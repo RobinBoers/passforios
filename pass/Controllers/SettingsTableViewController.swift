@@ -8,7 +8,6 @@
 
 import CoreData
 import passKit
-import SVProgressHUD
 import UIKit
 import YubiKit
 
@@ -34,9 +33,7 @@ class SettingsTableViewController: UITableViewController, UITabBarControllerDele
     }
 
     private func savePGPKey(using keyImporter: PGPKeyImporter) {
-        SVProgressHUD.setDefaultMaskType(.black)
-        SVProgressHUD.setDefaultStyle(.light)
-        SVProgressHUD.show(withStatus: "FetchingPgpKey".localize())
+        ProgressSheet.show("FetchingPgpKey".localize(), on: self)
         DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
             Defaults.pgpKeySource = type(of: keyImporter).keySource
             do {
@@ -46,9 +43,10 @@ class SettingsTableViewController: UITableViewController, UITabBarControllerDele
                 try PGPAgent.shared.initKeys()
                 DispatchQueue.main.async {
                     self.setPGPKeyTableViewCellDetailText()
-                    SVProgressHUD.showSuccess(withStatus: "Success".localize())
-                    SVProgressHUD.dismiss(withDelay: 1)
-                    keyImporter.doAfterImport()
+                    ProgressSheet.dismiss {
+                        Feedback.success()
+                        keyImporter.doAfterImport()
+                    }
                 }
             } catch {
                 DispatchQueue.main.async {

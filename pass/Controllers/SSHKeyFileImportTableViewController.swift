@@ -7,7 +7,6 @@
 //
 
 import passKit
-import SVProgressHUD
 
 class SSHKeyFileImportTableViewController: AutoCellHeightUITableViewController {
     @IBOutlet var sshPrivateKeyFile: UITableViewCell!

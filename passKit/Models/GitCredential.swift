@@ -7,7 +7,6 @@
 //
 
 import ObjectiveGit
-import SVProgressHUD
 
 public struct GitCredential {
     public typealias PasswordProvider = (String, String?) -> String?

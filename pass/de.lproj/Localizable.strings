@@ -91,7 +91,6 @@
 "AsciiArmorEncryptedKey"                = "Key im ASCII-Format";
 "ITunesFileSharing"                     = "Datenaustausch über iTunes";
 "Import"                                = "Importieren";
-"Imported"                              = "Importiert";
 "Tips"                                  = "Tipps";
 "FillInGitAccountPassword."             = "Bitte gib das Passwort deines Git-Accounts ein.";
 "NoPasswordStore."                      = "Es gibt im Moment keinen Passwort Store.";
@@ -166,13 +165,11 @@
 "ErasePasswordStoreData?"   = "Daten im Password Store löschen?";
 "ErasePasswordStoreData"    = "Daten im Password Store löschen";
 "EraseExplanation."         = "Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten auf einem entfernten Server sind nicht betroffen.";
-"Erasing..."                = "Lösche ...";
 
 // Discard local changes
 "DiscardAllLocalChanges?"   = "Alle lokalen Änderungen verwerfen?";
 "DiscardAllLocalChanges"    = "Alle lokalen Änderungen verwerfen";
 "DiscardExplanation."       = "Möchtest du wirklich alle Änderungen an den lokalen Daten für immer verwerfen? Diese Aktion kann nicht rückgängig gemacht werden.";
-"Resetting..."              = "Verwerfe ...";
 
 // Forget passcode
 "ForgotYourPasscode?"       = "Passcode vergessen?";
@@ -243,8 +240,6 @@
 "PreviousChangesDiscarded."     = "Alle vorherigen lokalen Änderungen wurden verworfen. Dein aktueller Password Store wird angezeigt.";
 "CannotShowPassword"            = "Passwort kann nicht angezeigt werden";
 "PasswordDoesNotExist"          = "Das Passwort existiert nicht.";
-"Saving"                        = "Speichere";
-"Success"                       = "Erfolg";
 "OneTimePassword"               = "Einmalkennwort";
 "ShowRaw"                       = "Zeige Original";
 "Reveal"                        = "Anzeigen";
@@ -252,11 +247,8 @@
 "NextPassword"                  = "Nächstes Passwort";
 "CopyAndOpen"                   = "Passwort kopieren & Link folgen";
 "GetNextPasswordOfNonHotp."     = "Zeige das nächste Passwort eines Nicht-HOTP-Eintrags.";
-"PasswordCopied"                = "Passwort kopiert";
-"CounterUpdated"                = "Zähler hochgezählt";
 "CannotFindValidUrl"            = "Gültige URL kann nicht gefunden werden";
 "LastUpdated"                   = "Zuletzt aktualisiert: %@";
-"PasswordCopiedToPasteboard."   = "Passwort kopiert. Es bleibt 45 Sekunden im Cache.";
 
 // Password editor
 "DeletePassword"                    = "Passwort löschen";

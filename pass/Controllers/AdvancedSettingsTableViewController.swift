@@ -7,7 +7,6 @@
 //
 
 import passKit
-import SVProgressHUD
 import UIKit
 
 class AdvancedSettingsTableViewController: UITableViewController {
@@ -50,11 +49,9 @@ class AdvancedSettingsTableViewController: UITableViewController {
             let alert = UIAlertController(title: "ErasePasswordStoreData?".localize(), message: "EraseExplanation.".localize(), preferredStyle: UIAlertController.Style.alert)
             alert.addAction(
                 UIAlertAction(title: "ErasePasswordStoreData".localize(), style: UIAlertAction.Style.destructive) { [unowned self] _ in
-                    SVProgressHUD.show(withStatus: "Erasing...".localize())
                     passwordStore.erase()
                     navigationController!.popViewController(animated: true)
-                    SVProgressHUD.showSuccess(withStatus: "Done".localize())
-                    SVProgressHUD.dismiss(withDelay: 1)
+                    Feedback.success()
                 }
             )
             alert.addAction(UIAlertAction.dismiss())
@@ -63,12 +60,11 @@ class AdvancedSettingsTableViewController: UITableViewController {
             let alert = UIAlertController(title: "DiscardAllLocalChanges?".localize(), message: "DiscardExplanation.".localize(), preferredStyle: UIAlertController.Style.alert)
             alert.addAction(
                 UIAlertAction(title: "DiscardAllLocalChanges".localize(), style: UIAlertAction.Style.destructive) { [unowned self] _ in
-                    SVProgressHUD.show(withStatus: "Resetting...".localize())
                     do {
                         let numberDiscarded = try passwordStore.reset()
-                        navigationController!.popViewController(animated: true)
-                        SVProgressHUD.showSuccess(withStatus: "DiscardedCommits(%d)".localize(numberDiscarded))
-                        SVProgressHUD.dismiss(withDelay: 1)
+                        let navigationController = navigationController!
+                        navigationController.popViewController(animated: true)
+                        Utils.alert(title: "Done".localize(), message: "DiscardedCommits(%d)".localize(numberDiscarded), controller: navigationController)
                     } catch {
                         Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self, completion: nil)
                     }
@@ -78,12 +74,12 @@ class AdvancedSettingsTableViewController: UITableViewController {
             present(alert, animated: true, completion: nil)
         } else if tableView.cellForRow(at: indexPath) == clearSuggestionsTableViewCell {
             CredentialIdentities.removeAll { error in
-                if let error {
-                    SVProgressHUD.showError(withStatus: "FailedToClearQuickTypeSuggestions".localize(error))
-                    SVProgressHUD.dismiss(withDelay: 1)
-                } else {
-                    SVProgressHUD.showSuccess(withStatus: "Done".localize())
-                    SVProgressHUD.dismiss(withDelay: 1)
+                DispatchQueue.main.async {
+                    if let error {
+                        Utils.alert(title: "Error".localize(), message: "FailedToClearQuickTypeSuggestions".localize(error), controller: self)
+                    } else {
+                        Feedback.success()
+                    }
                 }
             }
         }

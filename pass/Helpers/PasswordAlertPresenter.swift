@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bob Sun. All rights reserved.
 //
 
-import SVProgressHUD
+import UIKit
 
 protocol PasswordAlertPresenter {
     func present(message: String, lastPassword: String?) -> String?
@@ -18,7 +18,6 @@ extension PasswordAlertPresenter where Self: UIViewController {
         var password: String?
 
         DispatchQueue.main.async {
-            SVProgressHUD.dismiss()
             let alert = UIAlertController(title: "Password".localize(), message: message, preferredStyle: .alert)
             alert.addTextField {
                 $0.text = lastPassword ?? ""
@@ -36,7 +35,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                     sem.signal()
                 }
             )
-            self.present(alert, animated: true)
+            self.topmostPresentedViewController.present(alert, animated: true)
         }
 
         _ = sem.wait(timeout: .distantFuture)

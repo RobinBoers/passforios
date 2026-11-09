@@ -7,7 +7,6 @@
 //
 
 import passKit
-import SVProgressHUD
 import UIKit
 import UserNotifications
 
@@ -482,9 +481,7 @@ extension PasswordNavigationViewController: PasswordAlertPresenter {
             }
             return
         }
-        SVProgressHUD.setDefaultMaskType(.black)
-        SVProgressHUD.setDefaultStyle(.light)
-        SVProgressHUD.show(withStatus: "SyncingPasswordStore".localize())
+        ProgressSheet.show("SyncingPasswordStore".localize(), on: self)
         let keychain = AppKeychain.shared
         var gitCredential: GitCredential {
             GitCredential.from(
@@ -498,26 +495,24 @@ extension PasswordNavigationViewController: PasswordAlertPresenter {
                 let pullOptions = gitCredential.getCredentialOptions(passwordProvider: present)
                 try PasswordStore.shared.pullRepository(options: pullOptions) { git_transfer_progress, _ in
                     DispatchQueue.main.async {
-                        SVProgressHUD.showProgress(Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), status: "PullingFromRemoteRepository".localize())
+                        ProgressSheet.update(progress: Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), status: "PullingFromRemoteRepository".localize())
                     }
                 }
                 if PasswordStore.shared.numberOfLocalCommits > 0 {
                     let pushOptions = gitCredential.getCredentialOptions(passwordProvider: present)
                     try PasswordStore.shared.pushRepository(options: pushOptions) { current, total, _, _ in
                         DispatchQueue.main.async {
-                            SVProgressHUD.showProgress(Float(current) / Float(total), status: "PushingToRemoteRepository".localize())
+                            ProgressSheet.update(progress: Float(current) / Float(total), status: "PushingToRemoteRepository".localize())
                         }
                     }
                 }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .passwordStoreSyncSucceeded, object: nil)
-                    SVProgressHUD.showSuccess(withStatus: "Done".localize())
-                    SVProgressHUD.dismiss(withDelay: 1)
+                    ProgressSheet.dismiss(completion: Feedback.success)
                 }
             } catch let error as NSError {
                 gitCredential.delete()
                 DispatchQueue.main.async {
-                    SVProgressHUD.dismiss()
                     var message = error.localizedDescription
                     if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
                         message = message | "UnderlyingError".localize(underlyingError.localizedDescription)
@@ -529,9 +524,7 @@ extension PasswordNavigationViewController: PasswordAlertPresenter {
                         let mergeConflictFilesString = mergeConflictFiles.componentsJoined(by: ", ")
                         message = message | "MergeConflictError".localize(mergeConflictFilesString)
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                        Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
-                    }
+                    Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
                 }
             }
         }

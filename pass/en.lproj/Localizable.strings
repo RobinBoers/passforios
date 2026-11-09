@@ -92,7 +92,6 @@
 "AsciiArmorEncryptedKey"                = "ASCII-Armor Key";
 "ITunesFileSharing"                     = "iTunes File Sharing";
 "Import"                                = "Import";
-"Imported"                              = "Imported";
 "Tips"                                  = "Tips";
 "FillInGitAccountPassword."             = "Please fill in the password of your Git account.";
 "NoPasswordStore."                      = "There is no password store right now.";
@@ -167,13 +166,11 @@
 "ErasePasswordStoreData?"   = "Erase password store data?";
 "ErasePasswordStoreData"    = "Erase Password Store Data";
 "EraseExplanation."         = "This will delete all local data and settings. Password store data on your remote server will not be affected.";
-"Erasing..."                = "Erasing ...";
 
 // Discard local changes
 "DiscardAllLocalChanges?"   = "Discard all local changes?";
 "DiscardAllLocalChanges"    = "Discard All Local Changes";
 "DiscardExplanation."       = "Do you want to permanently discard all changes to the local copy of your password data? You cannot undo this action.";
-"Resetting..."              = "Resetting ...";
 
 // Forget passcode
 "ForgotYourPasscode?"       = "Forgot your passcode?";
@@ -244,8 +241,6 @@
 "PreviousChangesDiscarded."     = "All previous local changes have been discarded. Your current Password Store will be shown.";
 "CannotShowPassword"            = "Cannot show password";
 "PasswordDoesNotExist"          = "The password does not exist.";
-"Saving"                        = "Saving";
-"Success"                       = "Success";
 "OneTimePassword"               = "One-Time Password";
 "ShowRaw"                       = "Show Raw";
 "Reveal"                        = "Reveal";
@@ -253,11 +248,8 @@
 "NextPassword"                  = "Next Password";
 "CopyAndOpen"                   = "Copy Password & Open Link";
 "GetNextPasswordOfNonHotp."     = "Get next password of a non-HOTP entry.";
-"PasswordCopied"                = "Password Copied";
-"CounterUpdated"                = "Counter Updated";
 "CannotFindValidUrl"            = "Cannot find a valid URL";
 "LastUpdated"                   = "Last Updated: %@";
-"PasswordCopiedToPasteboard."   = "Password copied. We will clear the pasteboard in 45 seconds.";
 
 // Password editor
 "DeletePassword"                    = "Delete Password";

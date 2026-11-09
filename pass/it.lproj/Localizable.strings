@@ -90,7 +90,6 @@
 "AsciiArmorEncryptedKey"                = "Chiave con armatura ASCII";
 "ITunesFileSharing"                     = "Condivisione file iTunes";
 "Import"                                = "Importa";
-"Imported"                              = "Importata";
 "Tips"                                  = "Consigli";
 "FillInGitAccountPassword."             = "Inserire la password dell'account Git.";
 "NoPasswordStore."                      = "Attualmente non c'è alcun dato di Password Store.";
@@ -162,13 +161,11 @@
 "ErasePasswordStoreData?"   = "Eliminare i dati di Password Store?";
 "ErasePasswordStoreData"    = "Elimina i dati di Password Store";
 "EraseExplanation."         = "Verranno eliminati tutti i dati e le impostazioni locali. I dati nel server remoto non saranno modificati.";
-"Erasing..."                = "Eliminazione ...";
 
 // Discard local changes
 "DiscardAllLocalChanges?"   = "Scartare le modifiche locali?";
 "DiscardAllLocalChanges"    = "Scarta le modifiche locali";
 "DiscardExplanation."       = "Scartare permanentemente tutte le modifiche effettuate alla copia locale dei dati di Password Store? L'azione è irreversibile.";
-"Resetting..."              = "Reimpostazione ...";
 
 // Forget passcode
 "ForgotYourPasscode?"       = "Codice dimenticato?";
@@ -239,8 +236,6 @@
 "PreviousChangesDiscarded."     = "Tutte le modifiche precedenti sono state scartate. Verranno mostrate le password attuali.";
 "CannotShowPassword"            = "Impossibile mostrare la password";
 "PasswordDoesNotExist"          = "La password non esiste.";
-"Saving"                        = "Salvataggio";
-"Success"                       = "Successo";
 "OneTimePassword"               = "One-time password";
 "ShowRaw"                       = "Mostra in originale";
 "Reveal"                        = "Rivela";
@@ -248,11 +243,8 @@
 "NextPassword"                  = "Password successiva";
 "CopyAndOpen"                   = "Copia password e apri link";
 "GetNextPasswordOfNonHotp."     = "Ottieni la password successiva per un campo non HOTP.";
-"PasswordCopied"                = "Password copiata";
-"CounterUpdated"                = "Contatore aggiornato";
 "CannotFindValidUrl"            = "Impossibile trovare un URL valido";
 "LastUpdated"                   = "Ultimo aggiornamento: %@";
-"PasswordCopiedToPasteboard."   = "Password copiata. Gli appunti saranno cancellati tra 45 secondi.";
 
 // Password editor
 "DeletePassword"                    = "Elimina password";

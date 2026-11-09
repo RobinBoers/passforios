@@ -7,7 +7,6 @@
 //
 
 import passKit
-import SVProgressHUD
 
 class SSHKeyURLImportTableViewController: AutoCellHeightUITableViewController {
     @IBOutlet var privateKeyURLTextField: UITextField!

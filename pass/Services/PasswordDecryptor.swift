@@ -9,7 +9,6 @@
 import CryptoTokenKit
 import Gopenpgp
 import passKit
-import SVProgressHUD
 import UIKit
 import YubiKit
 

@@ -7,7 +7,6 @@
 //
 
 import passKit
-import SVProgressHUD
 import UIKit
 
 class GitRepositorySettingsTableViewController: UITableViewController, PasswordAlertPresenter {
@@ -172,18 +171,23 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
 
         // Remember git credential password/passphrase temporarily, ask whether users want this after a successful clone.
         Defaults.isRememberGitCredentialPassphraseOn = true
+        ProgressSheet.show("Cloning Remote Repository", on: self)
         // swiftlint:disable:next closure_body_length
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 let transferProgressBlock: (UnsafePointer<git_transfer_progress>, UnsafeMutablePointer<ObjCBool>) -> Void = { git_transfer_progress, _ in
                     let gitTransferProgress = git_transfer_progress.pointee
                     let progress = Float(gitTransferProgress.received_objects) / Float(gitTransferProgress.total_objects)
-                    SVProgressHUD.showProgress(progress, status: "Cloning Remote Repository")
+                    DispatchQueue.main.async {
+                        ProgressSheet.update(progress: progress, status: "Cloning Remote Repository")
+                    }
                 }
 
                 let checkoutProgressBlock: (String, UInt, UInt) -> Void = { _, completedSteps, totalSteps in
                     let progress = Float(completedSteps) / Float(totalSteps)
-                    SVProgressHUD.showProgress(progress, status: "CheckingOutBranch".localize(self.gitBranchName))
+                    DispatchQueue.main.async {
+                        ProgressSheet.update(progress: progress, status: "CheckingOutBranch".localize(self.gitBranchName))
+                    }
                 }
 
                 let options = self.gitCredential.getCredentialOptions(passwordProvider: self.present)
@@ -199,28 +203,26 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
                 let gpgIDFile = self.passwordStore.storeURL.appendingPathComponent(".gpg-id").path
                 guard FileManager.default.fileExists(atPath: gpgIDFile) else {
                     self.passwordStore.eraseStoreData()
-                    SVProgressHUD.dismiss {
-                        DispatchQueue.main.async {
-                            Utils.alert(title: "Error".localize(), message: "NoProperPassRepo.".localize(), controller: self)
-                        }
+                    DispatchQueue.main.async {
+                        Utils.alert(title: "Error".localize(), message: "NoProperPassRepo.".localize(), controller: self)
                     }
                     return
                 }
 
-                SVProgressHUD.dismiss {
-                    self.savePassphraseAndSegue()
+                DispatchQueue.main.async {
+                    ProgressSheet.dismiss {
+                        self.savePassphraseAndSegue()
+                    }
                 }
             } catch {
-                SVProgressHUD.dismiss {
-                    self.passwordStore.eraseStoreData()
-                    let error = error as NSError
-                    var message = error.localizedDescription
-                    if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
-                        message = "\(message)\n\("UnderlyingError".localize(underlyingError.localizedDescription))"
-                    }
-                    DispatchQueue.main.async {
-                        Utils.alert(title: "Error".localize(), message: message, controller: self)
-                    }
+                self.passwordStore.eraseStoreData()
+                let error = error as NSError
+                var message = error.localizedDescription
+                if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
+                    message = "\(message)\n\("UnderlyingError".localize(underlyingError.localizedDescription))"
+                }
+                DispatchQueue.main.async {
+                    Utils.alert(title: "Error".localize(), message: message, controller: self)
                 }
             }
         }
@@ -264,8 +266,7 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
             do {
                 try keyImporter.importKeys()
                 DispatchQueue.main.async {
-                    SVProgressHUD.showSuccess(withStatus: "Imported".localize())
-                    SVProgressHUD.dismiss(withDelay: 1)
+                    Feedback.success()
                     Defaults.gitSSHKeySource = type(of: keyImporter).keySource
                     self.gitAuthenticationMethod = .key
                     self.sshLabel?.isEnabled = true

@@ -10,7 +10,6 @@ import FavIcon
 import Gopenpgp
 import passAutoFillExtension
 import passKit
-import SVProgressHUD
 import UIKit
 import YubiKit
 
@@ -209,17 +208,14 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
     }
 
     private func saveEditPassword(password: Password, keyID: String? = nil) {
-        SVProgressHUD.show(withStatus: "Saving".localize())
         do {
             passwordEntity = try passwordStore.edit(passwordEntity: passwordEntity!, password: password, keyID: keyID)
             setTableData()
             tableView.reloadData()
-            SVProgressHUD.showSuccess(withStatus: "Success".localize())
-            SVProgressHUD.dismiss(withDelay: 1)
+            Feedback.success()
         } catch let AppError.pgpPublicKeyNotFound(keyID: key) {
             DispatchQueue.main.async {
                 // alert: cancel or select keys
-                SVProgressHUD.dismiss()
                 let alert = UIAlertController(title: "Cannot Edit Password", message: AppError.pgpPublicKeyNotFound(keyID: key).localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction.cancelAndPopView(controller: self))
                 let selectKey = UIAlertAction.selectKey(controller: self) { action in
@@ -398,11 +394,9 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         if password!.changed != 0 {
             do {
                 passwordEntity = try passwordStore.edit(passwordEntity: passwordEntity!, password: password!)
-                SVProgressHUD.showSuccess(withStatus: "PasswordCopied".localize() | "CounterUpdated".localize())
-                SVProgressHUD.dismiss(withDelay: 1)
+                Feedback.success()
             } catch {
-                SVProgressHUD.showSuccess(withStatus: error.localizedDescription)
-                SVProgressHUD.dismiss(withDelay: 1)
+                Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
             }
         }
     }

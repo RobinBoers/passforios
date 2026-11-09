@@ -9,7 +9,6 @@
 import AVFoundation
 import OneTimePassword
 import passKit
-import SVProgressHUD
 import UIKit
 
 protocol QRScannerControllerDelegate: AnyObject {
@@ -122,8 +121,7 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         captureSession?.stopRunning()
         delegate?.handleScannedOutput(line: scanned)
         DispatchQueue.main.async {
-            SVProgressHUD.showSuccess(withStatus: "Done".localize())
-            SVProgressHUD.dismiss(withDelay: 1)
+            Feedback.success()
             self.navigationController?.popViewController(animated: true)
         }
     }

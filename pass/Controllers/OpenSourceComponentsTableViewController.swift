@@ -42,11 +42,6 @@ class OpenSourceComponentsTableViewController: BasicStaticTableViewController {
             "https://github.com/mattrubin/OneTimePassword/blob/develop/LICENSE.md",
         ],
         [
-            "SVProgressHUD",
-            "https://github.com/SVProgressHUD/SVProgressHUD",
-            "https://github.com/SVProgressHUD/SVProgressHUD/blob/master/LICENSE",
-        ],
-        [
             "SwiftyUserDefaults",
             "https://github.com/radex/SwiftyUserDefaults",
             "https://github.com/radex/SwiftyUserDefaults/blob/master/LICENSE",

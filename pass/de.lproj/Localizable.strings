@@ -44,21 +44,14 @@
 "NoProperPassRepo."                                 = "Das Repository enthält keine .gpg-id Datei. Es muss erst noch mit 'pass init' korrekt initialisiert werden, bevor es in die App geladen werden kann.";
 
 // Settings
-"PasswordGeneratorFlavor"           = "Art";
 "RememberPgpKeyPassphrase"          = "GPG-Schlüssel-Passwort merken";
 "RememberGitCredentialPassphrase"   = "Git-Server-Passwort merken";
 "EnableGPGID"                       = "Berücksichtige .gpg-id Dateien (Beta)";
 "ShowFolders"                       = "Ordner anzeigen";
 "HidePasswordImages"                = "Favicons verstecken";
 "HidePasswordImagesExplanation."    = "Favicons werden basierend auf der assoziierten URL geladen und in Passworteinträgen angezeigt. Aktiviere diese Option, um das Laden dieser Bilder zu unterbinden und sie nicht anzuzeigen.";
-"HideUnknownFields"                 = "Unbekannte Felder verstecken";
-"HideUnknownFieldsExplanation."     = "Nur das Format \"key: value\" wird für zusätzliche Felder unterstützt. Felder, die nicht in dieser Form vorliegen, bekommen den Namen \"unknown\". Aktiviere diese Option, um solche Felder nicht anzuzeigen.";
-"HideOtpFields"                     = "OTP-Felder verstecken";
-"HideOtpFieldsExplanation."         = "Aktiviere diese Option, um OTP-Felder (z.B. %@) nicht anzuzeigen.";
-"Random"                            = "Zufällig";
 "RandomString"                      = "Zufällige Zeichenkette";
 "ApplesKeychainStyle"               = "Apples Keychain-Style";
-"XKCD"                              = "XKCD";
 
 // Git
 "FailedToFetchPasswords"                = "Abrufen von Passwörtern fehlgeschlagen";
@@ -246,7 +239,6 @@
 
 // Password view
 "Name"                          = "Name";
-"Additions"                     = "Weitere";
 "Notice"                        = "Beachte";
 "PreviousChangesDiscarded."     = "Alle vorherigen lokalen Änderungen wurden verworfen. Dein aktueller Password Store wird angezeigt.";
 "CannotShowPassword"            = "Passwort kann nicht angezeigt werden";
@@ -267,16 +259,20 @@
 "PasswordCopiedToPasteboard."   = "Passwort kopiert. Es bleibt 45 Sekunden im Cache.";
 
 // Password editor
-"UseKeyValueFormat."                = "Verwende das Format \"Name: Inhalt\" für zusätzliche Felder.";
 "DeletePassword"                    = "Passwort löschen";
 "AddOneTimePassword"                = "Einmalkennwort hinzufügen";
+"Fields"                            = "Felder";
+"Notes"                             = "Notizen";
+"AddField"                          = "Feld hinzufügen";
+"Key"                               = "Schlüssel";
+"Value"                             = "Wert";
+"Copy"                              = "Kopieren";
+"Secret"                            = "Geheim";
+"NotSecret"                         = "Nicht geheim";
+"FieldsExplanation."                = "Tippe auf das Schloss, um ein Feld als geheim zu markieren. Leere Felder werden entfernt.";
+"InvalidField."                     = "Das Feld \"%@\" ist ungültig. Schlüssel dürfen nur Buchstaben, Ziffern, \"_\", \".\" und \"-\" enthalten, Werte dürfen nicht mehrzeilig sein, und \"body\" sowie ein zweites \"pass\" sind nicht erlaubt.";
 "Length"                            = "Länge";
-"VaryCases"                         = "Groß- und Kleinbuchstaben";
-"Digits"                            = "Ziffern";
-"SpecialSymbols"                    = "Sonderzeichen";
-"Groups"                            = "Bilde Gruppen";
 "DeletePassword?"                   = "Passwort löschen?";
-"OverwriteOtpConfiguration?"        = "Konfiguration des Einmalkennwortes überschreiben?";
 "ValidTokenUrl"                     = "Gültiges URL-Token";
 "InvalidTokenUrl"                   = "Ungültiges URL-Token";
 "FillInName."                       = "Bitte gib den Namen ein.";

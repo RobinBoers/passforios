@@ -11,261 +11,70 @@ import passKit
 import SafariServices
 import UIKit
 
-enum PasswordEditorCellType: Equatable {
-    case nameCell
-    case fillPasswordCell
-    case passwordLengthCell
-    case passwordUseDigitsCell
-    case passwordVaryCasesCell
-    case passwordUseSpecialSymbols
-    case passwordGroupsCell
-    case additionsCell
-    case deletePasswordCell
-    case scanQRCodeCell
-    case passwordFlavorCell
-}
-
-enum PasswordEditorCellKey {
-    case type, title, content
-}
-
 protocol PasswordSettingSliderTableViewCellDelegate: AnyObject {
     func generateAndCopyPassword()
 }
 
 class PasswordEditorTableViewController: UITableViewController {
-    var tableData = [[[PasswordEditorCellKey: Any]]]()
-    var password: Password?
-
-    private var navigationItemTitle: String?
-
-    private var sectionHeaderTitles: [String?] = ["Name".localize(), "Password".localize(), "Additions".localize(), nil]
-    private var sectionFooterTitles: [String?] = [nil, nil, "UseKeyValueFormat.".localize(), nil]
-    private let nameSection = 0
-    private let passwordSection = 1
-    private let additionsSection = 2
-    private var hidePasswordSettings = true
-
-    private var passwordGenerator: PasswordGenerator = Defaults.passwordGenerator
-
-    var nameCell: TextFieldTableViewCell?
-    var fillPasswordCell: FillPasswordTableViewCell?
-    var additionsCell: TextViewTableViewCell?
-    private var deletePasswordCell: UITableViewCell?
-    private var scanQRCodeCell: UITableViewCell?
-    private var passwordFlavorCell: UITableViewCell?
-
-    var plainText: String {
-        var plainText = (fillPasswordCell?.getContent())!
-        if let additionsString = additionsCell?.getContent(), !additionsString.isEmpty {
-            plainText.append("\n")
-            plainText.append(additionsString)
-        }
-        if !plainText.trimmingCharacters(in: .whitespaces).hasSuffix("\n") {
-            plainText.append("\n")
-        }
-        return plainText
+    private enum Section {
+        case name, password, fields, body, delete
     }
 
-    override func loadView() {
-        super.loadView()
+    private enum FieldsRow {
+        case field(Int), addField, addOneTimePassword
+    }
 
-        deletePasswordCell = UITableViewCell(style: .default, reuseIdentifier: "default")
-        deletePasswordCell?.textLabel?.text = "DeletePassword".localize()
-        deletePasswordCell?.textLabel?.textAlignment = .center
-        deletePasswordCell?.textLabel?.textColor = Colors.systemRed
-        deletePasswordCell?.selectionStyle = .default
+    var password: Password?
 
-        scanQRCodeCell = UITableViewCell(style: .default, reuseIdentifier: "default")
-        scanQRCodeCell?.textLabel?.text = "AddOneTimePassword".localize()
-        scanQRCodeCell?.selectionStyle = .default
-        scanQRCodeCell?.accessoryType = .disclosureIndicator
+    var name = ""
+    private var secretField = Field(key: Constants.PASSWORD_KEYWORD, value: "", isSecret: true)
+    private var secretFieldIndex = 0
+    private var fields: [Field] = []
+    private var body = ""
 
-        passwordFlavorCell = UITableViewCell(style: .default, reuseIdentifier: "default")
-        passwordFlavorCell?.textLabel?.text = "PasswordGeneratorFlavor".localize()
-        passwordFlavorCell?.textLabel?.font = .preferredFont(forTextStyle: .footnote)
-        passwordFlavorCell!.layoutMargins.left = passKit.Globals.passwordGeneratorLeftLayoutMargin
-        passwordFlavorCell?.selectionStyle = .none
+    private var showsGeneratorSettings = false
+    private var passwordGenerator: PasswordGenerator = Defaults.passwordGenerator
 
-        let passwordFlavorSelector = UISegmentedControl(items: PasswordGeneratorFlavor.allCases.map(\.localized))
-        passwordFlavorSelector.selectedSegmentIndex = PasswordGeneratorFlavor.allCases.firstIndex(of: passwordGenerator.flavor)!
-        passwordFlavorSelector.addTarget(self, action: #selector(flavorChanged), for: .valueChanged)
-        passwordFlavorCell?.accessoryView = passwordFlavorSelector
+    private var sections: [Section] {
+        password == nil ? [.name, .password, .fields, .body] : [.name, .password, .fields, .body, .delete]
+    }
+
+    private var fillPasswordCell: FillPasswordTableViewCell? {
+        guard let section = sections.firstIndex(of: .password) else {
+            return nil
+        }
+        return tableView.cellForRow(at: IndexPath(row: 0, section: section)) as? FillPasswordTableViewCell
+    }
+
+    /// The entry as edited, with the password at its original position among the fields.
+    var entry: Entry {
+        var fields = fields.filter { !$0.key.isEmpty || !$0.value.isEmpty }
+        fields.insert(secretField, at: min(secretFieldIndex, fields.count))
+        return Entry(fields: fields, body: body.trimmingCharacters(in: .newlines))
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if navigationItemTitle != nil {
-            navigationItem.title = navigationItemTitle
-        }
 
         tableView.register(UINib(nibName: "TextFieldTableViewCell", bundle: nil), forCellReuseIdentifier: "textFieldCell")
         tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: nil), forCellReuseIdentifier: "textViewCell")
         tableView.register(UINib(nibName: "FillPasswordTableViewCell", bundle: nil), forCellReuseIdentifier: "fillPasswordCell")
         tableView.register(UINib(nibName: "SliderTableViewCell", bundle: nil), forCellReuseIdentifier: "sliderCell")
-        tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "switchCell")
+        tableView.register(FieldTableViewCell.self, forCellReuseIdentifier: "fieldCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "default")
+        tableView.keyboardDismissMode = .interactive
 
-        tableData = [
-            [
-                [.type: PasswordEditorCellType.nameCell, .title: "Name".localize(), .content: password?.namePath ?? ""],
-            ],
-            [
-                [.type: PasswordEditorCellType.fillPasswordCell, .title: "Password".localize(), .content: password?.password ?? ""],
-                [.type: PasswordEditorCellType.passwordFlavorCell],
-                [.type: PasswordEditorCellType.passwordLengthCell],
-                [.type: PasswordEditorCellType.passwordUseDigitsCell],
-                [.type: PasswordEditorCellType.passwordVaryCasesCell],
-                [.type: PasswordEditorCellType.passwordUseSpecialSymbols],
-            ],
-            [
-                [.type: PasswordEditorCellType.additionsCell, .title: "Additions".localize(), .content: password?.additionsPlainText ?? ""],
-            ],
-            [
-                [.type: PasswordEditorCellType.scanQRCodeCell],
-            ],
-        ]
-
-        if password != nil {
-            tableData.append([[.type: PasswordEditorCellType.deletePasswordCell]])
-            sectionFooterTitles.append(nil)
-            sectionHeaderTitles.append(nil)
+        guard let password else {
+            return
         }
-        updateTableData(withRespectTo: passwordGenerator.flavor)
-    }
-
-    override func viewDidLayoutSubviews() {
-        additionsCell?.contentTextView.setContentOffset(.zero, animated: false)
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellData = tableData[indexPath.section][indexPath.row]
-
-        switch cellData[PasswordEditorCellKey.type] as! PasswordEditorCellType {
-        case .nameCell:
-            nameCell = tableView.dequeueReusableCell(withIdentifier: "textFieldCell", for: indexPath) as? TextFieldTableViewCell
-            nameCell?.contentTextField.delegate = self
-            nameCell?.setContent(content: cellData[PasswordEditorCellKey.content] as? String)
-            return nameCell!
-        case .fillPasswordCell:
-            fillPasswordCell = tableView.dequeueReusableCell(withIdentifier: "fillPasswordCell", for: indexPath) as? FillPasswordTableViewCell
-            fillPasswordCell?.delegate = self
-            fillPasswordCell?.contentTextField.delegate = self
-            fillPasswordCell?.setContent(content: cellData[PasswordEditorCellKey.content] as? String)
-            if tableData[passwordSection].count == 1 {
-                fillPasswordCell?.settingButton.isHidden = true
-            }
-            return fillPasswordCell!
-        case .passwordLengthCell:
-            return (tableView.dequeueReusableCell(withIdentifier: "sliderCell", for: indexPath) as! SliderTableViewCell)
-                .set(title: "Length".localize())
-                .configureSlider(with: passwordGenerator.flavor.lengthLimits)
-                .set(initialValue: passwordGenerator.limitedLength)
-                .checkNewValue { $0 != self.passwordGenerator.length }
-                .updateNewValue { self.passwordGenerator.length = $0 }
-                .delegate(to: self)
-        case .passwordUseDigitsCell:
-            return (tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchTableViewCell)
-                .set(title: "Digits".localize())
-                .set(initialValue: passwordGenerator.useDigits)
-                .updateNewValue { self.passwordGenerator.useDigits = $0 }
-                .delegate(to: self)
-        case .passwordVaryCasesCell:
-            return (tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchTableViewCell)
-                .set(title: "VaryCases".localize())
-                .set(initialValue: passwordGenerator.varyCases)
-                .updateNewValue { self.passwordGenerator.varyCases = $0 }
-                .delegate(to: self)
-        case .passwordUseSpecialSymbols:
-            return (tableView.dequeueReusableCell(withIdentifier: "switchCell", for: indexPath) as! SwitchTableViewCell)
-                .set(title: "SpecialSymbols".localize())
-                .set(initialValue: passwordGenerator.useSpecialSymbols)
-                .updateNewValue { self.passwordGenerator.useSpecialSymbols = $0 }
-                .delegate(to: self)
-        case .passwordGroupsCell:
-            return (tableView.dequeueReusableCell(withIdentifier: "sliderCell", for: indexPath) as! SliderTableViewCell)
-                .set(title: "Groups".localize())
-                .configureSlider(with: (min: 0, max: 6))
-                .set(initialValue: passwordGenerator.groups)
-                .checkNewValue { $0 != self.passwordGenerator.groups && self.passwordGenerator.isAcceptable(groups: $0) }
-                .updateNewValue { self.passwordGenerator.groups = $0 }
-                .delegate(to: self)
-        case .passwordFlavorCell:
-            return passwordFlavorCell!
-        case .additionsCell:
-            additionsCell = tableView.dequeueReusableCell(withIdentifier: "textViewCell", for: indexPath) as? TextViewTableViewCell
-            additionsCell?.contentTextView.delegate = self
-            additionsCell?.setContent(content: cellData[PasswordEditorCellKey.content] as? String)
-            additionsCell?.contentTextView.textColor = Colors.label
-            return additionsCell!
-        case .deletePasswordCell:
-            return deletePasswordCell!
-        case .scanQRCodeCell:
-            return scanQRCodeCell!
-        }
-    }
-
-    override func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if sectionHeaderTitles[section] != nil {
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                return 30
-            }
-            // Fix covered section header in macOS
-            return 36
-        }
-        return UITableView.automaticDimension
-    }
-
-    override func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
-        UITableView.automaticDimension
-    }
-
-    override func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch tableData[indexPath.section][indexPath.row][PasswordEditorCellKey.type] as! PasswordEditorCellType {
-        case .passwordGroupsCell, .passwordLengthCell:
-            return 42
-        case .passwordFlavorCell, .passwordUseDigitsCell, .passwordUseSpecialSymbols, .passwordVaryCasesCell:
-            return 42
-        default:
-            return UITableView.automaticDimension
-        }
-    }
-
-    override func numberOfSections(in _: UITableView) -> Int {
-        tableData.count
-    }
-
-    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == passwordSection, hidePasswordSettings {
-            // hide the password section, only the password should be shown
-            return 1
-        }
-        return tableData[section].count
-    }
-
-    override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-        sectionHeaderTitles[section]
-    }
-
-    override func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
-        sectionFooterTitles[section]
-    }
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedCell = tableView.cellForRow(at: indexPath)
-        tableView.deselectRow(at: indexPath, animated: true)
-
-        if selectedCell == deletePasswordCell {
-            let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(
-                UIAlertAction(title: "Delete".localize(), style: UIAlertAction.Style.destructive) { [unowned self] _ in
-                    performSegue(withIdentifier: "deletePasswordSegue", sender: self)
-                }
-            )
-            alert.addAction(UIAlertAction.cancel())
-            present(alert, animated: true, completion: nil)
-        } else if selectedCell == scanQRCodeCell {
-            performSegue(withIdentifier: "showQRScannerSegue", sender: self)
+        name = password.namePath
+        fields = password.entry.fields
+        body = password.entry.body
+        if let index = fields.firstIndex(where: { $0.key == Constants.PASSWORD_KEYWORD }) {
+            secretField = fields.remove(at: index)
+            secretFieldIndex = index
+        } else {
+            secretFieldIndex = fields.count
         }
     }
 
@@ -274,85 +83,225 @@ class PasswordEditorTableViewController: UITableViewController {
         Defaults.passwordGenerator = passwordGenerator
     }
 
-    private func updateTableData(withRespectTo flavor: PasswordGeneratorFlavor) {
-        // Remove delimiter configuration for XKCD style passwords. Re-add it for random ones.
-        switch flavor {
-        case .random:
-            if tableData[1].contains(where: isPasswordDelimiterCellData) {
-                return
-            }
-            tableData[1].insert([.type: PasswordEditorCellType.passwordGroupsCell], at: tableData[1].endIndex)
-        case .xkcd:
-            tableData[1].removeAll(where: isPasswordDelimiterCellData)
+    // MARK: - Table view data source
+
+    private func fieldsRow(at row: Int) -> FieldsRow {
+        switch row - fields.count {
+        case 0:
+            return .addField
+        case 1:
+            return .addOneTimePassword
+        default:
+            return .field(row)
         }
     }
 
-    private func isPasswordDelimiterCellData(data: [PasswordEditorCellKey: Any]) -> Bool {
-        (data[.type] as? PasswordEditorCellType) == .some(.passwordGroupsCell)
+    override func numberOfSections(in _: UITableView) -> Int {
+        sections.count
+    }
+
+    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch sections[section] {
+        case .password:
+            return showsGeneratorSettings ? 2 : 1
+        case .fields:
+            return fields.count + 2
+        case .body, .delete, .name:
+            return 1
+        }
+    }
+
+    override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch sections[section] {
+        case .name:
+            return "Name".localize()
+        case .password:
+            return "Password".localize()
+        case .fields:
+            return "Fields".localize()
+        case .body:
+            return "Notes".localize()
+        case .delete:
+            return nil
+        }
+    }
+
+    override func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
+        sections[section] == .fields ? "FieldsExplanation.".localize() : nil
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch sections[indexPath.section] {
+        case .name:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "textFieldCell", for: indexPath) as! TextFieldTableViewCell
+            cell.setContent(content: name)
+            cell.contentTextField.delegate = self
+            cell.contentTextField.addTarget(self, action: #selector(nameChanged), for: .editingChanged)
+            return cell
+        case .password where indexPath.row == 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "fillPasswordCell", for: indexPath) as! FillPasswordTableViewCell
+            cell.delegate = self
+            cell.setContent(content: secretField.value)
+            cell.contentTextField.delegate = self
+            cell.contentTextField.addTarget(self, action: #selector(passwordChanged), for: .editingChanged)
+            return cell
+        case .password:
+            return (tableView.dequeueReusableCell(withIdentifier: "sliderCell", for: indexPath) as! SliderTableViewCell)
+                .set(title: "Length".localize())
+                .configureSlider(with: PasswordGenerator.lengthLimits)
+                .set(initialValue: passwordGenerator.limitedLength)
+                .checkNewValue { $0 != self.passwordGenerator.length }
+                .updateNewValue { self.passwordGenerator.length = $0 }
+                .delegate(to: self)
+        case .fields:
+            return fieldsCell(for: indexPath)
+        case .body:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "textViewCell", for: indexPath) as! TextViewTableViewCell
+            cell.setContent(content: body)
+            cell.contentTextView.delegate = self
+            return cell
+        case .delete:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
+            var content = cell.defaultContentConfiguration()
+            content.text = "DeletePassword".localize()
+            content.textProperties.color = .systemRed
+            content.textProperties.alignment = .center
+            cell.contentConfiguration = content
+            return cell
+        }
+    }
+
+    private func fieldsCell(for indexPath: IndexPath) -> UITableViewCell {
+        switch fieldsRow(at: indexPath.row) {
+        case let .field(index):
+            let cell = tableView.dequeueReusableCell(withIdentifier: "fieldCell", for: indexPath) as! FieldTableViewCell
+            cell.set(field: fields[index])
+            cell.onChange = { [weak self, weak cell] field in
+                guard let self, let cell, let row = tableView.indexPath(for: cell)?.row else {
+                    return
+                }
+                fields[row] = field
+            }
+            return cell
+        case .addField:
+            return actionCell(for: indexPath, title: "AddField".localize(), image: "plus.circle.fill")
+        case .addOneTimePassword:
+            return actionCell(for: indexPath, title: "AddOneTimePassword".localize(), image: "qrcode.viewfinder")
+        }
+    }
+
+    private func actionCell(for indexPath: IndexPath, title: String, image: String) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
+        var content = cell.defaultContentConfiguration()
+        content.text = title
+        content.textProperties.color = .tintColor
+        content.image = UIImage(systemName: image)
+        cell.contentConfiguration = content
+        return cell
+    }
+
+    // MARK: - Table view delegate
+
+    override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard sections[indexPath.section] == .fields, case .field = fieldsRow(at: indexPath.row) else {
+            return false
+        }
+        return true
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete, case let .field(index) = fieldsRow(at: indexPath.row) else {
+            return
+        }
+        fields.remove(at: index)
+        if index < secretFieldIndex {
+            secretFieldIndex -= 1
+        }
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        switch sections[indexPath.section] {
+        case .fields:
+            switch fieldsRow(at: indexPath.row) {
+            case .addField:
+                addField()
+            case .addOneTimePassword:
+                performSegue(withIdentifier: "showQRScannerSegue", sender: self)
+            case .field:
+                break
+            }
+        case .delete:
+            let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: .alert)
+            alert.addAction(
+                UIAlertAction(title: "Delete".localize(), style: .destructive) { [unowned self] _ in
+                    performSegue(withIdentifier: "deletePasswordSegue", sender: self)
+                }
+            )
+            alert.addAction(UIAlertAction.cancel())
+            present(alert, animated: true, completion: nil)
+        default:
+            break
+        }
+    }
+
+    private func addField(_ field: Field = Field(key: "", value: "")) {
+        guard let section = sections.firstIndex(of: .fields) else {
+            return
+        }
+        fields.append(field)
+        let indexPath = IndexPath(row: fields.count - 1, section: section)
+        tableView.insertRows(at: [indexPath], with: .automatic)
+        if field.key.isEmpty {
+            (tableView.cellForRow(at: indexPath) as? FieldTableViewCell)?.keyTextField.becomeFirstResponder()
+        }
+    }
+
+    private func insertScannedOTPField(_ otpauth: String) {
+        if let index = fields.firstIndex(where: \.isOtpauth), let section = sections.firstIndex(of: .fields) {
+            fields[index].value = otpauth
+            tableView.reloadRows(at: [IndexPath(row: index, section: section)], with: .automatic)
+        } else {
+            addField(Field(key: Constants.OTP_KEYWORD, value: otpauth, isSecret: true))
+        }
+    }
+
+    // MARK: - Actions
+
+    @objc
+    private func nameChanged(_ sender: UITextField) {
+        name = sender.text ?? ""
     }
 
     @objc
-    func flavorChanged(_ sender: UISegmentedControl) {
-        let flavor = PasswordGeneratorFlavor.allCases[sender.selectedSegmentIndex]
-        guard passwordGenerator.flavor != flavor else {
-            return
-        }
-        passwordGenerator.flavor = flavor
-        updateTableData(withRespectTo: flavor)
-        tableView.reloadSections([passwordSection], with: .none)
-        generateAndCopyPassword()
+    private func passwordChanged(_ sender: UITextField) {
+        secretField.value = sender.attributedText?.string ?? ""
     }
 
-    // generate the password, don't care whether the original line is otp
-    private func generateAndCopyPasswordNoOtpCheck() {
-        // show password settings (e.g., the length slider)
-        showPasswordSettings()
-
-        let plainPassword = passwordGenerator.generate()
-
-        // update tableData so to make sure reloadData() works correctly
-        tableData[passwordSection][0][PasswordEditorCellKey.content] = plainPassword
-
-        // update cell manually, no need to call reloadData()
+    private func setPassword(_ plainPassword: String) {
+        secretField.value = plainPassword
         fillPasswordCell?.setContent(content: plainPassword)
     }
 
-    // show password settings (e.g., the length slider)
     private func showPasswordSettings() {
-        if hidePasswordSettings == true {
-            hidePasswordSettings = false
-            tableView.reloadSections([passwordSection], with: .fade)
+        if !showsGeneratorSettings {
+            showHidePasswordSettings()
         }
-    }
-
-    private func insertScannedOTPFields(_ otpauth: String) {
-        // update tableData
-        var additionsString = ""
-        if let additionsPlainText = (tableData[additionsSection][0][PasswordEditorCellKey.content] as? String)?.trimmed, !additionsPlainText.isEmpty {
-            additionsString = additionsPlainText + "\n" + otpauth
-        } else {
-            additionsString = otpauth
-        }
-        tableData[additionsSection][0][PasswordEditorCellKey.content] = additionsString
-
-        // reload the additions cell
-        additionsCell?.setContent(content: additionsString)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         if segue.identifier == "showQRScannerSegue" {
-            if let navController = segue.destination as? UINavigationController {
-                if let viewController = navController.topViewController as? QRScannerController {
-                    viewController.delegate = self
-                }
-            } else if let viewController = segue.destination as? QRScannerController {
-                viewController.delegate = self
-            }
+            let navigationController = segue.destination as? UINavigationController
+            (navigationController?.topViewController as? QRScannerController ?? segue.destination as? QRScannerController)?.delegate = self
         }
     }
 
+    // MARK: - Validation
+
     func getNamePath() -> (String, String) {
-        guard let encodedName = nameCell?.getContent()?.stringByAddingPercentEncodingForRFC3986(), let url = URL(string: encodedName) else {
+        guard let encodedName = name.stringByAddingPercentEncodingForRFC3986(), let url = URL(string: encodedName) else {
             return ("", "")
         }
         let name = url.lastPathComponent
@@ -360,9 +309,26 @@ class PasswordEditorTableViewController: UITableViewController {
         return (name, path)
     }
 
-    func checkName() -> Bool {
+    func validate() -> Bool {
+        view.endEditing(true)
+        return checkName() && checkFields()
+    }
+
+    private func checkFields() -> Bool {
+        let invalid = entry.fields.first { field in
+            !field.value.isEmpty && (!Field.isValid(key: field.key) || field.value.contains(where: \.isNewline))
+        }
+        let duplicatePassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD && !$0.value.isEmpty }
+        guard invalid == nil, !duplicatePassword else {
+            Utils.alert(title: "CannotSave".localize(), message: "InvalidField.".localize(invalid?.key ?? Constants.PASSWORD_KEYWORD), controller: self, completion: nil)
+            return false
+        }
+        return true
+    }
+
+    private func checkName() -> Bool {
         // the name field should not be empty
-        guard let name = nameCell?.getContent(), name.isEmpty == false else {
+        guard !name.isEmpty else {
             Utils.alert(title: "CannotSave".localize(), message: "FillInName.".localize(), controller: self, completion: nil)
             return false
         }
@@ -398,27 +364,22 @@ class PasswordEditorTableViewController: UITableViewController {
 // MARK: - FillPasswordTableViewCellDelegate
 
 extension PasswordEditorTableViewController: FillPasswordTableViewCellDelegate {
-    // generate password, copy to pasteboard, and set the cell
-    // check whether the current password looks like an OTP field
     func generateAndCopyPassword() {
-        if let currentPassword = fillPasswordCell?.getContent(), Constants.isOtpRelated(line: currentPassword) {
-            let alert = UIAlertController(title: "Overwrite?".localize(), message: "OverwriteOtpConfiguration?".localize(), preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(
-                UIAlertAction(title: "Yes".localize(), style: UIAlertAction.Style.destructive) { _ in
-                    self.generateAndCopyPasswordNoOtpCheck()
-                }
-            )
-            alert.addAction(UIAlertAction.cancel())
-            present(alert, animated: true, completion: nil)
-        } else {
-            generateAndCopyPasswordNoOtpCheck()
-        }
+        showPasswordSettings()
+        setPassword(passwordGenerator.generate())
     }
 
-    // show/hide password settings (e.g., the length slider)
     func showHidePasswordSettings() {
-        hidePasswordSettings.toggle()
-        tableView.reloadSections([passwordSection], with: .fade)
+        guard let section = sections.firstIndex(of: .password) else {
+            return
+        }
+        showsGeneratorSettings.toggle()
+        let indexPaths = [IndexPath(row: 1, section: section)]
+        if showsGeneratorSettings {
+            tableView.insertRows(at: indexPaths, with: .fade)
+        } else {
+            tableView.deleteRows(at: indexPaths, with: .fade)
+        }
     }
 }
 
@@ -437,7 +398,7 @@ extension PasswordEditorTableViewController: QRScannerControllerDelegate {
     }
 
     func handleScannedOutput(line: String) {
-        insertScannedOTPFields(line)
+        insertScannedOTPField(line)
     }
 }
 
@@ -454,10 +415,7 @@ extension PasswordEditorTableViewController: SFSafariViewControllerDelegate {
             alert.setValue(message, forKey: "attributedMessage")
             alert.addAction(
                 UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { [unowned self] _ in
-                    // update tableData so to make sure reloadData() works correctly
-                    tableData[passwordSection][0][PasswordEditorCellKey.content] = generatedPassword
-                    // update cell manually, no need to call reloadData()
-                    fillPasswordCell?.setContent(content: generatedPassword)
+                    setPassword(generatedPassword)
                 }
             )
             alert.addAction(UIAlertAction.cancel())
@@ -469,20 +427,8 @@ extension PasswordEditorTableViewController: SFSafariViewControllerDelegate {
 // MARK: - UITextFieldDelegate
 
 extension PasswordEditorTableViewController: UITextFieldDelegate {
-    // update tableData so to make sure reloadData() works correctly
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField == nameCell?.contentTextField {
-            tableData[nameSection][0][PasswordEditorCellKey.content] = nameCell?.getContent()
-        } else if textField == fillPasswordCell?.contentTextField {
-            if let plainPassword = fillPasswordCell?.getContent() {
-                tableData[passwordSection][0][PasswordEditorCellKey.content] = plainPassword
-            }
-        }
-    }
-
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == fillPasswordCell?.contentTextField {
-            // show password generation settings automatically
             showPasswordSettings()
         }
     }
@@ -491,10 +437,12 @@ extension PasswordEditorTableViewController: UITextFieldDelegate {
 // MARK: - UITextViewDelegate
 
 extension PasswordEditorTableViewController: UITextViewDelegate {
-    // update tableData so to make sure reloadData() works correctly
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView == additionsCell?.contentTextView {
-            tableData[additionsSection][0][PasswordEditorCellKey.content] = additionsCell?.getContent()
+    func textViewDidChange(_ textView: UITextView) {
+        body = textView.text
+        // Grow the cell with its content.
+        UIView.performWithoutAnimation {
+            tableView.beginUpdates()
+            tableView.endUpdates()
         }
     }
 }

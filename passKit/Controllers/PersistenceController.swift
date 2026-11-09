@@ -55,13 +55,8 @@ public class PersistenceController {
             return
         }
         do {
-            if #available(iOS 15.0, *) {
-                let storeType: NSPersistentStore.StoreType = inMemoryStore ? .inMemory : .sqlite
-                try coordinator.destroyPersistentStore(at: storeURL, type: storeType)
-            } else {
-                let storeType: String = inMemoryStore ? NSInMemoryStoreType : NSSQLiteStoreType
-                try coordinator.destroyPersistentStore(at: storeURL, ofType: storeType)
-            }
+            let storeType: NSPersistentStore.StoreType = inMemoryStore ? .inMemory : .sqlite
+            try coordinator.destroyPersistentStore(at: storeURL, type: storeType)
         } catch {
             fatalError("Failed to destroy persistent store: \(error)")
         }

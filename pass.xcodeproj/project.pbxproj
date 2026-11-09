@@ -11,14 +11,13 @@
 		3010CB6026DA4F87008964D2 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 3010CB5F26DA4F87008964D2 /* SwiftyUserDefaults */; };
 		3010CB6326DA4FE9008964D2 /* FavIcon in Frameworks */ = {isa = PBXBuildFile; productRef = 3010CB6226DA4FE9008964D2 /* FavIcon */; };
 		3010CB6626DA500F008964D2 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 3010CB6526DA500F008964D2 /* KeychainAccess */; };
-		301F6463216162550071A4CE /* AdditionField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F6462216162550071A4CE /* AdditionField.swift */; };
-		301F6468216165290071A4CE /* ConstantsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F6467216165290071A4CE /* ConstantsTest.swift */; };
-		301F646D216166AA0071A4CE /* AdditionFieldTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F646C216166AA0071A4CE /* AdditionFieldTest.swift */; };
+		301F6463216162550071A4CE /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F6462216162550071A4CE /* Field.swift */; };
 		302269B323E634B000F843A3 /* PGPKeyFIleImportTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302269B223E634B000F843A3 /* PGPKeyFIleImportTableViewController.swift */; };
 		302B2C9822C2BDE700D831EE /* AppKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302B2C9722C2BDE700D831EE /* AppKeychain.swift */; };
+		DCCD95C08455E2C2C3EC3BFD /* CredentialIdentities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DA94F80142BE6AF087C7E4 /* CredentialIdentities.swift */; };
 		8A7150122F60000100C7A64D /* ObjectiveCExceptionCatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A7150102F60000100C7A64D /* ObjectiveCExceptionCatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A7150132F60000100C7A64D /* ObjectiveCExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7150112F60000100C7A64D /* ObjectiveCExceptionCatcher.m */; };
-		302E85612125ECC70031BA64 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302E85602125ECC70031BA64 /* Parser.swift */; };
+		302E85612125ECC70031BA64 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302E85602125ECC70031BA64 /* Entry.swift */; };
 		302E85632125EE550031BA64 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302E85622125EE550031BA64 /* Constants.swift */; };
 		3032327422C7F710009EBD9C /* KeyFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3032327322C7F710009EBD9C /* KeyFileManager.swift */; };
 		3032328A22C9FBA2009EBD9C /* KeyFileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3032328922C9FBA2009EBD9C /* KeyFileManagerTest.swift */; };
@@ -36,7 +35,6 @@
 		30697C2A21F63C5A0064FCAC /* NotificationNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2321F63C580064FCAC /* NotificationNames.swift */; };
 		30697C2B21F63C5A0064FCAC /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2421F63C590064FCAC /* Globals.swift */; };
 		30697C2C21F63C5A0064FCAC /* FileManagerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2521F63C590064FCAC /* FileManagerExtension.swift */; };
-		30697C2D21F63C5A0064FCAC /* PasswordGeneratorFlavor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2621F63C590064FCAC /* PasswordGeneratorFlavor.swift */; };
 		30697C2E21F63C5A0064FCAC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2721F63C590064FCAC /* Utils.swift */; };
 		30697C2F21F63C5A0064FCAC /* DefaultsKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2821F63C590064FCAC /* DefaultsKeys.swift */; };
 		30697C3021F63C5A0064FCAC /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C2921F63C590064FCAC /* AppError.swift */; };
@@ -57,20 +55,15 @@
 		30697C5321F63E0B0064FCAC /* PasscodeExtensionDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C5121F63E0B0064FCAC /* PasscodeExtensionDisplay.swift */; };
 		30697C5421F63E0B0064FCAC /* CredentialProviderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C5221F63E0B0064FCAC /* CredentialProviderViewController.swift */; };
 		30697C5F21F674800064FCAC /* String+UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30697C5E21F674800064FCAC /* String+UtilitiesTest.swift */; };
-		306D970E24091CDD006C0E2E /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306D970D24091CDD006C0E2E /* SwitchTableViewCell.swift */; };
-		306D971224091EE7006C0E2E /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 306D971124091EE7006C0E2E /* SwitchTableViewCell.xib */; };
 		3087574F2343E42A00B971A2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3087574E2343E42A00B971A2 /* Colors.swift */; };
 		308800C324EDA5F600E87ED3 /* QRKeyScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308800C224EDA5F600E87ED3 /* QRKeyScanner.swift */; };
 		308800C724EDC08D00E87ED3 /* ScannableKeyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308800C624EDC08D00E87ED3 /* ScannableKeyType.swift */; };
 		308800CF24F04E9900E87ED3 /* ScannableKeyTypeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308800CE24F04E9900E87ED3 /* ScannableKeyTypeTest.swift */; };
 		308800D124F0596300E87ED3 /* QRKeyScannerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 308800D024F0596300E87ED3 /* QRKeyScannerTest.swift */; };
 		308C273A2279F9CB0016D0E2 /* SearchBarScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302202EE222F14E400555236 /* SearchBarScope.swift */; };
-		30A1D29C21AF451E00E2D1F7 /* PasswordGeneratorFlavorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D29B21AF451E00E2D1F7 /* PasswordGeneratorFlavorTest.swift */; };
-		30A1D2A221B2BC6F00E2D1F7 /* TokenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D2A121B2BC6F00E2D1F7 /* TokenBuilder.swift */; };
 		30A1D2A621B2D46100E2D1F7 /* OTPType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D2A521B2D46100E2D1F7 /* OTPType.swift */; };
 		30A1D2A821B2D53200E2D1F7 /* PasswordChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D2A721B2D53200E2D1F7 /* PasswordChange.swift */; };
 		30A1D2AA21B32A0100E2D1F7 /* OTPTypeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D2A921B32A0100E2D1F7 /* OTPTypeTest.swift */; };
-		30A1D2AC21B32C2A00E2D1F7 /* TokenBuilderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A1D2AB21B32C2A00E2D1F7 /* TokenBuilderTest.swift */; };
 		30A3001426DA6692002A734E /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 30A3001326DA6692002A734E /* KeychainAccess */; };
 		30A3001626DA6697002A734E /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 30A3001526DA6697002A734E /* SwiftyUserDefaults */; };
 		30A3001826DA6974002A734E /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 30A3001726DA6974002A734E /* SwiftyUserDefaults */; };
@@ -103,7 +96,7 @@
 		30EE3A14241AE6EC009FBB61 /* SyncRepositoryIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A69968240EF52E00B7D967 /* SyncRepositoryIntentHandler.swift */; };
 		30EE3A16241E98C1009FBB61 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 30EE3A19241E98C1009FBB61 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (no_codegen, ); }; };
 		30EE3A17241E98C1009FBB61 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 30EE3A19241E98C1009FBB61 /* Intents.intentdefinition */; settings = {ATTRIBUTES = (codegen, ); }; };
-		30FD2F78214D9E0E005E0A92 /* ParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FD2F77214D9E0E005E0A92 /* ParserTest.swift */; };
+		30FD2F78214D9E0E005E0A92 /* EntryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30FD2F77214D9E0E005E0A92 /* EntryTest.swift */; };
 		556EC3D322335C5F00934F9C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30BF5ECA21EA8FB5000E4154 /* Localizable.strings */; };
 		556EC3D422335C5F00934F9C /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 30BF5ED521ED2434000E4154 /* Localizable.stringsdict */; };
 		556EC3D522335CD900934F9C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30BF5ECA21EA8FB5000E4154 /* Localizable.strings */; };
@@ -195,9 +188,9 @@
 		DC037CC01E4ED4E100609409 /* TextViewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC037CBE1E4ED4E100609409 /* TextViewTableViewCell.xib */; };
 		DC0F7692283C00220042DA74 /* passKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A26075781EEC6F34005DB03E /* passKit.framework */; };
 		DC193FFA1E49B4430077E0A3 /* AdvancedSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC193FF91E49B4430077E0A3 /* AdvancedSettingsTableViewController.swift */; };
-		DC30F83829BED4E2001EB12B /* PasswordGeneratorUISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC30F83729BED4E2001EB12B /* PasswordGeneratorUISwitch.swift */; };
 		DC30F83A29BED611001EB12B /* PasswordGeneratorUISlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC30F83929BED611001EB12B /* PasswordGeneratorUISlider.swift */; };
 		DC3E64E61E656F11009A83DE /* CommitLogsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3E64E51E656F11009A83DE /* CommitLogsTableViewController.swift */; };
+		DD8990E8F1136FB0AE07405A /* FieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */; };
 		DC4914961E434301007FF592 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4914941E434301007FF592 /* LabelTableViewCell.swift */; };
 		DC4914991E434600007FF592 /* PasswordDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4914981E434600007FF592 /* PasswordDetailTableViewController.swift */; };
 		DC5F385B1E56AADB00C69ACA /* PGPKeyArmorImportTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5F385A1E56AADB00C69ACA /* PGPKeyArmorImportTableViewController.swift */; };
@@ -340,15 +333,14 @@
 
 /* Begin PBXFileReference section */
 		300713C42219D54100F553AC /* AutoCellHeightUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCellHeightUITableViewController.swift; sourceTree = "<group>"; };
-		301F6462216162550071A4CE /* AdditionField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionField.swift; sourceTree = "<group>"; };
-		301F6467216165290071A4CE /* ConstantsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantsTest.swift; sourceTree = "<group>"; };
-		301F646C216166AA0071A4CE /* AdditionFieldTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionFieldTest.swift; sourceTree = "<group>"; };
+		301F6462216162550071A4CE /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		302202EE222F14E400555236 /* SearchBarScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarScope.swift; sourceTree = "<group>"; };
 		302269B223E634B000F843A3 /* PGPKeyFIleImportTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PGPKeyFIleImportTableViewController.swift; sourceTree = "<group>"; };
 		302B2C9722C2BDE700D831EE /* AppKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKeychain.swift; sourceTree = "<group>"; };
+		33DA94F80142BE6AF087C7E4 /* CredentialIdentities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialIdentities.swift; sourceTree = "<group>"; };
 		8A7150102F60000100C7A64D /* ObjectiveCExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectiveCExceptionCatcher.h; sourceTree = "<group>"; };
 		8A7150112F60000100C7A64D /* ObjectiveCExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCExceptionCatcher.m; sourceTree = "<group>"; };
-		302E85602125ECC70031BA64 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		302E85602125ECC70031BA64 /* Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		302E85622125EE550031BA64 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3032327322C7F710009EBD9C /* KeyFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFileManager.swift; sourceTree = "<group>"; };
 		3032328922C9FBA2009EBD9C /* KeyFileManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyFileManagerTest.swift; sourceTree = "<group>"; };
@@ -363,7 +355,6 @@
 		30697C2321F63C580064FCAC /* NotificationNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationNames.swift; sourceTree = "<group>"; };
 		30697C2421F63C590064FCAC /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		30697C2521F63C590064FCAC /* FileManagerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManagerExtension.swift; sourceTree = "<group>"; };
-		30697C2621F63C590064FCAC /* PasswordGeneratorFlavor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorFlavor.swift; sourceTree = "<group>"; };
 		30697C2721F63C590064FCAC /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		30697C2821F63C590064FCAC /* DefaultsKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultsKeys.swift; sourceTree = "<group>"; };
 		30697C2921F63C590064FCAC /* AppError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
@@ -384,19 +375,14 @@
 		30697C5121F63E0B0064FCAC /* PasscodeExtensionDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeExtensionDisplay.swift; sourceTree = "<group>"; };
 		30697C5221F63E0B0064FCAC /* CredentialProviderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialProviderViewController.swift; sourceTree = "<group>"; };
 		30697C5E21F674800064FCAC /* String+UtilitiesTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+UtilitiesTest.swift"; sourceTree = "<group>"; };
-		306D970D24091CDD006C0E2E /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
-		306D971124091EE7006C0E2E /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		3087574E2343E42A00B971A2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		308800C224EDA5F600E87ED3 /* QRKeyScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRKeyScanner.swift; sourceTree = "<group>"; };
 		308800C624EDC08D00E87ED3 /* ScannableKeyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannableKeyType.swift; sourceTree = "<group>"; };
 		308800CE24F04E9900E87ED3 /* ScannableKeyTypeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannableKeyTypeTest.swift; sourceTree = "<group>"; };
 		308800D024F0596300E87ED3 /* QRKeyScannerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRKeyScannerTest.swift; sourceTree = "<group>"; };
-		30A1D29B21AF451E00E2D1F7 /* PasswordGeneratorFlavorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorFlavorTest.swift; sourceTree = "<group>"; };
-		30A1D2A121B2BC6F00E2D1F7 /* TokenBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBuilder.swift; sourceTree = "<group>"; };
 		30A1D2A521B2D46100E2D1F7 /* OTPType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTPType.swift; sourceTree = "<group>"; };
 		30A1D2A721B2D53200E2D1F7 /* PasswordChange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordChange.swift; sourceTree = "<group>"; };
 		30A1D2A921B32A0100E2D1F7 /* OTPTypeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTPTypeTest.swift; sourceTree = "<group>"; };
-		30A1D2AB21B32C2A00E2D1F7 /* TokenBuilderTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBuilderTest.swift; sourceTree = "<group>"; };
 		30A69945240EED5E00B7D967 /* passShortcuts.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = passShortcuts.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		30A69947240EED5E00B7D967 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		30A69949240EED5E00B7D967 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -429,7 +415,7 @@
 		30EE3A18241E98C1009FBB61 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = en; path = en.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
 		30EE3A1B241E98C6009FBB61 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Intents.strings; sourceTree = "<group>"; };
 		30F6C1B327664C7200BE5AB2 /* SVProgressHUD.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SVProgressHUD.xcframework; path = Carthage/Build/SVProgressHUD.xcframework; sourceTree = "<group>"; };
-		30FD2F77214D9E0E005E0A92 /* ParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserTest.swift; sourceTree = "<group>"; };
+		30FD2F77214D9E0E005E0A92 /* EntryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTest.swift; sourceTree = "<group>"; };
 		5F9D7B0C27AF6F7300A8AB22 /* CryptoTokenKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CryptoTokenKit.framework; path = System/Library/Frameworks/CryptoTokenKit.framework; sourceTree = SDKROOT; };
 		8A4716682F5EF56900C7A64D /* AppKeychainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKeychainTest.swift; sourceTree = "<group>"; };
 		8A47166F2F5EF7A900C7A64D /* PersistenceControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTest.swift; sourceTree = "<group>"; };
@@ -501,13 +487,13 @@
 		DC13B1521E8640810097803F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC193FF91E49B4430077E0A3 /* AdvancedSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AdvancedSettingsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DC30F83629BAFD2E001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
-		DC30F83729BED4E2001EB12B /* PasswordGeneratorUISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorUISwitch.swift; sourceTree = "<group>"; };
 		DC30F83929BED611001EB12B /* PasswordGeneratorUISlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorUISlider.swift; sourceTree = "<group>"; };
 		DC30F93729C63856001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Intents.strings; sourceTree = "<group>"; };
 		DC30F93829C6385F001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = it; path = it.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DC30F93929C6386E001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC30F93A29C63875001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		DC3E64E51E656F11009A83DE /* CommitLogsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommitLogsTableViewController.swift; sourceTree = "<group>"; };
+		B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldTableViewCell.swift; sourceTree = "<group>"; };
 		DC4914941E434301007FF592 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
 		DC4914981E434600007FF592 /* PasswordDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordDetailTableViewController.swift; sourceTree = "<group>"; };
 		DC5F385A1E56AADB00C69ACA /* PGPKeyArmorImportTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PGPKeyArmorImportTableViewController.swift; sourceTree = "<group>"; };
@@ -648,7 +634,6 @@
 			isa = PBXGroup;
 			children = (
 				30B4C7B924084AAA008B86F7 /* PasswordGenerator.swift */,
-				30697C2621F63C590064FCAC /* PasswordGeneratorFlavor.swift */,
 			);
 			path = Passwords;
 			sourceTree = "<group>";
@@ -695,7 +680,6 @@
 		30B4C7BB24085A3C008B86F7 /* Passwords */ = {
 			isa = PBXGroup;
 			children = (
-				30A1D29B21AF451E00E2D1F7 /* PasswordGeneratorFlavorTest.swift */,
 				306623322406F1A7000E2AD6 /* PasswordGeneratorTest.swift */,
 			);
 			path = Passwords;
@@ -731,12 +715,11 @@
 		30C015A3214ECF2B005BB6DF /* Parser */ = {
 			isa = PBXGroup;
 			children = (
-				301F6462216162550071A4CE /* AdditionField.swift */,
+				301F6462216162550071A4CE /* Field.swift */,
 				302E85622125EE550031BA64 /* Constants.swift */,
 				30A1D2A521B2D46100E2D1F7 /* OTPType.swift */,
-				302E85602125ECC70031BA64 /* Parser.swift */,
+				302E85602125ECC70031BA64 /* Entry.swift */,
 				30A1D2A721B2D53200E2D1F7 /* PasswordChange.swift */,
-				30A1D2A121B2BC6F00E2D1F7 /* TokenBuilder.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -744,11 +727,8 @@
 		30C015A6214ED32A005BB6DF /* Parser */ = {
 			isa = PBXGroup;
 			children = (
-				301F646C216166AA0071A4CE /* AdditionFieldTest.swift */,
-				301F6467216165290071A4CE /* ConstantsTest.swift */,
 				30A1D2A921B32A0100E2D1F7 /* OTPTypeTest.swift */,
-				30FD2F77214D9E0E005E0A92 /* ParserTest.swift */,
-				30A1D2AB21B32C2A00E2D1F7 /* TokenBuilderTest.swift */,
+				30FD2F77214D9E0E005E0A92 /* EntryTest.swift */,
 			);
 			path = Parser;
 			sourceTree = "<group>";
@@ -973,6 +953,7 @@
 				9A2C7D8A2784139200BD9AF3 /* YubiKeyAPDU.swift */,
 				30697C2921F63C590064FCAC /* AppError.swift */,
 				302B2C9722C2BDE700D831EE /* AppKeychain.swift */,
+				33DA94F80142BE6AF087C7E4 /* CredentialIdentities.swift */,
 				3087574E2343E42A00B971A2 /* Colors.swift */,
 				3032328D22CBD4CD009EBD9C /* CryptographicKeys.swift */,
 				30697C2821F63C590064FCAC /* DefaultsKeys.swift */,
@@ -1051,15 +1032,13 @@
 				9A8F9EE1259EDD520027CE15 /* PasswordTableViewCell.swift */,
 				DCFB779C1E4F40C7008DE471 /* FillPasswordTableViewCell.swift */,
 				DCFB779D1E4F40C7008DE471 /* FillPasswordTableViewCell.xib */,
+				B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */,
 				DC4914941E434301007FF592 /* LabelTableViewCell.swift */,
 				DCDDEAAF1E4639F300F68193 /* LabelTableViewCell.xib */,
 				DCDDEAB11E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift */,
 				DCFB77A21E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib */,
 				A2802BF71E70813A00879216 /* SliderTableViewCell.swift */,
 				A2802BF81E70813A00879216 /* SliderTableViewCell.xib */,
-				306D970D24091CDD006C0E2E /* SwitchTableViewCell.swift */,
-				306D971124091EE7006C0E2E /* SwitchTableViewCell.xib */,
-				DC30F83729BED4E2001EB12B /* PasswordGeneratorUISwitch.swift */,
 				DC30F83929BED611001EB12B /* PasswordGeneratorUISlider.swift */,
 				DC037CB91E4DD47B00609409 /* TextFieldTableViewCell.swift */,
 				DC037CBA1E4DD47B00609409 /* TextFieldTableViewCell.xib */,
@@ -1516,7 +1495,6 @@
 				A2802BFA1E70813A00879216 /* SliderTableViewCell.xib in Resources */,
 				DCFB779F1E4F40C7008DE471 /* FillPasswordTableViewCell.xib in Resources */,
 				DC037CC01E4ED4E100609409 /* TextViewTableViewCell.xib in Resources */,
-				306D971224091EE7006C0E2E /* SwitchTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1613,29 +1591,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				30A1D2A221B2BC6F00E2D1F7 /* TokenBuilder.swift in Sources */,
 				8A7150132F60000100C7A64D /* ObjectiveCExceptionCatcher.m in Sources */,
 				30697C3C21F63C990064FCAC /* UITextFieldExtension.swift in Sources */,
 				302E85632125EE550031BA64 /* Constants.swift in Sources */,
 				9A652414244BB33300DA0A41 /* UIAlertActionExtension.swift in Sources */,
 				9A2C7D842783FF5200BD9AF3 /* YubiKeyConnection.swift in Sources */,
-				301F6463216162550071A4CE /* AdditionField.swift in Sources */,
+				301F6463216162550071A4CE /* Field.swift in Sources */,
 				30697C3021F63C5A0064FCAC /* AppError.swift in Sources */,
 				30697C2B21F63C5A0064FCAC /* Globals.swift in Sources */,
 				30697C4821F63CAB0064FCAC /* PasswordStore.swift in Sources */,
 				A26075AD1EEC7125005DB03E /* pass.xcdatamodeld in Sources */,
-				30697C2D21F63C5A0064FCAC /* PasswordGeneratorFlavor.swift in Sources */,
 				308C273A2279F9CB0016D0E2 /* SearchBarScope.swift in Sources */,
 				DC7CBBBF2D0FAC92003BB4D2 /* YKFSmartCardInterfaceExtension.swift in Sources */,
 				30697C2F21F63C5A0064FCAC /* DefaultsKeys.swift in Sources */,
 				30A1D2A821B2D53200E2D1F7 /* PasswordChange.swift in Sources */,
 				30697C3E21F63C990064FCAC /* String+Utilities.swift in Sources */,
 				302B2C9822C2BDE700D831EE /* AppKeychain.swift in Sources */,
+				DCCD95C08455E2C2C3EC3BFD /* CredentialIdentities.swift in Sources */,
 				3032327422C7F710009EBD9C /* KeyFileManager.swift in Sources */,
 				30CCA90B2325119C0048CA51 /* Data+Mutable.swift in Sources */,
 				A2AA934422DE30DD00D79A00 /* PGPAgent.swift in Sources */,
 				30697C3B21F63C990064FCAC /* String+Localization.swift in Sources */,
-				302E85612125ECC70031BA64 /* Parser.swift in Sources */,
+				302E85612125ECC70031BA64 /* Entry.swift in Sources */,
 				30B331772704DBEE00D64A99 /* NotificationCenterDispatcher.swift in Sources */,
 				30CCA91A232591320048CA51 /* ObjectivePGPInterface.swift in Sources */,
 				30697C4621F63CAB0064FCAC /* GitCredential.swift in Sources */,
@@ -1671,15 +1648,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				30A86F95230F237000F821A4 /* CryptoFrameworkTest.swift in Sources */,
-				30A1D2AC21B32C2A00E2D1F7 /* TokenBuilderTest.swift in Sources */,
 				30DAFD4C240985E3002456E7 /* Array+SlicesTest.swift in Sources */,
 				8A4716712F5EF7A900C7A64D /* PersistenceControllerTest.swift in Sources */,
-				301F646D216166AA0071A4CE /* AdditionFieldTest.swift in Sources */,
 				9ADC954124418A5F0005402E /* PasswordStoreTest.swift in Sources */,
 				30BAC8CB22E3BB6C00438475 /* DictBasedKeychain.swift in Sources */,
 				DC6474612D46A8F8004B4BBC /* GitRepositoryTest.swift in Sources */,
 				A2699ACF24027D9500F36323 /* PasswordTableEntryTest.swift in Sources */,
-				30FD2F78214D9E0E005E0A92 /* ParserTest.swift in Sources */,
+				30FD2F78214D9E0E005E0A92 /* EntryTest.swift in Sources */,
 				A2AA934622DE3A8000D79A00 /* PGPAgentTest.swift in Sources */,
 				8A4716692F5EF56900C7A64D /* AppKeychainTest.swift in Sources */,
 				30695E2524FAEF2600C9D46E /* GitCredentialTest.swift in Sources */,
@@ -1692,9 +1667,7 @@
 				8A4756A32F6374CC00131B6D /* PersistenceController+UnitTestHelpers.swift in Sources */,
 				30BAC8C722E3BAAF00438475 /* TestPGPKeys.swift in Sources */,
 				30A1D2AA21B32A0100E2D1F7 /* OTPTypeTest.swift in Sources */,
-				301F6468216165290071A4CE /* ConstantsTest.swift in Sources */,
 				DC64745D2D29BEA9004B4BBC /* CoreDataTestCase.swift in Sources */,
-				30A1D29C21AF451E00E2D1F7 /* PasswordGeneratorFlavorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1731,10 +1704,8 @@
 				30EE3A16241E98C1009FBB61 /* Intents.intentdefinition in Sources */,
 				DC037CBF1E4ED4E100609409 /* TextViewTableViewCell.swift in Sources */,
 				DCC441541E916382008A90C4 /* SSHKeyArmorImportTableViewController.swift in Sources */,
-				306D970E24091CDD006C0E2E /* SwitchTableViewCell.swift in Sources */,
 				A2A61C201EEFABAD00CFE063 /* UtilsExtension.swift in Sources */,
 				DC8963C01E38EEB900828B09 /* SSHKeyURLImportTableViewController.swift in Sources */,
-				DC30F83829BED4E2001EB12B /* PasswordGeneratorUISwitch.swift in Sources */,
 				9AFC87F025B514AD008D6060 /* PasswordDecryptor.swift in Sources */,
 				3066AD6823EE0D6500F65535 /* PGPKeyImporter.swift in Sources */,
 				9AFC87E225B3B5C6008D6060 /* PasswordNavigationDataSource.swift in Sources */,
@@ -1743,6 +1714,7 @@
 				9AFC880025B51EC3008D6060 /* PasswordEncryptor.swift in Sources */,
 				DCA0499C1E3362F400522E8F /* PGPKeyURLImportTableViewController.swift in Sources */,
 				DC30F83A29BED611001EB12B /* PasswordGeneratorUISlider.swift in Sources */,
+				DD8990E8F1136FB0AE07405A /* FieldTableViewCell.swift in Sources */,
 				DC4914961E434301007FF592 /* LabelTableViewCell.swift in Sources */,
 				DC5F385B1E56AADB00C69ACA /* PGPKeyArmorImportTableViewController.swift in Sources */,
 				DCAAF7451E2FA66800AB94BC /* SettingsTableViewController.swift in Sources */,
@@ -1939,7 +1911,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passShortcuts/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1975,7 +1947,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passShortcuts/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2043,7 +2015,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MARKETING_VERSION = 0.19.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -2075,7 +2047,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pass/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2105,7 +2077,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2137,7 +2109,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2176,7 +2148,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = "$(MARKETING_VERSION)";
@@ -2205,7 +2177,7 @@
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKitTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2239,7 +2211,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passAutoFillExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2276,7 +2248,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passShortcuts/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2312,7 +2284,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passAutoFillExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2349,7 +2321,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passAutoFillExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2385,7 +2357,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = "$(MARKETING_VERSION)";
@@ -2423,7 +2395,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MARKETING_VERSION = "$(MARKETING_VERSION)";
@@ -2451,7 +2423,7 @@
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKitTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2475,7 +2447,7 @@
 				CURRENT_PROJECT_VERSION = "$(CURRENT_PROJECT_VERSION)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passKitTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2506,7 +2478,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2542,7 +2514,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2572,7 +2544,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2597,7 +2569,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = passTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2669,7 +2641,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MARKETING_VERSION = 0.19.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -2737,7 +2709,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MARKETING_VERSION = 0.19.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -2768,7 +2740,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pass/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2801,7 +2773,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pass/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -14,7 +14,7 @@ import SVProgressHUD
 import UIKit
 import YubiKit
 
-class PasswordDetailTableViewController: UITableViewController, UIGestureRecognizerDelegate, AlertPresenting {
+class PasswordDetailTableViewController: UITableViewController, UIGestureRecognizerDelegate, UIEditMenuInteractionDelegate, AlertPresenting {
     var passwordEntity: PasswordEntity? {
         didSet {
             passwordPath = passwordEntity?.path
@@ -31,11 +31,12 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
     private var passwordPath: String?
 
     private lazy var editUIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(pressEdit))
+    private lazy var editMenuInteraction = UIEditMenuInteraction(delegate: self)
 
     private struct TableSection {
         var type: PasswordDetailTableViewControllerSectionType
         var header: String?
-        var item: [AdditionField] = []
+        var item: [LabelTableViewCellData] = []
 
         init(type: PasswordDetailTableViewControllerSectionType, header: String? = nil) {
             self.type = type
@@ -60,12 +61,10 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         tapGesture.cancelsTouchesInView = false
         tableView.addGestureRecognizer(tapGesture)
         tapGesture.delegate = self
+        tableView.addInteraction(editMenuInteraction)
 
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 52
-        let adjustForTabbarInsets = UIEdgeInsets(top: 0, left: 0, bottom: tabBarController!.tabBar.frame.height, right: 0)
-        tableView.contentInset = adjustForTabbarInsets
-        tableView.scrollIndicatorInsets = adjustForTabbarInsets
 
         editUIBarButtonItem.isEnabled = false
         navigationItem.rightBarButtonItem = editUIBarButtonItem
@@ -179,7 +178,7 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
             switch otpType {
             case .totp:
                 if let (title, otp) = strongSelf.password?.getOtpStrings() {
-                    strongSelf.tableData[indexPath.section].item[indexPath.row] = title => otp
+                    strongSelf.tableData[indexPath.section].item[indexPath.row] = LabelTableViewCellData(title: title, content: otp)
                     cell.cellData?.title = title
                     cell.cellData?.content = otp
                 }
@@ -250,50 +249,53 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
 
     private func setTableData() {
         tableData = [TableSection]()
+        oneTimePasswordIndexPath = nil
+        let password = password!
 
         // name section
         var section = TableSection(type: .name)
-        section.item.append(AdditionField())
+        section.item.append(LabelTableViewCellData(title: "", content: ""))
         tableData.append(section)
 
         // main section
         section = TableSection(type: .main)
-        let password = password!
-        if let username = password.username {
-            section.item.append(Constants.USERNAME_KEYWORD => username)
-        }
         if let user = password.user {
-            section.item.append(Constants.USER_KEYWORD => user)
+            section.item.append(LabelTableViewCellData(title: Constants.USER_KEYWORD, content: user))
         }
-        if let login = password.login {
-            section.item.append(Constants.LOGIN_KEYWORD => login)
+        if !password.password.isEmpty {
+            let title = password.entry.isBodyPrimary ? Constants.BODY_KEYWORD : Constants.PASSWORD_KEYWORD
+            section.item.append(LabelTableViewCellData(title: title, content: password.password, isSecret: true))
         }
-        section.item.append(Constants.PASSWORD_KEYWORD => password.password)
-        tableData.append(section)
-
-        // addition section
-
-        // show one time password
-        if password.otpType != .none {
-            if let (title, otp) = self.password?.getOtpStrings() {
-                section = TableSection(type: .addition, header: "OneTimePassword".localize())
-                section.item.append(title => otp)
-                tableData.append(section)
-                oneTimePasswordIndexPath = IndexPath(row: 0, section: tableData.count - 1)
-            }
+        if !section.item.isEmpty {
+            tableData.append(section)
         }
 
-        // show additional information
-        let filteredAdditionKeys = password.getFilteredAdditions()
-        if !filteredAdditionKeys.isEmpty {
-            section = TableSection(type: .addition, header: "Additions".localize())
-            section.item.append(contentsOf: filteredAdditionKeys)
+        // one time password
+        if password.otpType != .none, let (title, otp) = password.getOtpStrings() {
+            section = TableSection(type: .addition, header: "OneTimePassword".localize())
+            section.item.append(LabelTableViewCellData(title: title, content: otp))
+            tableData.append(section)
+            oneTimePasswordIndexPath = IndexPath(row: 0, section: tableData.count - 1)
+        }
+
+        // other fields
+        let fields = password.additionalFields
+        if !fields.isEmpty {
+            section = TableSection(type: .addition, header: "Fields".localize())
+            section.item = fields.map { LabelTableViewCellData(title: $0.key, content: $0.value, isSecret: $0.isSecret) }
+            tableData.append(section)
+        }
+
+        // notes
+        if let notes = password.notes {
+            section = TableSection(type: .addition, header: "Notes".localize())
+            section.item.append(LabelTableViewCellData(title: "", content: notes))
             tableData.append(section)
         }
 
         // misc section
         section = TableSection(type: .misc)
-        section.item.append(AdditionField(title: "ShowRaw".localize()))
+        section.item.append(LabelTableViewCellData(title: "ShowRaw".localize(), content: ""))
         tableData.append(section)
     }
 
@@ -345,21 +347,28 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
 
     @objc
     private func tapMenu(recognizer: UITapGestureRecognizer) {
-        if recognizer.state == UIGestureRecognizer.State.ended {
-            let tapLocation = recognizer.location(in: tableView)
-            if let tapIndexPath = tableView.indexPathForRow(at: tapLocation) {
-                if let tappedCell = tableView.cellForRow(at: tapIndexPath) as? LabelTableViewCell {
-                    tappedCell.becomeFirstResponder()
-                    let menuController = UIMenuController.shared
-                    let revealItem = UIMenuItem(title: "Reveal".localize(), action: #selector(LabelTableViewCell.revealPassword))
-                    let concealItem = UIMenuItem(title: "Conceal".localize(), action: #selector(LabelTableViewCell.concealPassword))
-                    let nextHOTPItem = UIMenuItem(title: "NextPassword".localize(), action: #selector(LabelTableViewCell.getNextHOTP))
-                    let openURLItem = UIMenuItem(title: "CopyAndOpen".localize(), action: #selector(LabelTableViewCell.openLink))
-                    menuController.menuItems = [revealItem, concealItem, nextHOTPItem, openURLItem]
-                    menuController.showMenu(from: tappedCell.contentLabel.superview!, rect: tappedCell.contentLabel.frame)
-                }
-            }
+        guard recognizer.state == .ended else {
+            return
         }
+        let tapLocation = recognizer.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: tapLocation), tableView.cellForRow(at: indexPath) is LabelTableViewCell else {
+            return
+        }
+        editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: tapLocation))
+    }
+
+    func editMenuInteraction(_: UIEditMenuInteraction, menuFor configuration: UIEditMenuConfiguration, suggestedActions _: [UIMenuElement]) -> UIMenu? {
+        guard let indexPath = configuration.identifier as? IndexPath, let cell = tableView.cellForRow(at: indexPath) as? LabelTableViewCell else {
+            return nil
+        }
+        return UIMenu(children: cell.menuActions())
+    }
+
+    func editMenuInteraction(_: UIEditMenuInteraction, targetRectFor configuration: UIEditMenuConfiguration) -> CGRect {
+        guard let indexPath = configuration.identifier as? IndexPath, let cell = tableView.cellForRow(at: indexPath) as? LabelTableViewCell else {
+            return .null
+        }
+        return cell.contentLabel.convert(cell.contentLabel.bounds, to: tableView)
     }
 
     func gestureRecognizer(_: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -454,82 +463,27 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
             return cell
         case .addition, .main:
             let cell = tableView.dequeueReusableCell(withIdentifier: "labelCell", for: indexPath) as! LabelTableViewCell
-            let titleData = tableDataItem.title
-            let contentData = tableDataItem.content
             cell.delegatePasswordTableView = self
-            cell.cellData = LabelTableViewCellData(title: titleData, content: contentData)
+            cell.cellData = tableDataItem
             cell.selectionStyle = .none
             return cell
         case .misc:
             let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
             cell.textLabel?.text = tableDataItem.title
             cell.selectionStyle = .default
-            addHiddenFieldInformation(to: cell)
             return cell
         }
-    }
-
-    private func addHiddenFieldInformation(to cell: UITableViewCell) {
-        guard password != nil, let detailTextLabel = cell.detailTextLabel else {
-            return
-        }
-
-        var numberOfHiddenFields = 0
-        numberOfHiddenFields += Defaults.isHideUnknownOn ? password!.numberOfUnknowns : 0
-        numberOfHiddenFields += Defaults.isHideOTPOn ? password!.numberOfOtpRelated : 0
-        guard numberOfHiddenFields > 0 else {
-            return
-        }
-
-        detailTextLabel.textAlignment = .center
-        detailTextLabel.textColor = .gray
-        detailTextLabel.text = "HiddenFields(%d)".localize(numberOfHiddenFields)
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
         tableData[section].header
     }
 
-    override func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if tableData[section].header != nil {
-            return 30
+    override func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
+        guard section == tableData.count - 1, let password else {
+            return nil
         }
-        return UITableView.automaticDimension
-    }
-
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if section == tableData.count - 1 {
-            let view = UIView()
-            let footerLabel = UILabel(frame: CGRect(x: 15, y: 15, width: tableView.frame.width, height: 60))
-            footerLabel.numberOfLines = 0
-            footerLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
-            footerLabel.textColor = UIColor.gray
-            let dateString = passwordStore.getLatestUpdateInfo(path: password!.path)
-            footerLabel.text = "LastUpdated".localize(dateString)
-            view.addSubview(footerLabel)
-            return view
-        }
-        return nil
-    }
-
-    override func tableView(_: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender _: Any?) {
-        if action == #selector(copy(_:)) {
-            SecurePasteboard.shared.copy(textToCopy: tableData[indexPath.section].item[indexPath.row].content)
-        }
-    }
-
-    override func tableView(_: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender _: Any?) -> Bool {
-        let section = tableData[indexPath.section]
-        switch section.type {
-        case .addition, .main:
-            return action == #selector(UIResponderStandardEditActions.copy)
-        default:
-            return false
-        }
-    }
-
-    override func tableView(_: UITableView, shouldShowMenuForRowAt _: IndexPath) -> Bool {
-        true
+        return "LastUpdated".localize(passwordStore.getLatestUpdateInfo(path: password.path))
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

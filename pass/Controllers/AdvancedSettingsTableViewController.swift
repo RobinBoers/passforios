@@ -6,7 +6,6 @@
 //  Copyright © 2017 Bob Sun. All rights reserved.
 //
 
-import AuthenticationServices
 import passKit
 import SVProgressHUD
 import UIKit
@@ -21,7 +20,6 @@ class AdvancedSettingsTableViewController: UITableViewController {
 
     private lazy var encryptInASCIIArmoredSwitch: UISwitch = {
         let uiSwitch = UISwitch()
-        uiSwitch.onTintColor = Colors.systemBlue
         uiSwitch.sizeToFit()
         uiSwitch.addTarget(self, action: #selector(encryptInASCIIArmoredAction), for: UIControl.Event.valueChanged)
         return uiSwitch
@@ -79,7 +77,7 @@ class AdvancedSettingsTableViewController: UITableViewController {
             alert.addAction(UIAlertAction.dismiss())
             present(alert, animated: true, completion: nil)
         } else if tableView.cellForRow(at: indexPath) == clearSuggestionsTableViewCell {
-            ASCredentialIdentityStore.shared.removeAllCredentialIdentities { _, error in
+            CredentialIdentities.removeAll { error in
                 if let error {
                     SVProgressHUD.showError(withStatus: "FailedToClearQuickTypeSuggestions".localize(error))
                     SVProgressHUD.dismiss(withDelay: 1)

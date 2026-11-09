@@ -19,315 +19,106 @@ final class PasswordTest: XCTestCase {
     }
 
     func testEmptyFile() {
-        [
-            "",
-            "\n",
-        ].forEach { fileContent in
+        ["", "\n"].forEach { fileContent in
             let password = getPasswordObjectWith(content: fileContent)
 
             XCTAssertEqual(password.password, "")
             XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-            XCTAssertEqual(password.additionsPlainText, "")
-            XCTAssert(password.getFilteredAdditions().isEmpty)
-            XCTAssertEqual(password.numberOfUnknowns, 0)
-
-            XCTAssertNil(password.username)
+            XCTAssert(password.additionalFields.isEmpty)
             XCTAssertNil(password.user)
             XCTAssertNil(password.urlString)
-            XCTAssertNil(password.login)
-
-            XCTAssertEqual(password.numberOfOtpRelated, 0)
+            XCTAssertNil(password.notes)
+            XCTAssertEqual(password.otpType, .none)
         }
     }
 
-    func testEmptyPassword() {
-        let fileContent = "\n\(LOGIN_FIELD.asString)"
-        let password = getPasswordObjectWith(content: fileContent)
-
-        assertDefaults(in: password, with: "", and: LOGIN_FIELD.asString)
-
-        XCTAssert(LOGIN_FIELD ∉ password)
-
-        XCTAssertNil(password.username)
-        XCTAssertNil(password.urlString)
-        XCTAssertEqual(password.login, LOGIN_FIELD.content)
-    }
-
-    func testSimplePasswordFile() {
-        let additions = SECURE_URL_FIELD | LOGIN_FIELD | USERNAME_FIELD | USER_FIELD | NOTE_FIELD
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
-
-        assertDefaults(in: password, with: PASSWORD_STRING, and: additions)
-
-        XCTAssert(SECURE_URL_FIELD ∈ password)
-        XCTAssert(LOGIN_FIELD ∉ password)
-        XCTAssert(USERNAME_FIELD ∉ password)
-        XCTAssert(USER_FIELD ∉ password)
-        XCTAssert(NOTE_FIELD ∈ password)
-
-        XCTAssertEqual(password.urlString, SECURE_URL_FIELD.content)
-        XCTAssertEqual(password.login, LOGIN_FIELD.content)
-        XCTAssertEqual(password.username, USERNAME_FIELD.content)
-        XCTAssertEqual(password.user, USER_FIELD.content)
-    }
-
-    func testTwoPasswords() {
-        let additions = "efgh5678" | INSECURE_URL_FIELD
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testWebEntry() {
+        let password = getPasswordObjectWith(content: "proto: web\nuser: me\npass!: \(PASSWORD_STRING)\nurl: https://secure.com\n\nsome notes\n")
 
         XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-        XCTAssertEqual(password.numberOfUnknowns, 1)
-
-        XCTAssert(INSECURE_URL_FIELD ∈ password)
-        XCTAssert(Constants.unknown(1) => "efgh5678" ∈ password)
-
-        XCTAssertNil(password.username)
-        XCTAssertEqual(password.urlString, INSECURE_URL_FIELD.content)
-        XCTAssertNil(password.login)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 0)
+        XCTAssertEqual(password.user, "me")
+        XCTAssertEqual(password.urlString, "https://secure.com")
+        XCTAssertEqual(password.notes, "some notes")
+        XCTAssertEqual(password.additionalFields, [
+            Field(key: "proto", value: "web"),
+            Field(key: "url", value: "https://secure.com"),
+        ])
+        XCTAssertEqual(password.getUsernameForCompletion(), "me")
     }
 
-    func testNoPassword() {
-        let fileContent = SECURE_URL_FIELD | NOTE_FIELD
-        let password = getPasswordObjectWith(content: fileContent)
+    func testSSHEntryUsesBodyAsPrimary() {
+        let password = getPasswordObjectWith(content: "proto: ssh\npub: ssh-ed25519 AAAA\npass!: passphrase\n\nprivate key\n")
 
-        assertDefaults(in: password, with: SECURE_URL_FIELD.asString, and: NOTE_FIELD.asString)
-
-        XCTAssert(NOTE_FIELD ∈ password)
-
-        XCTAssertNil(password.username)
-        XCTAssertNil(password.urlString)
-        XCTAssertNil(password.login)
+        XCTAssertEqual(password.password, "private key")
+        XCTAssertNil(password.notes)
+        XCTAssertEqual(password.additionalFields, [
+            Field(key: "proto", value: "ssh"),
+            Field(key: "pub", value: "ssh-ed25519 AAAA"),
+            Field(key: "pass", value: "passphrase", isSecret: true),
+        ])
     }
 
-    func testDuplicateKeys() {
-        let additions = SECURE_URL_FIELD | INSECURE_URL_FIELD
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testMalformedEntryBecomesBody() {
+        let password = getPasswordObjectWith(content: "\(PASSWORD_STRING)\nlogin: me")
 
-        assertDefaults(in: password, with: PASSWORD_STRING, and: additions)
-
-        XCTAssert(SECURE_URL_FIELD ∈ password)
-        XCTAssert(INSECURE_URL_FIELD ∈ password)
-
-        XCTAssertNil(password.username)
-        XCTAssertEqual(password.urlString, SECURE_URL_FIELD.content)
-        XCTAssertNil(password.login)
+        XCTAssertEqual(password.password, "")
+        XCTAssertEqual(password.notes, "\(PASSWORD_STRING)\nlogin: me")
+        XCTAssert(password.additionalFields.isEmpty)
     }
 
-    func testUnknownKeys() {
-        let value1 = "value 1"
-        let value2 = "value 2"
-        let value3 = "value 3"
-        let value4 = "value 4"
-        let additions = value1 | NOTE_FIELD | value2 | value3 | SECURE_URL_FIELD | value4
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testUsernameFallsBackToName() {
+        let password = getPasswordObjectWith(content: "pass!: x", path: "web/example.com.gpg")
 
-        XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-        XCTAssertEqual(password.numberOfUnknowns, 4)
-
-        XCTAssert(Constants.unknown(1) => value1 ∈ password)
-        XCTAssert(NOTE_FIELD ∈ password)
-        XCTAssert(Constants.unknown(2) => value2 ∈ password)
-        XCTAssert(Constants.unknown(3) => value3 ∈ password)
-        XCTAssert(SECURE_URL_FIELD ∈ password)
-        XCTAssert(Constants.unknown(4) => value4 ∈ password)
-
-        XCTAssertNil(password.username)
-        XCTAssertEqual(password.urlString, SECURE_URL_FIELD.content)
-        XCTAssertNil(password.login)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 0)
+        XCTAssertEqual(password.getUsernameForCompletion(), "example.com")
     }
 
-    func testPasswordFileWithOtpToken() {
-        let additions = NOTE_FIELD | TOTP_URL
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testTOTP() {
+        let password = getPasswordObjectWith(content: "pass!: x\notp!: \(TOTP_URL)")
 
-        XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-        XCTAssertEqual(password.numberOfUnknowns, 0)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 1)
         XCTAssertEqual(password.otpType, .totp)
         XCTAssertNotNil(password.currentOtp)
+        XCTAssert(password.additionalFields.isEmpty)
     }
 
-    func testFirstLineIsOtpToken() {
-        let password = getPasswordObjectWith(content: TOTP_URL)
+    func testSteamTOTP() {
+        let password = getPasswordObjectWith(content: "otp!: \(STEAM_TOTP_URL)")
 
-        XCTAssertEqual(password.password, TOTP_URL)
-        XCTAssertEqual(password.plainData, TOTP_URL.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, "")
-        XCTAssertEqual(password.numberOfUnknowns, 0)
-
-        XCTAssertNil(password.username)
-        XCTAssertNil(password.urlString)
-        XCTAssertNil(password.login)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 0)
         XCTAssertEqual(password.otpType, .totp)
-        XCTAssertNotNil(password.currentOtp)
+        XCTAssertEqual(password.currentOtp?.count, 5)
     }
 
-    func testOtpTokenAsField() {
-        let additions = TOTP_URL_FIELD.asString
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testInvalidOtpauth() {
+        let password = getPasswordObjectWith(content: "otp!: otpauth://totp/no-secret")
 
-        XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-        XCTAssertEqual(password.numberOfUnknowns, 0)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 1)
-        XCTAssertEqual(password.otpType, .totp)
-        XCTAssertNotNil(password.currentOtp)
-    }
-
-    func testOtpTokenFromFields() {
-        let additions =
-            Constants.OTP_SECRET => "secret" |
-            Constants.OTP_TYPE => "hotp" |
-            Constants.OTP_COUNTER => "12" |
-            Constants.OTP_DIGITS => "7"
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
-
-        XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-        XCTAssertEqual(password.numberOfUnknowns, 0)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 4)
-        XCTAssertEqual(password.otpType, .hotp)
-        XCTAssertNotNil(password.currentOtp)
-    }
-
-    func testWrongOtpToken() {
-        let fileContent = "otpauth://htop/blabla"
-        let password = getPasswordObjectWith(content: fileContent)
-
-        XCTAssertEqual(password.password, fileContent)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssert(password.additionsPlainText.isEmpty)
-        XCTAssertEqual(password.numberOfUnknowns, 0)
-
-        XCTAssertEqual(password.numberOfOtpRelated, 0)
-        XCTAssertEqual(password.otpType, OTPType.none)
+        XCTAssertEqual(password.otpType, .none)
         XCTAssertNil(password.currentOtp)
     }
 
-    func testEmptyMultilineValues() {
-        let additions = MULTILINE_BLOCK_START | "\n" | MULTILINE_BLOCK_START | " \n" | NOTE_FIELD | MULTILINE_LINE_START
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
+    func testNextHOTPUpdatesFieldInPlace() {
+        let password = getPasswordObjectWith(content: "user: me\notp!: \(HOTP_URL)\npass!: x\n\nnotes\n")
 
-        assertDefaults(in: password, with: PASSWORD_STRING, and: additions)
-
-        XCTAssert(MULTILINE_BLOCK_START.title => "" ∈ password)
-        XCTAssert(MULTILINE_BLOCK_START.title => "" ∈ password)
-        XCTAssert(NOTE_FIELD ∈ password)
-        XCTAssert(MULTILINE_LINE_START.title => "" ∈ password)
-    }
-
-    func testUsernameInPath() {
-        let password = getPasswordObjectWith(content: "", path: "exampleservice/exampleusername.pgp")
-
-        XCTAssertEqual(password.nameFromPath, "exampleusername")
-    }
-
-    func testMultilineValues() {
-        let lineBreakField = "with line breaks" => "|\n  This is \n   text spread over \n  multiple lines!  "
-        let noLineBreakField = "without line breaks" => " > \n This is \n  text spread over\n   multiple lines!"
-        let additions = lineBreakField | NOTE_FIELD | noLineBreakField
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
-
-        assertDefaults(in: password, with: PASSWORD_STRING, and: additions)
-
-        XCTAssert(lineBreakField.title => "This is \n text spread over \nmultiple lines!" ∈ password)
-        XCTAssert(NOTE_FIELD ∈ password)
-        XCTAssert(noLineBreakField.title => "This is   text spread over   multiple lines!" ∈ password)
-    }
-
-    func testMultilineValuesMixed() {
-        let lineBreakField = "with line breaks" => "|\n  This is \n  \(HINT_FIELD.asString) spread over\n multiple lines!"
-        let noLineBreakField = "without line breaks" => " > \n This is \n | \n text spread over\nmultiple lines!"
-        let additions = lineBreakField | noLineBreakField | NOTE_FIELD
-        let fileContent = PASSWORD_STRING | additions
-        let password = getPasswordObjectWith(content: fileContent)
-
-        XCTAssertEqual(password.password, PASSWORD_STRING)
-        XCTAssertEqual(password.plainData, fileContent.data(using: .utf8))
-        XCTAssertEqual(password.additionsPlainText, additions)
-
-        XCTAssert(lineBreakField.title => "This is \n\(HINT_FIELD.asString) spread over" ∈ password)
-        XCTAssert(Constants.unknown(1) => " multiple lines!" ∈ password)
-        XCTAssert(noLineBreakField.title => "This is  |  text spread over" ∈ password)
-        XCTAssert(Constants.unknown(2) => "multiple lines!" ∈ password)
-        XCTAssert(NOTE_FIELD ∈ password)
+        XCTAssertEqual(password.otpType, .hotp)
+        XCTAssertNotNil(password.getNextHotp())
+        XCTAssertNotEqual(password.changed, 0)
+        XCTAssertEqual(password.entry.fields.map(\.key), ["user", "otp", "pass"])
+        XCTAssert(password.entry.fields[1].value.contains("counter=1"))
+        XCTAssertEqual(password.notes, "notes")
     }
 
     func testUpdatePassword() {
-        let password = getPasswordObjectWith(content: "")
-        XCTAssertEqual(password.changed, 0)
+        let password = getPasswordObjectWith(content: "pass!: old")
 
-        password.updatePassword(name: "password", path: PASSWORD_PATH, plainText: "")
-        XCTAssertEqual(password.changed, 0)
+        password.updatePassword(name: "password", path: PASSWORD_PATH, plainText: "pass!: new\n")
 
-        password.updatePassword(name: "", path: PASSWORD_PATH, plainText: "a")
-        XCTAssertEqual(password.changed, 2)
-
-        password.updatePassword(name: "", path: "/some/path/", plainText: "a")
-        XCTAssertEqual(password.changed, 3)
-
-        password.updatePassword(name: "", path: PASSWORD_PATH, plainText: "")
-        XCTAssertEqual(password.changed, 3)
+        XCTAssertEqual(password.password, "new")
+        XCTAssertEqual(password.changed, PasswordChange.content.rawValue)
     }
 
-    func testOtpStringsNoOtpToken() {
-        let password = getPasswordObjectWith(content: "")
-        let otpStrings = password.getOtpStrings()
+    func testInitFromEntry() {
+        let entry = Entry(fields: [Field(key: "pass", value: "x", isSecret: true)])
+        let password = Password(name: "password", path: PASSWORD_PATH, entry: entry)
 
-        XCTAssertNil(otpStrings)
-    }
-
-    func testOtpStringsTotpToken() {
-        let password = getPasswordObjectWith(content: TOTP_URL)
-        let otpStrings = password.getOtpStrings()
-        let otpDescription = otpStrings!.description
-
-        XCTAssertNotNil(otpStrings)
-        XCTAssert(otpDescription.hasPrefix("TimeBased".localize() + " ("))
-        XCTAssert(otpDescription.hasSuffix(")"))
-    }
-
-    func testOtpStringsHotpToken() {
-        let password = getPasswordObjectWith(content: HOTP_URL)
-        let otpStrings = password.getOtpStrings()
-
-        XCTAssertNotNil(otpStrings)
-        XCTAssertEqual(otpStrings!.description, "HmacBased".localize())
-    }
-
-    func testSteamOtpStringsToken() {
-        let password = getPasswordObjectWith(content: STEAM_TOTP_URL)
-        let otpStrings = password.getOtpStrings()
-        let otpDescription = otpStrings!.description
-
-        XCTAssertNotNil(otpStrings)
-        XCTAssert(otpDescription.hasPrefix("TimeBased".localize() + " ("))
-        XCTAssert(otpDescription.hasSuffix(")"))
+        XCTAssertEqual(password.plainText, "pass!: x\n")
+        XCTAssertEqual(password.entry, entry)
     }
 }

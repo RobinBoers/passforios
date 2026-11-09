@@ -45,21 +45,14 @@
 "NoProperPassRepo."                                 = "The repository does not contain a .gpg-id file. Please set it up properly by performing 'pass init'. Then try again to load it into the app.";
 
 // Settings
-"PasswordGeneratorFlavor"           = "Style";
 "RememberPgpKeyPassphrase"          = "Remember PGP Key Passphrase";
 "RememberGitCredentialPassphrase"   = "Remember Git Credential Passphrase";
 "EnableGPGID"                       = "Enable .gpg-id (Beta)";
 "ShowFolders"                       = "Show Folders";
 "HidePasswordImages"                = "Hide Password Images";
 "HidePasswordImagesExplanation."    = "Associated favicon images are loaded and shown based upon the URL associated with an entry. Enable this option to hide these images and prevent them from being loaded.";
-"HideUnknownFields"                 = "Hide Unknown Fields";
-"HideUnknownFieldsExplanation."     = "Only \"key: value\" format in additional fields is supported. Unsupported fields will be given \"unknown\" keys. Turn on this switch to hide unsupported fields.";
-"HideOtpFields"                     = "Hide OTP Fields";
-"HideOtpFieldsExplanation."         = "Turn on this switch to hide the fields related to one time passwords (i.e., %@).";
-"Random"                            = "Random";
 "RandomString"                      = "Random String";
 "ApplesKeychainStyle"               = "Apple's Keychain Style";
-"XKCD"                              = "XKCD";
 
 // Git
 "FailedToFetchPasswords"                = "Failed to fetch passwords";
@@ -247,7 +240,6 @@
 
 // Password view
 "Name"                          = "Name";
-"Additions"                     = "Additions";
 "Notice"                        = "Notice";
 "PreviousChangesDiscarded."     = "All previous local changes have been discarded. Your current Password Store will be shown.";
 "CannotShowPassword"            = "Cannot show password";
@@ -268,16 +260,20 @@
 "PasswordCopiedToPasteboard."   = "Password copied. We will clear the pasteboard in 45 seconds.";
 
 // Password editor
-"UseKeyValueFormat."                = "Use \"key: value\" format for additional fields.";
 "DeletePassword"                    = "Delete Password";
 "AddOneTimePassword"                = "Add One-Time Password";
+"Fields"                            = "Fields";
+"Notes"                             = "Notes";
+"AddField"                          = "Add Field";
+"Key"                               = "Key";
+"Value"                             = "Value";
+"Copy"                              = "Copy";
+"Secret"                            = "Secret";
+"NotSecret"                         = "Not Secret";
+"FieldsExplanation."                = "Tap the lock to mark a field as secret. Fields left empty are removed.";
+"InvalidField."                     = "The field \"%@\" is invalid. Keys may only contain letters, digits, \"_\", \".\" and \"-\", values cannot span multiple lines, and \"body\" and a second \"pass\" are not allowed.";
 "Length"                            = "Length";
-"VaryCases"                         = "Random Capitalization";
-"Digits"                            = "Digits";
-"SpecialSymbols"                    = "Special Symbols";
-"Groups"                            = "Arrange Into Groups";
 "DeletePassword?"                   = "Delete Password?";
-"OverwriteOtpConfiguration?"        = "Overwrite the one-time password configuration?";
 "ValidTokenUrl"                     = "Valid token URL";
 "InvalidTokenUrl"                   = "Invalid token URL";
 "FillInName."                       = "Please fill in the name.";

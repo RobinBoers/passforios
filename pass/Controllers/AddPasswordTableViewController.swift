@@ -14,7 +14,7 @@ class AddPasswordTableViewController: PasswordEditorTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableData[0][0][PasswordEditorCellKey.content] = defaultDirPrefix
+        name = defaultDirPrefix
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
@@ -27,8 +27,7 @@ class AddPasswordTableViewController: PasswordEditorTableViewController {
                 return false
             }
 
-            // check name
-            guard checkName() else {
+            guard validate() else {
                 return false
             }
         }
@@ -44,7 +43,7 @@ class AddPasswordTableViewController: PasswordEditorTableViewController {
         super.prepare(for: segue, sender: sender)
         if segue.identifier == "saveAddPasswordSegue" {
             let (name, path) = getNamePath()
-            password = Password(name: name, path: path, plainText: plainText)
+            password = Password(name: name, path: path, entry: entry)
         }
     }
 }

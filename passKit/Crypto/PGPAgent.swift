@@ -136,7 +136,7 @@ public class PGPAgent {
     }
 
     private func checkAndInit() throws {
-        if pgpInterface == nil || !keyStore.contains(key: Globals.pgpKeyPassphrase) {
+        if pgpInterface == nil {
             try initKeys()
         }
     }

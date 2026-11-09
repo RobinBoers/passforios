@@ -42,7 +42,7 @@ class SliderTableViewCell: UITableViewCell {
         return self
     }
 
-    func configureSlider(with configuration: LengthLimits) -> SliderTableViewCell {
+    func configureSlider(with configuration: (min: Int, max: Int)) -> SliderTableViewCell {
         slider.minimumValue = Float(configuration.min)
         slider.maximumValue = Float(configuration.max)
         return self

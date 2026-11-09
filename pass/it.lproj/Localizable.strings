@@ -44,21 +44,14 @@
 "NoProperPassRepo."                                 = "Il repository non contiene un file .gpg-id. Impostarlo correttamente eseguendo 'pass init', poi riprovare a caricarlo nell'app.";
 
 // Settings
-"PasswordGeneratorFlavor"           = "Stile";
 "RememberPgpKeyPassphrase"          = "Ricorda la password di PGP";
 "RememberGitCredentialPassphrase"   = "Ricorda la password di Git";
 "EnableGPGID"                       = "Attiva .gpg-id (Sperimentale)";
 "ShowFolders"                       = "Mostra cartelle";
 "HidePasswordImages"                = "Nascondi immagini password";
 "HidePasswordImagesExplanation."    = "Le immagini delle password sono caricate e mostrate in base all'URL associato. Attivando questa opzione tali icone non saranno caricate.";
-"HideUnknownFields"                 = "Nascondi campi sconosciuti";
-"HideUnknownFieldsExplanation."     = "È supportato solo il formato \"chiave: valore\" per i campi. Ai campi non supportati verrà assegnata la chiave \"Sconosciuto\". Attivando questa opzione non saranno mostrati i campi non supportati.";
-"HideOtpFields"                     = "Nascondi campi OTP";
-"HideOtpFieldsExplanation."         = "Attivando questa opzione saranno nascosti i campi relativi alle one time password (cioè %@).";
-"Random"                            = "Casuale";
 "RandomString"                      = "Stringa casuale";
 "ApplesKeychainStyle"               = "Stile Apple Keychain";
-"XKCD"                              = "XKCD";
 
 // Git
 "FailedToFetchPasswords"                = "Impossibile raccogliere le password";
@@ -242,7 +235,6 @@
 
 // Password view
 "Name"                          = "Nome";
-"Additions"                     = "Altro";
 "Notice"                        = "Avviso";
 "PreviousChangesDiscarded."     = "Tutte le modifiche precedenti sono state scartate. Verranno mostrate le password attuali.";
 "CannotShowPassword"            = "Impossibile mostrare la password";
@@ -263,16 +255,20 @@
 "PasswordCopiedToPasteboard."   = "Password copiata. Gli appunti saranno cancellati tra 45 secondi.";
 
 // Password editor
-"UseKeyValueFormat."                = "Usare il formato \"chiave: valore\" per gli altri campi.";
 "DeletePassword"                    = "Elimina password";
 "AddOneTimePassword"                = "Aggiungi one-time password";
+"Fields"                            = "Campi";
+"Notes"                             = "Note";
+"AddField"                          = "Aggiungi campo";
+"Key"                               = "Chiave";
+"Value"                             = "Valore";
+"Copy"                              = "Copia";
+"Secret"                            = "Segreto";
+"NotSecret"                         = "Non segreto";
+"FieldsExplanation."                = "Tocca il lucchetto per contrassegnare un campo come segreto. I campi vuoti vengono rimossi.";
+"InvalidField."                     = "Il campo \"%@\" non è valido. Le chiavi possono contenere solo lettere, cifre, \"_\", \".\" e \"-\", i valori non possono occupare più righe, e \"body\" e un secondo \"pass\" non sono consentiti.";
 "Length"                            = "Lunghezza";
-"VaryCases"                         = "Maiuscole casuali";
-"Digits"                            = "Cifre";
-"SpecialSymbols"                    = "Simboli speciali";
-"Groups"                            = "Organizza in gruppi";
 "DeletePassword?"                   = "Eliminare la password?";
-"OverwriteOtpConfiguration?"        = "Sovrascrivere la configurazione della one-time password?";
 "ValidTokenUrl"                     = "Token dell'URL valido";
 "InvalidTokenUrl"                   = "Token dell'URL non valido";
 "FillInName."                       = "Inserire il nome.";

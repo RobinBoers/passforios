@@ -129,7 +129,7 @@ public class PasswordStore {
             Defaults.lastSyncedTime = nil
             DispatchQueue.main.async {
                 self.deleteCoreData()
-                self.notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+                self.didUpdateStore()
             }
             throw (error)
         }
@@ -137,7 +137,7 @@ public class PasswordStore {
         DispatchQueue.main.async {
             self.deleteCoreData()
             self.initPasswordEntityCoreData()
-            self.notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+            self.didUpdateStore()
         }
     }
 
@@ -154,7 +154,7 @@ public class PasswordStore {
         DispatchQueue.main.async {
             self.deleteCoreData()
             self.initPasswordEntityCoreData()
-            self.notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+            self.didUpdateStore()
         }
     }
 
@@ -268,7 +268,7 @@ public class PasswordStore {
         try gitAdd(path: password.path)
         try gitCommit(message: "AddPassword.".localize(password.path))
         let newPasswordEntity = try addPasswordEntities(password: password)
-        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+        didUpdateStore()
         return newPasswordEntity
     }
 
@@ -285,7 +285,7 @@ public class PasswordStore {
         try deletePasswordEntities(passwordEntity: passwordEntity)
         try deleteDirectoryTree(at: deletedFileURL)
         try gitCommit(message: "RemovePassword.".localize(deletedFilePath))
-        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+        didUpdateStore()
     }
 
     public func edit(passwordEntity: PasswordEntity, password: Password, keyID: String? = nil) throws -> PasswordEntity? {
@@ -320,10 +320,16 @@ public class PasswordStore {
             let deletedFilePath = passwordEntity.path
             try deletePasswordEntities(passwordEntity: passwordEntity)
             try gitCommit(message: "RenamePassword.".localize(deletedFilePath, password.path))
+            CredentialIdentities.move(from: deletedFilePath, to: password.path)
         }
         saveUpdatedContext()
-        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+        didUpdateStore()
         return newPasswordEntity
+    }
+
+    private func didUpdateStore() {
+        CredentialIdentities.prune { fetchPasswordEntity(with: $0) != nil }
+        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
     }
 
     private func deletePasswordEntities(passwordEntity: PasswordEntity) throws {
@@ -351,7 +357,7 @@ public class PasswordStore {
         gitRepository = nil
 
         // Broadcast.
-        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+        didUpdateStore()
         notificationCenter.post(name: .passwordStoreErased, object: nil)
     }
 
@@ -380,7 +386,7 @@ public class PasswordStore {
         deleteCoreData()
         initPasswordEntityCoreData()
 
-        notificationCenter.post(name: .passwordStoreUpdated, object: nil)
+        didUpdateStore()
         notificationCenter.post(name: .passwordStoreChangeDiscarded, object: nil)
         return localCommitsCount
     }

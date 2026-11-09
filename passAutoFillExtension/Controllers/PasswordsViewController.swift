@@ -18,7 +18,6 @@ class PasswordsViewController: UIViewController {
 
     lazy var searchController: UISearchController = {
         let uiSearchController = UISearchController(searchResultsController: nil)
-        uiSearchController.searchBar.isTranslucent = true
         uiSearchController.obscuresBackgroundDuringPresentation = false
         uiSearchController.searchBar.sizeToFit()
         uiSearchController.searchBar.searchTextField.clearButtonMode = .whileEditing

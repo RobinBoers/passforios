@@ -38,7 +38,6 @@ class PasswordNavigationViewController: UIViewController {
 
     lazy var searchController: UISearchController = {
         let uiSearchController = UISearchController(searchResultsController: nil)
-        uiSearchController.searchBar.isTranslucent = true
         uiSearchController.obscuresBackgroundDuringPresentation = false
         uiSearchController.searchBar.sizeToFit()
         uiSearchController.searchBar.returnKeyType = .done
@@ -54,15 +53,7 @@ class PasswordNavigationViewController: UIViewController {
         return refreshControl
     }()
 
-    lazy var addPasswordUIBarButtonItem: UIBarButtonItem = {
-        var addPasswordUIBarButtonItem = UIBarButtonItem()
-        let addPasswordButton = UIButton(type: .system)
-        let plusImage = UIImage(systemName: "plus.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
-        addPasswordButton.setImage(plusImage, for: .normal)
-        addPasswordButton.addTarget(self, action: #selector(addPasswordAction), for: .touchDown)
-        addPasswordUIBarButtonItem.customView = addPasswordButton
-        return addPasswordUIBarButtonItem
-    }()
+    lazy var addPasswordUIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPasswordAction))
 
     lazy var gestureRecognizer: UILongPressGestureRecognizer = {
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
@@ -134,7 +125,6 @@ class PasswordNavigationViewController: UIViewController {
         tableView.addGestureRecognizer(gestureRecognizer)
         tableView.delegate = self
         tableView.layoutIfNeeded()
-        tableView.contentInset.top = 8
         let atribbutedTitle = "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)"
         refreshControl.attributedTitle = NSAttributedString(string: atribbutedTitle)
         tableView.refreshControl = refreshControl
@@ -155,10 +145,6 @@ class PasswordNavigationViewController: UIViewController {
         guard let tabBarItem = navigationController?.tabBarItem else {
             return
         }
-        if #available(iOS 15.0, *) {
-            tabBarItem.scrollEdgeAppearance = tabBarItem.standardAppearance
-        }
-
         let numberOfLocalCommits = PasswordStore.shared.numberOfLocalCommits
         if numberOfLocalCommits != 0 {
             tabBarItem.badgeValue = "\(numberOfLocalCommits)"

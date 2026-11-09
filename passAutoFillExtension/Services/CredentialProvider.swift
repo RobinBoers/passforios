@@ -33,24 +33,39 @@ class CredentialProvider {
         }
     }
 
+    /// Decrypts with the remembered passphrase only. Anything that needs the user, like a forgotten passphrase,
+    /// is handed back to the system, which then asks for the interface.
+    func credentialsWithoutUserInteraction(for identity: ASPasswordCredentialIdentity) {
+        guard let recordIdentifier = identity.recordIdentifier else {
+            cancel(with: .credentialIdentityNotFound)
+            return
+        }
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            let password = try? PasswordStore.shared.decrypt(path: recordIdentifier) { _ in "" }
+            DispatchQueue.main.async {
+                guard let password else {
+                    self.cancel(with: .userInteractionRequired)
+                    return
+                }
+                self.extensionContext.completeRequest(withSelectedCredential: .from(password))
+                self.afterDecryption(password)
+            }
+        }
+    }
+
     func persistAndProvideCredentials(with passwordPath: String) {
         decryptPassword(in: viewController, with: passwordPath) { password in
             if let identifier = self.identifier {
-                ASCredentialIdentityStore.shared.getState { state in
-                    guard state.isEnabled else {
-                        return
-                    }
-                    let credentialIdentity = ASPasswordCredentialIdentity(
-                        serviceIdentifier: identifier,
-                        user: password.getUsernameForCompletion(),
-                        recordIdentifier: passwordPath
-                    )
-                    ASCredentialIdentityStore.shared.saveCredentialIdentities([credentialIdentity])
-                }
+                CredentialIdentities.save(service: identifier, user: password.getUsernameForCompletion(), path: passwordPath)
             }
             self.extensionContext.completeRequest(withSelectedCredential: .from(password))
             self.afterDecryption(password)
         }
+    }
+
+    private func cancel(with code: ASExtensionError.Code) {
+        extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: code.rawValue))
     }
 }
 

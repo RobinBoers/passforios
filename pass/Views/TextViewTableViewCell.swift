@@ -15,6 +15,11 @@ class TextViewTableViewCell: UITableViewCell {
         super.awakeFromNib()
         contentTextView.textContainer.lineFragmentPadding = 0
         contentTextView.textContainerInset = .zero
+        contentTextView.isScrollEnabled = false
+        contentTextView.font = .preferredFont(forTextStyle: .body)
+        contentTextView.adjustsFontForContentSizeCategory = true
+        contentTextView.textColor = .label
+        contentTextView.backgroundColor = .clear
     }
 
     func getContent() -> String? {

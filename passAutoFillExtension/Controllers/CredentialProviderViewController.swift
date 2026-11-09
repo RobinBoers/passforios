@@ -50,18 +50,38 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
 
     override func provideCredentialWithoutUserInteraction(for credentialIdentity: ASPasswordCredentialIdentity) {
         credentialProvider.identifier = credentialIdentity.serviceIdentifier
-        if !PasscodeLock.shared.hasPasscode, Defaults.isRememberPGPPassphraseOn {
-            credentialProvider.credentials(for: credentialIdentity)
+        guard exists(credentialIdentity) else {
+            removeSuggestion(credentialIdentity)
+            extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.credentialIdentityNotFound.rawValue))
+            return
+        }
+        if !PasscodeLock.shared.hasPasscode, Defaults.isRememberPGPPassphraseOn, !Defaults.isYubiKeyEnabled {
+            credentialProvider.credentialsWithoutUserInteraction(for: credentialIdentity)
         } else {
             extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.userInteractionRequired.rawValue))
         }
     }
 
     override func prepareInterfaceToProvideCredential(for credentialIdentity: ASPasswordCredentialIdentity) {
+        guard exists(credentialIdentity) else {
+            removeSuggestion(credentialIdentity)
+            prepareCredentialList(for: [credentialIdentity.serviceIdentifier])
+            return
+        }
         passcodelock.presentPasscodeLockIfNeeded(self) {
             self.view.isHidden = true
         } after: { [unowned self] in
             credentialProvider.credentials(for: credentialIdentity)
+        }
+    }
+
+    private func exists(_ credentialIdentity: ASPasswordCredentialIdentity) -> Bool {
+        credentialIdentity.recordIdentifier.flatMap(PasswordStore.shared.fetchPasswordEntity(with:)) != nil
+    }
+
+    private func removeSuggestion(_ credentialIdentity: ASPasswordCredentialIdentity) {
+        if let path = credentialIdentity.recordIdentifier {
+            CredentialIdentities.remove(path: path)
         }
     }
 

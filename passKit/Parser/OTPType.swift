@@ -27,15 +27,4 @@ public enum OTPType: String {
             self = .none
         }
     }
-
-    init(name: String?) {
-        switch name?.lowercased() {
-        case Constants.HOTP:
-            self = .hotp
-        case Constants.TOTP:
-            self = .totp
-        default:
-            self = .none
-        }
-    }
 }

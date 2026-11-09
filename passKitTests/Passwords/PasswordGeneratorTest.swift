@@ -12,87 +12,36 @@ import XCTest
 
 final class PasswordGeneratorTest: XCTestCase {
     func testLimitedLength() {
-        [
-            PasswordGenerator(length: 15),
-            PasswordGenerator(length: -3),
-            PasswordGenerator(length: 128),
-        ].forEach { generator in
-            XCTAssertLessThanOrEqual(generator.limitedLength, generator.flavor.lengthLimits.max)
-            XCTAssertGreaterThanOrEqual(generator.limitedLength, generator.flavor.lengthLimits.min)
+        XCTAssertEqual(PasswordGenerator(length: 27).limitedLength, 27)
+        XCTAssertEqual(PasswordGenerator(length: -3).limitedLength, PasswordGenerator.lengthLimits.min)
+        XCTAssertEqual(PasswordGenerator(length: 128).limitedLength, PasswordGenerator.lengthLimits.max)
+    }
+
+    func testAppleStyleShape() {
+        (0 ..< 100).forEach { _ in
+            let password = PasswordGenerator().generate()
+
+            XCTAssertNotNil(password.wholeMatch(of: #/[a-z0-9]{6}(-[a-z0-9]{6}){3}/#.ignoresCase()), password)
         }
     }
 
-    func testAcceptableGroups() {
-        [
-            (15, 4),
-            (19, 4),
-            (9, 5),
-            (11, 6),
-            (259, 13),
-        ].forEach { length, groups in
-            XCTAssertTrue(PasswordGenerator(length: length).isAcceptable(groups: groups))
+    func testDashesNeverTrail() {
+        (PasswordGenerator.lengthLimits.min ... PasswordGenerator.lengthLimits.max).forEach { length in
+            let password = PasswordGenerator(length: length).generate()
+
+            XCTAssertEqual(password.count, length)
+            XCTAssertFalse(password.hasPrefix("-"), password)
+            XCTAssertFalse(password.hasSuffix("-"), password)
+            XCTAssertFalse(password.contains("--"), password)
         }
     }
 
-    func testNotAcceptableGroups() {
-        [
-            (15, 0),
-            (19, 20),
-            (9, 9),
-            (11, -1),
-        ].forEach { length, groups in
-            XCTAssertFalse(PasswordGenerator(length: length).isAcceptable(groups: groups))
+    func testContainsDigitAndUppercaseLetter() {
+        (0 ..< 100).forEach { _ in
+            let password = PasswordGenerator().generate()
+
+            XCTAssert(password.contains(where: \.isNumber), password)
+            XCTAssertEqual(password.filter(\.isUppercase).count, 1, password)
         }
-    }
-
-    func testGroupsAreNotAcceptableForXKCDStyle() {
-        var generator = PasswordGenerator(length: 15)
-
-        XCTAssertTrue(generator.isAcceptable(groups: 4))
-
-        generator.flavor = .xkcd
-        XCTAssertFalse(generator.isAcceptable(groups: 4))
-    }
-
-    func testRandomGroupsCount() {
-        [
-            PasswordGenerator(length: 15, groups: 4),
-            PasswordGenerator(length: 24, groups: 5),
-            PasswordGenerator(length: 63, groups: 8),
-        ].forEach { generator in
-            XCTAssertEqual(generator.generate().split(separator: "-").count, generator.groups)
-        }
-    }
-
-    func testXKCDWordsCount() {
-        [
-            PasswordGenerator(flavor: .xkcd, length: 4, useSpecialSymbols: false),
-            PasswordGenerator(flavor: .xkcd, length: 8, useSpecialSymbols: false),
-            PasswordGenerator(flavor: .xkcd, length: 1, useSpecialSymbols: false),
-        ].forEach { generator in
-            XCTAssertEqual(generator.generate().split { "0123456789".contains($0) }.count, generator.limitedLength)
-        }
-    }
-
-    func testRandomPasswordLength() {
-        [
-            PasswordGenerator(),
-            PasswordGenerator(groups: 1),
-            PasswordGenerator(length: 25),
-            PasswordGenerator(length: 47, groups: 12),
-            PasswordGenerator(useDigits: true),
-        ].forEach { generator in
-            XCTAssertEqual(generator.generate().count, generator.length)
-        }
-    }
-
-    func testXKCDPasswordGeneration() {
-        let typicalPassword = PasswordGenerator(flavor: .xkcd).generate()
-        XCTAssertFalse(typicalPassword.isEmpty)
-        XCTAssertFalse(typicalPassword.trimmingCharacters(in: .letters).isEmpty)
-
-        let passwordWithoutSeparators = PasswordGenerator(flavor: .xkcd, useDigits: false, useSpecialSymbols: false).generate()
-        XCTAssertFalse(passwordWithoutSeparators.isEmpty)
-        XCTAssertTrue(passwordWithoutSeparators.trimmingCharacters(in: .letters).isEmpty)
     }
 }

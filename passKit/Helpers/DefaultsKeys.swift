@@ -57,17 +57,17 @@ public extension DefaultsKeys {
 
     var lastSyncedTime: DefaultsKey<Date?> { DefaultsKey("lastSyncedTime") }
 
-    var isHideUnknownOn: DefaultsKey<Bool> { DefaultsKey("isHideUnknownOn", defaultValue: false) }
-    var isHideOTPOn: DefaultsKey<Bool> { DefaultsKey("isHideOTPOn", defaultValue: false) }
     var isRememberPGPPassphraseOn: DefaultsKey<Bool> { DefaultsKey("isRememberPGPPassphraseOn", defaultValue: false) }
     var isRememberGitCredentialPassphraseOn: DefaultsKey<Bool> { DefaultsKey("isRememberGitCredentialPassphraseOn", defaultValue: false) }
     var isEnableGPGIDOn: DefaultsKey<Bool> { DefaultsKey("isEnableGPGIDOn", defaultValue: false) }
     var isShowFolderOn: DefaultsKey<Bool> { DefaultsKey("isShowFolderOn", defaultValue: true) }
     var isHidePasswordImagesOn: DefaultsKey<Bool> { DefaultsKey("isHidePasswordImagesOn", defaultValue: false) }
     var searchDefault: DefaultsKey<SearchBarScope?> { DefaultsKey("searchDefault", defaultValue: .all) }
-    var passwordGenerator: DefaultsKey<PasswordGenerator> { DefaultsKey("passwordGenerator", defaultValue: PasswordGenerator()) }
+    var passwordGenerator: DefaultsKey<PasswordGenerator> { DefaultsKey("appleStylePasswordGenerator", defaultValue: PasswordGenerator()) }
 
     var encryptInArmored: DefaultsKey<Bool> { DefaultsKey("encryptInArmored", defaultValue: false) }
 
     var autoCopyOTP: DefaultsKey<Bool> { DefaultsKey("autoCopyOTP", defaultValue: false) }
+
+    var credentialIdentities: DefaultsKey<[SavedCredentialIdentity]> { DefaultsKey("credentialIdentities", defaultValue: []) }
 }

@@ -101,9 +101,7 @@ public class YubiKeyConnection: NSObject {
     }
 
     public func stop() {
-        if #available(iOSApplicationExtension 16.0, *) {
-            smartCardConnection?.stop()
-        }
+        smartCardConnection?.stop()
         accessoryConnection?.stop()
         nfcConnection?.stop()
         // stop() returns immediately but closing the connection will take a few cycles so we need to wait to make sure it's closed before restarting.
@@ -111,7 +109,7 @@ public class YubiKeyConnection: NSObject {
             if YubiKitDeviceCapabilities.supportsMFIAccessoryKey {
                 YubiKitManager.shared.startAccessoryConnection()
             }
-            if YubiKitDeviceCapabilities.supportsSmartCardOverUSBC, #available(iOSApplicationExtension 16.0, *) {
+            if YubiKitDeviceCapabilities.supportsSmartCardOverUSBC {
                 YubiKitManager.shared.startSmartCardConnection()
             }
         }

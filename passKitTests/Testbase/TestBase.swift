@@ -16,48 +16,6 @@ let TOTP_URL = "otpauth://totp/email@email.com?secret=abcd1234"
 let STEAM_TOTP_URL = "otpauth://totp/username?secret=12345678901234567890&issuer=Steam&algorithm=SHA1&digits=5&period=30&representation=steamguard"
 let HOTP_URL = "otpauth://hotp/email@email.com?secret=abcd1234"
 
-let FIELD = "key" => "value"
-let SECURE_URL_FIELD = "url" => "https://secure.com"
-let INSECURE_URL_FIELD = "url" => "http://insecure.com"
-let LOGIN_FIELD = "login" => "login name"
-let USERNAME_FIELD = "username" => "微 分 方 程"
-let USER_FIELD = "user" => "积 分 方 程"
-let NOTE_FIELD = "note" => "A NOTE"
-let HINT_FIELD = "some hints" => "äöüß // €³ %% −° && @²` | [{\\}],.<>"
-let TOTP_URL_FIELD = "otpauth" => "//totp/email@email.com?secret=abcd1234"
-
-let MULTILINE_BLOCK_START = "multiline block" => "|"
-let MULTILINE_LINE_START = "multiline line" => ">"
-
 func getPasswordObjectWith(content: String, path: String? = nil) -> Password {
     Password(name: "password", path: path ?? PASSWORD_PATH, plainText: content)
-}
-
-func assertDefaults(
-    in password: Password,
-    with passwordString: String,
-    and additions: String,
-    at file: StaticString = #file,
-    line: UInt = #line
-) {
-    let fileContent = (passwordString | additions).data(using: .utf8)
-    XCTAssertEqual(password.password, passwordString, "Actual passwords do not match.", file: file, line: line)
-    XCTAssertEqual(password.plainData, fileContent, "Plain data are not equal.", file: file, line: line)
-    XCTAssertEqual(password.additionsPlainText, additions, "Plain texts are not equal.", file: file, line: line)
-    XCTAssertEqual(password.numberOfUnknowns, 0, "Number of unknowns is not 0.", file: file, line: line)
-    XCTAssertEqual(password.numberOfOtpRelated, 0, "Number of OTP related fields is not 0.", file: file, line: line)
-    XCTAssertEqual(password.otpType, .none, "OTP type is not .none.", file: file, line: line)
-}
-
-infix operator ∈: AdditionPrecedence
-infix operator ∉: AdditionPrecedence
-
-extension AdditionField {
-    static func ∈ (field: AdditionField, password: Password) -> Bool { // swiftlint:disable:this identifier_name
-        password.getFilteredAdditions().contains(field)
-    }
-
-    static func ∉ (field: AdditionField, password: Password) -> Bool { // swiftlint:disable:this identifier_name
-        !(field ∈ password)
-    }
 }

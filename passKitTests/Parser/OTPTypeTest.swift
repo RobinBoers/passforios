@@ -26,19 +26,9 @@ final class OTPTypeTest: XCTestCase {
         XCTAssertEqual(OTPType(token: nil), .none)
     }
 
-    func testInitFromString() {
-        XCTAssertEqual(OTPType(name: "totp"), .totp)
-        XCTAssertEqual(OTPType(name: "tOtP"), .totp)
-        XCTAssertEqual(OTPType(name: "hotp"), .hotp)
-        XCTAssertEqual(OTPType(name: "HoTp"), .hotp)
-        XCTAssertEqual(OTPType(name: nil), .none)
-        XCTAssertEqual(OTPType(name: ""), .none)
-        XCTAssertEqual(OTPType(name: "something"), .none)
-    }
-
     func testDescription() {
-        XCTAssertEqual(OTPType(name: "totp").description, "TimeBased".localize())
-        XCTAssertEqual(OTPType(name: "hotp").description, "HmacBased".localize())
-        XCTAssertEqual(OTPType(name: nil).description, "None".localize())
+        XCTAssertEqual(OTPType.totp.description, "TimeBased".localize())
+        XCTAssertEqual(OTPType.hotp.description, "HmacBased".localize())
+        XCTAssertEqual(OTPType.none.description, "None".localize())
     }
 }

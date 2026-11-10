@@ -279,10 +279,10 @@
 "SendEmail" = "Send Email";
 "Call" = "Call";
 "ProtoCard" = "Credit Card";
-"ProtoImap" = "Incoming mail (IMAP)";
+"ProtoImap" = "Incoming Mail (IMAP)";
 "ProtoLicense" = "Software License";
 "ProtoPostgres" = "PostgreSQL";
-"ProtoSmtp" = "Outgoing mail (SMTP)";
+"ProtoSmtp" = "Outgoing Mail (SMTP)";
 "ProtoSsh" = "SSH Key";
 "ProtoWeb" = "Website";
 "ProtoWifi" = "WiFi";

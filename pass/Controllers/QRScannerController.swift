@@ -10,21 +10,18 @@ import AVFoundation
 import OneTimePassword
 import passKit
 import UIKit
-import VisionKit
 
 protocol QRScannerControllerDelegate: AnyObject {
     func checkScannedOutput(line: String) -> (accepted: Bool, message: String)
     func handleScannedOutput(line: String)
 }
 
-/// Scans QR codes with VisionKit where the device supports it, and with a capture session of its own elsewhere.
 class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     @IBOutlet var scannerOutput: UILabel!
 
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var qrCodeFrameView: UIView?
-    private var dataScanner: DataScannerViewController?
     private var hasStarted = false
     private var isDone = false
 
@@ -51,12 +48,12 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         hasStarted = true
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            startScanning()
+            startCaptureSession()
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
                 DispatchQueue.main.async {
                     if granted {
-                        self.startScanning()
+                        self.startCaptureSession()
                     } else {
                         self.presentCameraSettings()
                     }
@@ -64,37 +61,6 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
             }
         default:
             presentCameraSettings()
-        }
-    }
-
-    private func startScanning() {
-        if DataScannerViewController.isSupported, DataScannerViewController.isAvailable {
-            startDataScanner()
-        } else {
-            startCaptureSession()
-        }
-    }
-
-    private func startDataScanner() {
-        let scanner = DataScannerViewController(
-            recognizedDataTypes: [.barcode(symbologies: [.qr])],
-            qualityLevel: .balanced,
-            recognizesMultipleItems: false,
-            isHighFrameRateTrackingEnabled: true,
-            isGuidanceEnabled: true,
-            isHighlightingEnabled: true
-        )
-        scanner.delegate = self
-        addChild(scanner)
-        scanner.view.frame = view.bounds
-        scanner.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.insertSubview(scanner.view, at: 0)
-        scanner.didMove(toParent: self)
-        dataScanner = scanner
-        do {
-            try scanner.startScanning()
-        } catch {
-            scannerOutput.text = error.localizedDescription
         }
     }
 
@@ -169,7 +135,6 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         }
         isDone = true
         captureSession?.stopRunning()
-        dataScanner?.stopScanning()
         delegate?.handleScannedOutput(line: scanned)
         DispatchQueue.main.async {
             Feedback.success()
@@ -251,30 +216,5 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
             }
         )
         present(alertController, animated: true)
-    }
-}
-
-extension QRScannerController: DataScannerViewControllerDelegate {
-    func dataScanner(_: DataScannerViewController, didAdd addedItems: [RecognizedItem], allItems _: [RecognizedItem]) {
-        recognize(addedItems)
-    }
-
-    /// A code that changes in place, like the frames of an animated one, updates the item it was.
-    func dataScanner(_: DataScannerViewController, didUpdate updatedItems: [RecognizedItem], allItems _: [RecognizedItem]) {
-        recognize(updatedItems)
-    }
-
-    func dataScanner(_: DataScannerViewController, didRemove _: [RecognizedItem], allItems: [RecognizedItem]) {
-        if allItems.isEmpty {
-            setNotDetected()
-        }
-    }
-
-    private func recognize(_ items: [RecognizedItem]) {
-        for case let .barcode(barcode) in items {
-            if let payload = barcode.payloadStringValue {
-                handle(scanned: payload)
-            }
-        }
     }
 }

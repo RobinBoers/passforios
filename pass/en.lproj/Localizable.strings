@@ -193,7 +193,7 @@
 "ClearSavedSuggestions"   = "Clear Saved Suggestions";
 "Clone"                   = "Clone";
 "Email"                   = "Email";
-"GitSignature"            = "Commit Author";
+"GitSignature"            = "Signature";
 "GitURL"                  = "Git URL";
 "GitURLFormats."          = "https://host/repo.git\nssh://user@host:port/repo.git\nuser@host:repo.git";
 "Keys"                    = "Keys";

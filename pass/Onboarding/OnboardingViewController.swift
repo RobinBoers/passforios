@@ -30,7 +30,6 @@ final class OnboardingViewController: UIHostingController<AnyView>, PasswordAler
         super.init(rootView: AnyView(OnboardingView().environmentObject(model)))
         model.host = self
         modalPresentationStyle = passport == nil ? .fullScreen : .pageSheet
-        isModalInPresentation = true
     }
 
     @available(*, unavailable)

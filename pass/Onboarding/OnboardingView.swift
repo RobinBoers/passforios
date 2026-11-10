@@ -24,20 +24,11 @@ struct OnboardingView: View {
 private struct StepView: View {
     let step: OnboardingModel.Step
 
-    @EnvironmentObject private var model: OnboardingModel
-
     var body: some View {
         content
             .navigationBarTitleDisplayMode(.inline)
             // Going back from here would clone again.
             .navigationBarBackButtonHidden(step == .gpgPassphrase)
-            .toolbar {
-                if step != .welcome {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel", action: model.cancel)
-                    }
-                }
-            }
     }
 
     @ViewBuilder private var content: some View {

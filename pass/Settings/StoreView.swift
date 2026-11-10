@@ -23,8 +23,8 @@ struct StoreView: View {
     var body: some View {
         Form {
             infoSection
-            remoteSection
             signatureSection
+            remoteSection
             if model.hasStore {
                 dangerSection
             }

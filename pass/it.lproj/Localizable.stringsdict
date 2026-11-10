@@ -74,5 +74,23 @@
 			<string>%d tentativi errati</string>
 		</dict>
 	</dict>
+	<key>UnsyncedChanges(%d)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@changes@</string>
+		<key>changes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>zero</key>
+			<string>Nessuna modifica da sincronizzare.</string>
+			<key>one</key>
+			<string>Una modifica da sincronizzare.</string>
+			<key>other</key>
+			<string>%d modifiche da sincronizzare.</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

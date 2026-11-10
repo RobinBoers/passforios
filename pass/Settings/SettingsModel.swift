@@ -135,7 +135,9 @@ final class SettingsModel: ObservableObject {
     }
 
     func setUpFromComputer() {
-        host?.presentOnboarding()
+        host?.scanPassport { [weak host] passport in
+            host?.topmostPresentedViewController.present(OnboardingViewController(passport: passport) { _ in }, animated: true)
+        }
     }
 
     func sync() {
@@ -218,7 +220,7 @@ final class SettingsModel: ObservableObject {
 
     func erase() {
         PasswordStore.shared.erase()
-        Feedback.success()
         refresh()
+        host?.startOver()
     }
 }

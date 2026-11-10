@@ -9,9 +9,6 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject private var model: SettingsModel
 
-    @State private var isConfirmingDiscard = false
-    @State private var isConfirmingErase = false
-
     var body: some View {
         NavigationStack {
             Form {
@@ -26,7 +23,6 @@ struct SettingsView: View {
                         AboutView()
                     }
                 }
-                dangerSection
             }
             .navigationTitle("Settings")
             .toolbar {
@@ -56,6 +52,8 @@ struct SettingsView: View {
             } label: {
                 Label("SetUpFromComputer", systemImage: "qrcode.viewfinder")
             }
+        } footer: {
+            Text("SetUpFromComputer.")
         }
     }
 
@@ -82,32 +80,6 @@ struct SettingsView: View {
             Text("AutoFill")
         } footer: {
             Text("AutoCopyOTPExplanation.")
-        }
-    }
-
-    private var dangerSection: some View {
-        SwiftUI.Section {
-            Button("DiscardChanges", role: .destructive) {
-                isConfirmingDiscard = true
-            }
-            .disabled(model.storeInfo.localCommits == 0)
-            Button("EraseStore", role: .destructive) {
-                isConfirmingErase = true
-            }
-        }
-        .confirmationDialog("DiscardChanges?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
-            Button("DiscardChanges", role: .destructive) {
-                model.discardLocalChanges()
-            }
-        } message: {
-            Text("DiscardExplanation.")
-        }
-        .confirmationDialog("EraseStore?", isPresented: $isConfirmingErase, titleVisibility: .visible) {
-            Button("EraseStore", role: .destructive) {
-                model.erase()
-            }
-        } message: {
-            Text("EraseExplanation.")
         }
     }
 

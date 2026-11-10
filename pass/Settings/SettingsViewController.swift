@@ -51,6 +51,17 @@ final class SettingsViewController: UIHostingController<AnyView>, PasswordAlertP
         dismiss(animated: true)
     }
 
+    /// Sets up from the start, as after erasing there is nothing left to show.
+    func startOver() {
+        guard presentingViewController != nil, let root = view.window?.rootViewController else {
+            presentOnboarding()
+            return
+        }
+        dismiss(animated: true) {
+            root.presentOnboarding()
+        }
+    }
+
     func alert(title: String, message: String) {
         Utils.alert(title: title, message: message, controller: self)
     }

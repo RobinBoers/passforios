@@ -11,17 +11,29 @@ import UserNotifications
 @MainActor
 final class OnboardingModel: ObservableObject {
     enum Step {
-        case welcome, gitPassphrase, gpgPassphrase, autoFill, oneTimeCodes, appLock
+        case welcome, importing, gitPassphrase, gpgPassphrase, autoFill, oneTimeCodes, appLock
     }
 
     weak var host: OnboardingViewController?
 
-    @Published var step = Step.welcome
+    /// Welcome on the first run; importing for a code scanned elsewhere, until the next step takes its place.
+    @Published var root: Step
+    @Published var path = [Step]()
     @Published var isAutoFillEnabled = false
     @Published var isWorking = false
     @Published var error: String?
 
     private var passport: Passport?
+
+    /// Starts with a code scanned before, or else with the welcome.
+    init(passport: Passport? = nil) {
+        self.passport = passport
+        self.root = passport == nil ? .welcome : .importing
+    }
+
+    var step: Step {
+        path.last ?? root
+    }
 
     var usesSSHKey: Bool {
         Defaults.gitAuthenticationMethod == .key
@@ -37,12 +49,22 @@ final class OnboardingModel: ObservableObject {
         host?.finish(showingSettings: true)
     }
 
+    func importScannedKeys() {
+        if let passport {
+            importKeys(from: passport)
+        }
+    }
+
     private func importKeys(from passport: Passport) {
         guard let host else {
             return
         }
         self.passport = passport
-        ProgressSheet.show("ImportingKeys".localize(), on: host)
+        // The importing step shows progress itself.
+        let showsProgress = root != .importing
+        if showsProgress {
+            ProgressSheet.show("ImportingKeys".localize(), on: host)
+        }
         Task.detached(priority: .userInitiated) {
             let error: Error? = {
                 do {
@@ -53,14 +75,19 @@ final class OnboardingModel: ObservableObject {
                 }
             }()
             await MainActor.run {
-                ProgressSheet.dismiss {
+                let next = {
                     if let error {
-                        Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: host)
+                        self.fail(title: "Error".localize(), message: error.localizedDescription)
                     } else if passport.needsGitSecret {
                         self.go(to: .gitPassphrase)
                     } else {
                         self.clone(secret: "", remember: false)
                     }
+                }
+                if showsProgress {
+                    ProgressSheet.dismiss(completion: next)
+                } else {
+                    next()
                 }
             }
         }
@@ -88,12 +115,17 @@ final class OnboardingModel: ObservableObject {
                 self?.go(to: .gpgPassphrase)
             },
             failure: { [weak self] message in
-                guard passport.needsGitSecret else {
-                    Utils.alert(title: "CouldNotClone".localize(), message: message, controller: host)
+                guard let self else {
                     return
                 }
-                self?.error = message
-                self?.go(to: .gitPassphrase)
+                guard passport.needsGitSecret else {
+                    fail(title: "CouldNotClone".localize(), message: message)
+                    return
+                }
+                error = message
+                if step != .gitPassphrase {
+                    go(to: .gitPassphrase)
+                }
             }
         )
     }
@@ -136,12 +168,28 @@ final class OnboardingModel: ObservableObject {
         }
     }
 
+    /// Shows an error; with nothing behind it to go back to, it ends setting up.
+    private func fail(title: String, message: String) {
+        guard let host else {
+            return
+        }
+        Utils.alert(title: title, message: message, controller: host) { _ in
+            if self.root == .importing {
+                self.cancel()
+            }
+        }
+    }
+
     func go(to step: Step) {
-        if step != self.step, step != .gitPassphrase {
+        if step != .gitPassphrase {
             error = nil
         }
-        withAnimation {
-            self.step = step
+        if root == .importing {
+            withAnimation {
+                root = step
+            }
+        } else {
+            path.append(step)
         }
         if step == .autoFill {
             refreshAutoFillState()
@@ -198,5 +246,9 @@ final class OnboardingModel: ObservableObject {
 
     func finish() {
         host?.finish(showingSettings: false)
+    }
+
+    func cancel() {
+        finish()
     }
 }

@@ -17,12 +17,17 @@ struct StoreView: View {
     @State private var format = Defaults.storeFormat
     @State private var isShowingURLFormats = false
     @State private var isConfirmingClone = false
+    @State private var isConfirmingDiscard = false
+    @State private var isConfirmingErase = false
 
     var body: some View {
         Form {
             infoSection
             remoteSection
             signatureSection
+            if model.hasStore {
+                dangerSection
+            }
         }
         .navigationTitle("Store")
         .navigationBarTitleDisplayMode(.inline)
@@ -156,6 +161,34 @@ struct StoreView: View {
 
     private var remote: URL? {
         URL(string: url.trimmed).flatMap { $0.absoluteString.isEmpty || $0.absoluteString == "https://" ? nil : $0 }
+    }
+
+    private var dangerSection: some View {
+        SwiftUI.Section {
+            Button("DiscardChanges", role: .destructive) {
+                isConfirmingDiscard = true
+            }
+            .disabled(model.storeInfo.localCommits == 0)
+            Button("EraseStore", role: .destructive) {
+                isConfirmingErase = true
+            }
+        } footer: {
+            Text("UnsyncedChanges(%d)".localize(model.storeInfo.localCommits))
+        }
+        .confirmationDialog("DiscardChanges?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
+            Button("DiscardChanges", role: .destructive) {
+                model.discardLocalChanges()
+            }
+        } message: {
+            Text("DiscardExplanation.")
+        }
+        .confirmationDialog("EraseStore?", isPresented: $isConfirmingErase, titleVisibility: .visible) {
+            Button("EraseStore", role: .destructive) {
+                model.erase()
+            }
+        } message: {
+            Text("EraseExplanation.")
+        }
     }
 
     private var canClone: Bool {

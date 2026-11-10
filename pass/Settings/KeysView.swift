@@ -15,14 +15,6 @@ struct KeysView: View {
     var body: some View {
         Form {
             SwiftUI.Section {
-                Button(action: model.setUpFromComputer) {
-                    Label("SetUpFromComputer", systemImage: "qrcode.viewfinder")
-                }
-            } footer: {
-                Text("SetUpFromComputer.")
-            }
-
-            SwiftUI.Section {
                 if model.pgpKeyIDs.isEmpty {
                     Text("NotSet").foregroundStyle(.secondary)
                 } else {

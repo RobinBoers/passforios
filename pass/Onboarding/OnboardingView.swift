@@ -10,23 +10,53 @@ struct OnboardingView: View {
     @EnvironmentObject private var model: OnboardingModel
 
     var body: some View {
-        Group {
-            switch model.step {
-            case .welcome:
-                WelcomeStep()
-            case .gitPassphrase:
-                GitPassphraseStep()
-            case .gpgPassphrase:
-                GPGPassphraseStep()
-            case .autoFill:
-                AutoFillStep()
-            case .oneTimeCodes:
-                OneTimeCodesStep()
-            case .appLock:
-                AppLockStep()
-            }
+        NavigationStack(path: $model.path) {
+            StepView(step: model.root)
+                .id(model.root)
+                .transition(.opacity)
+                .navigationDestination(for: OnboardingModel.Step.self) { step in
+                    StepView(step: step)
+                }
         }
-        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+    }
+}
+
+private struct StepView: View {
+    let step: OnboardingModel.Step
+
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        content
+            .navigationBarTitleDisplayMode(.inline)
+            // Going back from here would clone again.
+            .navigationBarBackButtonHidden(step == .gpgPassphrase)
+            .toolbar {
+                if step != .welcome {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel", action: model.cancel)
+                    }
+                }
+            }
+    }
+
+    @ViewBuilder private var content: some View {
+        switch step {
+        case .welcome:
+            WelcomeStep()
+        case .importing:
+            ImportingStep()
+        case .gitPassphrase:
+            GitPassphraseStep()
+        case .gpgPassphrase:
+            GPGPassphraseStep()
+        case .autoFill:
+            AutoFillStep()
+        case .oneTimeCodes:
+            OneTimeCodesStep()
+        case .appLock:
+            AppLockStep()
+        }
     }
 }
 
@@ -78,13 +108,30 @@ private struct StepLayout<Content: View, Buttons: View>: View {
 }
 
 private struct PrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
             .frame(maxWidth: .infinity, minHeight: 50)
-            .foregroundStyle(.white)
-            .background(Capsule().fill(.tint))
+            .foregroundStyle(isEnabled ? .white : .secondary)
+            .background(Capsule().fill(isEnabled ? AnyShapeStyle(.tint) : AnyShapeStyle(Color(.tertiarySystemFill))))
             .opacity(configuration.isPressed ? 0.7 : 1)
+    }
+}
+
+private struct ImportingStep: View {
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        StepLayout(symbol: "qrcode", title: "ImportingKeys") {
+            ProgressView()
+        } buttons: {
+            EmptyView()
+        }
+        .task {
+            model.importScannedKeys()
+        }
     }
 }
 

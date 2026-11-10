@@ -22,13 +22,15 @@ final class OnboardingViewController: UIHostingController<AnyView>, PasswordAler
     private let model: OnboardingModel
     private let onFinish: (_ showingSettings: Bool) -> Void
 
-    init(onFinish: @escaping (_ showingSettings: Bool) -> Void) {
-        let model = OnboardingModel()
+    /// With a code scanned before, setting up continues from it in a sheet instead of starting over.
+    init(passport: Passport? = nil, onFinish: @escaping (_ showingSettings: Bool) -> Void) {
+        let model = OnboardingModel(passport: passport)
         self.model = model
         self.onFinish = onFinish
         super.init(rootView: AnyView(OnboardingView().environmentObject(model)))
         model.host = self
-        modalPresentationStyle = .fullScreen
+        modalPresentationStyle = passport == nil ? .fullScreen : .pageSheet
+        isModalInPresentation = true
     }
 
     @available(*, unavailable)
@@ -36,8 +38,8 @@ final class OnboardingViewController: UIHostingController<AnyView>, PasswordAler
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(refreshAutoFillState), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
 

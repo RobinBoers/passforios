@@ -38,6 +38,8 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         var kind: RowKind
         var key = ""
         var value = ""
+        /// Where a link leads: a website, an email to write or a number to call.
+        var url: URL?
     }
 
     private struct TableSection {
@@ -260,8 +262,8 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             if field.isSecret {
                 return Row(kind: .secret, key: field.key, value: field.value)
             }
-            let isLink = field.key.lowercased().contains("url") || field.value.hasPrefix("https://") || field.value.hasPrefix("http://")
-            return Row(kind: isLink ? .link : .field, key: field.key, value: field.value)
+            let url = Self.link(key: field.key, value: field.value)
+            return Row(kind: url == nil ? .field : .link, key: field.key, value: field.value, url: url)
         }
         if !fields.isEmpty {
             tableData.append(TableSection(rows: fields))
@@ -329,22 +331,44 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         }
     }
 
-    func openLink(to address: String?) {
-        guard address != nil, let url = URL(string: formActualWebAddress(from: address!)) else {
-            DispatchQueue.main.async {
-                Utils.alert(title: "Error".localize(), message: "CannotFindValidUrl".localize(), controller: self, completion: nil)
-            }
-            return
+    /// A value that is a website, an email address or, under a key that says so, a phone number, as a whole.
+    private static func link(key: String, value: String) -> URL? {
+        let value = value.trimmingCharacters(in: .whitespaces)
+        let key = key.lowercased()
+        // Codes and account numbers can look like phone numbers too.
+        let mayBePhone = value.hasPrefix("+") || ["phone", "tel", "mobile", "cell"].contains { key.contains($0) }
+        let types: NSTextCheckingResult.CheckingType = mayBePhone ? [.link, .phoneNumber] : .link
+        guard !value.isEmpty, let detector = try? NSDataDetector(types: types.rawValue),
+              let match = detector.firstMatch(in: value, range: NSRange(value.startIndex..., in: value)),
+              match.range.length == (value as NSString).length else {
+            return nil
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        if match.resultType == .phoneNumber {
+            return match.phoneNumber.flatMap { URL(string: "tel:" + $0.filter { !$0.isWhitespace }) }
+        }
+        // Bare domains are detected as http, which sites no longer serve.
+        guard var components = match.url.flatMap({ URLComponents(url: $0, resolvingAgainstBaseURL: false) }) else {
+            return nil
+        }
+        if components.scheme == "http", !value.lowercased().hasPrefix("http://") {
+            components.scheme = "https"
+        }
+        return components.url
     }
 
-    private func formActualWebAddress(from: String) -> String {
-        let lowercased = from.lowercased()
-        if !(lowercased.starts(with: "https://") || lowercased.starts(with: "http://")) {
-            return "https://\(from)"
+    private static func openAction(for url: URL) -> UIAction {
+        let (title, symbol) =
+            switch url.scheme {
+            case "mailto":
+                ("SendEmail", "envelope")
+            case "tel":
+                ("Call", "phone")
+            default:
+                ("OpenWebsite", "safari")
+            }
+        return UIAction(title: title.localize(), image: UIImage(systemName: symbol)) { _ in
+            UIApplication.shared.open(url)
         }
-        return from
     }
 
     // MARK: - Rows
@@ -470,44 +494,65 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             break
         case .raw:
             performSegue(withIdentifier: "showRawPasswordSegue", sender: self)
-        default:
-            if row.kind == .secret {
-                reveal(indexPath)
+        case .link:
+            tableView.deselectRow(at: indexPath, animated: true)
+            reveal(nil)
+            if let url = row.url {
+                UIApplication.shared.open(url)
             }
+        default:
+            reveal(row.kind == .secret ? indexPath : nil)
             let rect = tableView.rectForRow(at: indexPath)
             editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: CGPoint(x: rect.midX, y: rect.minY)))
         }
     }
 
-    // MARK: - Edit menu
+    // MARK: - Menus
+
+    private func copyAction(for row: Row) -> UIAction {
+        UIAction(title: "Copy".localize(), image: UIImage(systemName: "doc.on.doc")) { _ in
+            SecurePasteboard.shared.copy(textToCopy: row.value)
+        }
+    }
+
+    /// Holding a row offers everything that can be done with it; tapping does the most likely of it.
+    override func tableView(_: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
+        let row = tableData[indexPath.section].rows[indexPath.row]
+        guard ![.header, .raw].contains(row.kind) else {
+            return nil
+        }
+        return UIContextMenuConfiguration(actionProvider: { [weak self] _ in
+            guard let self else {
+                return nil
+            }
+            var actions = [copyAction(for: row)]
+            if let url = row.url {
+                actions.append(Self.openAction(for: url))
+            }
+            if row.kind == .secret {
+                let isRevealed = revealed == indexPath
+                actions.append(
+                    UIAction(title: (isRevealed ? "Hide" : "Show").localize(), image: UIImage(systemName: isRevealed ? "eye.slash" : "eye")) { [weak self] _ in
+                        self?.reveal(isRevealed ? nil : indexPath)
+                    }
+                )
+            }
+            if row.kind == .oneTimePassword, password?.otpType == .hotp {
+                actions.append(
+                    UIAction(title: "NextPassword".localize(), image: UIImage(systemName: "arrow.clockwise")) { [weak self] _ in
+                        self?.getNextHOTP()
+                    }
+                )
+            }
+            return UIMenu(children: actions)
+        })
+    }
 
     func editMenuInteraction(_: UIEditMenuInteraction, menuFor configuration: UIEditMenuConfiguration, suggestedActions _: [UIMenuElement]) -> UIMenu? {
         guard let indexPath = configuration.identifier as? IndexPath else {
             return nil
         }
-        let row = tableData[indexPath.section].rows[indexPath.row]
-        var actions = [
-            UIAction(title: "Copy".localize(), image: UIImage(systemName: "doc.on.doc")) { _ in
-                SecurePasteboard.shared.copy(textToCopy: row.value)
-            },
-        ]
-        switch row.kind {
-        case .link:
-            actions.append(
-                UIAction(title: "OpenWebsite".localize(), image: UIImage(systemName: "safari")) { [weak self] _ in
-                    self?.openLink(to: row.value)
-                }
-            )
-        case .oneTimePassword where password?.otpType == .hotp:
-            actions.append(
-                UIAction(title: "NextPassword".localize(), image: UIImage(systemName: "arrow.clockwise")) { [weak self] _ in
-                    self?.getNextHOTP()
-                }
-            )
-        default:
-            break
-        }
-        return UIMenu(children: actions)
+        return UIMenu(children: [copyAction(for: tableData[indexPath.section].rows[indexPath.row])])
     }
 
     func editMenuInteraction(_: UIEditMenuInteraction, targetRectFor configuration: UIEditMenuConfiguration) -> CGRect {

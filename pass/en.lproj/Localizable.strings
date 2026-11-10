@@ -275,3 +275,7 @@
 "RememberGitSecret." = "Syncing won't ask for it again.";
 "Remember" = "Remember";
 "Unlock" = "Unlock";
+"Show" = "Show";
+"Hide" = "Hide";
+"SendEmail" = "Send Email";
+"Call" = "Call";

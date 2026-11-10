@@ -274,3 +274,7 @@
 "RememberGitSecret." = "Beim Synchronisieren wird nicht erneut danach gefragt.";
 "Remember" = "Merken";
 "Unlock" = "Entsperren";
+"Show" = "Einblenden";
+"Hide" = "Ausblenden";
+"SendEmail" = "E-Mail senden";
+"Call" = "Anrufen";

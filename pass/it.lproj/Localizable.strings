@@ -270,3 +270,7 @@
 "RememberGitSecret." = "La sincronizzazione non la chiederà più.";
 "Remember" = "Ricorda";
 "Unlock" = "Sblocca";
+"Show" = "Mostra";
+"Hide" = "Nascondi";
+"SendEmail" = "Invia e-mail";
+"Call" = "Chiama";

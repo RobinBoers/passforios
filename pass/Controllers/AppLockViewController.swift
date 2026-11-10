@@ -18,7 +18,7 @@ final class AppLockViewController: UIViewController {
 
         view.backgroundColor = .secondarySystemBackground
 
-        let iconSize: CGFloat = 100
+        let iconSize: CGFloat = 118
         let icon = UIImageView(image: #imageLiteral(resourceName: "Logo"))
         icon.layer.cornerRadius = iconSize * 0.225
         icon.layer.cornerCurve = .continuous
@@ -26,7 +26,7 @@ final class AppLockViewController: UIViewController {
         icon.translatesAutoresizingMaskIntoConstraints = false
 
         let lock = UIImageView(image: UIImage(systemName: "lock.fill"))
-        lock.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: iconSize * 0.42)
+        lock.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: iconSize * 0.56)
         lock.tintColor = .systemGray
         lock.translatesAutoresizingMaskIntoConstraints = false
 
@@ -49,13 +49,19 @@ final class AppLockViewController: UIViewController {
         let title = UILabel()
         let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
         title.text = "IsLocked(%@)".localize(appName)
-        title.font = .preferredFont(forTextStyle: .title1, compatibleWith: UITraitCollection(legibilityWeight: .bold))
+        title.font = UIFontMetrics(forTextStyle: .title1).scaledFont(for: .systemFont(ofSize: 28, weight: .bold))
         title.adjustsFontForContentSizeCategory = true
         title.numberOfLines = 0
         title.textAlignment = .center
 
         var configuration = UIButton.Configuration.gray()
         configuration.title = "Unlock".localize()
+        configuration.baseForegroundColor = .tintColor
+        configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var attributes = attributes
+            attributes.font = UIFont.preferredFont(forTextStyle: .title3)
+            return attributes
+        }
         configuration.cornerStyle = .capsule
         configuration.buttonSize = .large
         configuration.contentInsets.leading = 24

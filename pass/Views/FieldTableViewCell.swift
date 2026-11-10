@@ -50,6 +50,12 @@ class FieldTableViewCell: UITableViewCell {
         generateButton.addTarget(self, action: #selector(generate), for: .touchUpInside)
         generateButton.setContentHuggingPriority(.required, for: .horizontal)
 
+        // The value gives way to the buttons when it runs long.
+        valueTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        for button in [generateButton, secretButton] {
+            button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        }
+
         let stack = UIStackView(arrangedSubviews: [keyTextField, valueTextField, generateButton, secretButton])
         stack.spacing = 12
         stack.alignment = .center

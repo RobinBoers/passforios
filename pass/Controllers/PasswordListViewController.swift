@@ -89,6 +89,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             center.addObserver(self, selector: #selector(startSearching), name: .passwordSearch, object: nil)
         }
 
+        showSyncStatus(nil)
         reload(animated: false)
         updateBarButtons()
     }
@@ -326,19 +327,19 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         hideSyncStatus()
     }
 
-    /// The status shows under the title while syncing and for a while after, as Mail shows it.
+    /// The status shows under the title while syncing and for a while after, as Mail shows it. The line stays
+    /// when empty: a header that changes height leaves the list scrolled under it.
     private func showSyncStatus(_ status: String?) {
         guard isRoot else {
             return
         }
         if #available(iOS 26.0, *) {
-            navigationItem.subtitle = status
-            navigationItem.largeAttributedSubtitle = status.map {
-                var subtitle = AttributedString($0)
-                subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
-                subtitle.uiKit.foregroundColor = .secondaryLabel
-                return subtitle
-            }
+            let text = status ?? " "
+            navigationItem.subtitle = text
+            var subtitle = AttributedString(text)
+            subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
+            subtitle.uiKit.foregroundColor = .secondaryLabel
+            navigationItem.largeAttributedSubtitle = subtitle
         } else {
             refreshControl?.attributedTitle = status.map { NSAttributedString(string: $0) }
         }

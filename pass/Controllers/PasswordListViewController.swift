@@ -174,6 +174,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     /// On iOS 26 settings and the sync button sit at the top; before, the tab bar holds settings and a badge.
     @objc
     private func updateBarButtons() {
+        guard refreshControl?.isRefreshing != true else {
+            return
+        }
         let localCommits = PasswordStore.shared.numberOfLocalCommits
         if #available(iOS 26.0, *) {
             syncButton.badge = .count(localCommits)
@@ -268,9 +271,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             return
         }
         isSyncFinished = false
-        syncRepository { [weak self] status in
-            self?.showSyncStatus(status)
-        } completion: { [weak self] _ in
+        // The header stays as it is while the refresh control shows: changing the subtitle or the buttons then
+        // relays out the navigation bar mid-animation, which leaves the list scrolled down.
+        syncRepository(status: { _ in }) { [weak self] _ in
             self?.isSyncFinished = true
             self?.endRefreshingIfReleased()
         }
@@ -283,8 +286,10 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
         isSyncFinished = false
         refreshControl?.endRefreshing()
-        showLastSynced()
-        updateBarButtons()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+            self?.showLastSynced()
+            self?.updateBarButtons()
+        }
     }
 
     override func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {

@@ -23,6 +23,8 @@ final class AppLockViewController: UIViewController {
         icon.layer.cornerRadius = iconSize * 0.225
         icon.layer.cornerCurve = .continuous
         icon.clipsToBounds = true
+        icon.layer.borderWidth = 1 / 1.5
+        icon.layer.borderColor = UIColor.white.withAlphaComponent(0.12).cgColor
         icon.translatesAutoresizingMaskIntoConstraints = false
 
         let lock = UIImageView(image: UIImage(systemName: "lock.fill"))
@@ -42,8 +44,8 @@ final class AppLockViewController: UIViewController {
             icon.bottomAnchor.constraint(equalTo: image.bottomAnchor),
             icon.leadingAnchor.constraint(equalTo: image.leadingAnchor),
             icon.trailingAnchor.constraint(equalTo: image.trailingAnchor),
-            lock.centerXAnchor.constraint(equalTo: icon.trailingAnchor),
-            lock.centerYAnchor.constraint(equalTo: icon.bottomAnchor, constant: -iconSize * 0.05),
+            lock.centerXAnchor.constraint(equalTo: icon.trailingAnchor, constant: iconSize * 0.015),
+            lock.centerYAnchor.constraint(equalTo: icon.bottomAnchor, constant: -iconSize * 0.045),
         ])
 
         let title = UILabel()
@@ -59,13 +61,11 @@ final class AppLockViewController: UIViewController {
         configuration.baseForegroundColor = .tintColor
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
             var attributes = attributes
-            attributes.font = UIFont.preferredFont(forTextStyle: .title3)
+            attributes.font = UIFontMetrics(forTextStyle: .title3).scaledFont(for: .systemFont(ofSize: 20, weight: .semibold))
             return attributes
         }
         configuration.cornerStyle = .capsule
-        configuration.buttonSize = .large
-        configuration.contentInsets.leading = 24
-        configuration.contentInsets.trailing = 24
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
             authenticate()
         })
@@ -79,7 +79,7 @@ final class AppLockViewController: UIViewController {
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 6),
             stack.leadingAnchor.constraint(greaterThanOrEqualTo: view.readableContentGuide.leadingAnchor),
             stack.trailingAnchor.constraint(lessThanOrEqualTo: view.readableContentGuide.trailingAnchor),
         ])

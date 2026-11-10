@@ -10,6 +10,8 @@ class FieldTableViewCell: UITableViewCell {
     let keyTextField = UITextField()
     let valueTextField = UITextField()
     private let secretButton = UIButton(type: .system)
+    private let generateButton = UIButton(type: .system)
+    private var allowsSecret = true
 
     var onChange: ((Field) -> Void)?
 
@@ -43,7 +45,12 @@ class FieldTableViewCell: UITableViewCell {
         secretButton.addTarget(self, action: #selector(toggleSecret), for: .touchUpInside)
         secretButton.setContentHuggingPriority(.required, for: .horizontal)
 
-        let stack = UIStackView(arrangedSubviews: [keyTextField, valueTextField, secretButton])
+        generateButton.setImage(UIImage(systemName: "wand.and.stars"), for: .normal)
+        generateButton.accessibilityLabel = "GeneratePassword".localize()
+        generateButton.addTarget(self, action: #selector(generate), for: .touchUpInside)
+        generateButton.setContentHuggingPriority(.required, for: .horizontal)
+
+        let stack = UIStackView(arrangedSubviews: [keyTextField, valueTextField, generateButton, secretButton])
         stack.spacing = 12
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -66,13 +73,15 @@ class FieldTableViewCell: UITableViewCell {
 
     /// Only some store formats can mark a field as secret.
     func set(field: Field, allowsSecret: Bool = true) {
+        self.allowsSecret = allowsSecret
         self.field = field
-        secretButton.isHidden = !allowsSecret
         keyTextField.text = field.key
         valueTextField.text = field.value
     }
 
     private func render() {
+        secretButton.isHidden = !allowsSecret
+        generateButton.isHidden = !field.isSecret || field.isOtpauth
         valueTextField.font = field.isSecret ? Globals.passwordFont : .preferredFont(forTextStyle: .body)
         secretButton.setImage(UIImage(systemName: field.isSecret ? "lock.fill" : "lock.open"), for: .normal)
         secretButton.tintColor = field.isSecret ? .tintColor : .tertiaryLabel
@@ -88,6 +97,13 @@ class FieldTableViewCell: UITableViewCell {
     @objc
     private func valueChanged() {
         field.value = valueTextField.text ?? ""
+        onChange?(field)
+    }
+
+    @objc
+    private func generate() {
+        field.value = Defaults.passwordGenerator.generate()
+        valueTextField.text = field.value
         onChange?(field)
     }
 

@@ -257,7 +257,6 @@
 "AddOneTimePassword"                = "Einmalkennwort hinzufügen";
 "Fields"                            = "Felder";
 "Notes"                             = "Notizen";
-"AddField"                          = "Feld hinzufügen";
 "Key"                               = "Schlüssel";
 "Value"                             = "Wert";
 "Copy"                              = "Kopieren";
@@ -413,3 +412,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "AllowNotifications" = "Mitteilungen erlauben";
 "AppLockMessage." = "Vor dem Anzeigen oder Ausfüllen von Passwörtern nachfragen.";
 "UseMethod(%@)" = "%@ verwenden";
+"AddPasswordField" = "Passwort hinzufügen";
+"AddText" = "Text hinzufügen";
+"GeneratePassword" = "Passwort erzeugen";

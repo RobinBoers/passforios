@@ -253,7 +253,6 @@
 "AddOneTimePassword"                = "Aggiungi one-time password";
 "Fields"                            = "Campi";
 "Notes"                             = "Note";
-"AddField"                          = "Aggiungi campo";
 "Key"                               = "Chiave";
 "Value"                             = "Valore";
 "Copy"                              = "Copia";
@@ -409,3 +408,6 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "AllowNotifications" = "Consenti notifiche";
 "AppLockMessage." = "Chiedi prima di mostrare o inserire le password.";
 "UseMethod(%@)" = "Usa %@";
+"AddPasswordField" = "Aggiungi password";
+"AddText" = "Aggiungi testo";
+"GeneratePassword" = "Genera password";

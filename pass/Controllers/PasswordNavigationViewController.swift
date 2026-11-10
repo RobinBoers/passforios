@@ -129,9 +129,13 @@ class PasswordNavigationViewController: UIViewController {
         tableView.addGestureRecognizer(gestureRecognizer)
         tableView.delegate = self
         tableView.layoutIfNeeded()
-        let atribbutedTitle = "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)"
-        refreshControl.attributedTitle = NSAttributedString(string: atribbutedTitle)
-        tableView.refreshControl = refreshControl
+        // Changing the refresh control while it shows moves the list, so it is only set up when idle.
+        if !refreshControl.isRefreshing {
+            showLastSynced()
+        }
+        if tableView.refreshControl !== refreshControl {
+            tableView.refreshControl = refreshControl
+        }
         tableView.backgroundView = isRootViewController() && !PasswordStore.shared.repositoryExists() ? makeSetUpView() : nil
     }
 
@@ -323,8 +327,12 @@ class PasswordNavigationViewController: UIViewController {
                 return
             }
             refreshControl.endRefreshing()
-            refreshControl.attributedTitle = NSAttributedString(string: "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)")
+            showLastSynced()
         }
+    }
+
+    private func showLastSynced() {
+        refreshControl.attributedTitle = NSAttributedString(string: "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)")
     }
 }
 

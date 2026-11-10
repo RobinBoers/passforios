@@ -258,7 +258,6 @@
 "AddOneTimePassword"                = "Add One-Time Password";
 "Fields"                            = "Fields";
 "Notes"                             = "Notes";
-"AddField"                          = "Add Field";
 "Key"                               = "Key";
 "Value"                             = "Value";
 "Copy"                              = "Copy";
@@ -414,3 +413,6 @@ Finally, copy them to a location accessible by the Files app.";
 "AllowNotifications" = "Allow Notifications";
 "AppLockMessage." = "Ask before showing or filling in passwords.";
 "UseMethod(%@)" = "Use %@";
+"AddPasswordField" = "Add Password";
+"AddText" = "Add Text";
+"GeneratePassword" = "Generate Password";

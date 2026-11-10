@@ -20,5 +20,7 @@ class RawPasswordViewController: UIViewController {
         rawPasswordTextView.textContainerInset = .zero
         rawPasswordTextView.text = password?.plainText
         rawPasswordTextView.textColor = Colors.label
+        rawPasswordTextView.font = .monospacedSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize, weight: .regular)
+        rawPasswordTextView.adjustsFontForContentSizeCategory = true
     }
 }

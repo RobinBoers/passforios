@@ -286,12 +286,8 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
                     editController.password = password
                 }
             }
-        } else if segue.identifier == "showRawPasswordSegue" {
-            if let controller = segue.destination as? UINavigationController {
-                if let controller = controller.viewControllers.first as? RawPasswordViewController {
-                    controller.password = password
-                }
-            }
+        } else if segue.identifier == "showRawPasswordSegue", let controller = segue.destination as? RawPasswordViewController {
+            controller.password = password
         }
     }
 

@@ -155,7 +155,7 @@
                     </tableView>
                     <connections>
                         <segue destination="eui-w4-P7T" kind="show" identifier="editPasswordSegue" id="Ydg-pZ-oNS"/>
-                        <segue destination="kNf-lG-BeC" kind="presentation" identifier="showRawPasswordSegue" modalTransitionStyle="flipHorizontal" id="qpR-3X-eyt"/>
+                        <segue destination="mlB-OK-hLo" kind="show" identifier="showRawPasswordSegue" id="qpR-3X-eyt"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9sC-44-OKL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -262,13 +262,7 @@ Secret Question 1: What is your childhood best friend's most bizarre superhero f
                             <constraint firstItem="3dt-Ph-4As" firstAttribute="top" secondItem="XeK-cv-AXf" secondAttribute="bottom" constant="20" id="yN7-0c-t4Y"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Raw Password" id="c13-zM-tLf">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="9yM-Mg-Cg8">
-                            <connections>
-                                <segue destination="pNY-ul-yzB" kind="unwind" unwindAction="backWithSegue:" id="SzI-Au-9rJ"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Raw Password" id="c13-zM-tLf"/>
                     <connections>
                         <outlet property="rawPasswordTextView" destination="3dt-Ph-4As" id="SVL-F8-5yD"/>
                     </connections>
@@ -314,24 +308,6 @@ Secret Question 1: What is your childhood best friend's most bizarre superhero f
                 <placeholder placeholderIdentifier="IBFirstResponder" id="llB-WG-h5s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4954" y="-224"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Ps2-MC-JQX">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kNf-lG-BeC" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dx6-8j-IzX">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="56"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="mlB-OK-hLo" kind="relationship" relationship="rootViewController" id="wp3-xi-lwY"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ycf-Zv-ej8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4954" y="633"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

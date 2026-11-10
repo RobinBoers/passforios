@@ -136,14 +136,8 @@ final class SettingsModel: ObservableObject {
         }
     }
 
-    /// The remote's host, also for `user@host:path` remotes, which Foundation parses without one.
     var remoteHost: String {
-        let url = passKit.Defaults.gitURL
-        if let host = url.host {
-            return host
-        }
-        let remote = url.absoluteString
-        return String(remote.split(separator: "@").last?.split(separator: ":").first ?? Substring(remote))
+        passKit.Defaults.gitURL.gitHost
     }
 
     /// SSH keys have a passphrase, HTTPS remotes a password.

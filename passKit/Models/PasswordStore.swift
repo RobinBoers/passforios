@@ -121,8 +121,6 @@ public class PasswordStore {
         checkoutProgressBlock: @escaping CheckoutProgressHandler = { _, _, _ in }
     ) throws {
         try? fileManager.removeItem(at: storeURL)
-        gitPassword = nil
-        gitSSHPrivateKeyPassphrase = nil
         do {
             gitRepository = try GitRepository(from: remoteRepoURL, to: storeURL, branchName: branchName, options: options, transferProgressBlock: transferProgressBlock, checkoutProgressBlock: checkoutProgressBlock)
         } catch {

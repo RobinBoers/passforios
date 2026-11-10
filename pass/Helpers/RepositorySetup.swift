@@ -18,6 +18,11 @@ extension PasswordAlertPresenter where Self: UIViewController {
         completion: @escaping () -> Void,
         failure: ((String) -> Void)? = nil
     ) {
+        // A remembered password belongs to an account on a host; the SSH passphrase to the key, which
+        // stays the same.
+        if url.gitHost != Defaults.gitURL.gitHost || username != Defaults.gitUsername {
+            PasswordStore.shared.gitPassword = nil
+        }
         Defaults.gitURL = url
         Defaults.gitBranchName = branch
         Defaults.gitUsername = username
@@ -194,6 +199,16 @@ extension PasswordAlertPresenter where Self: UIViewController {
         alert.addAction(UIAlertAction(title: "Overwrite".localize(), style: .destructive) { _ in action() })
         alert.addAction(UIAlertAction.cancel())
         topmostPresentedViewController.present(alert, animated: true)
+    }
+}
+
+extension URL {
+    /// The host, also for `user@host:path` remotes, which Foundation parses without one.
+    var gitHost: String {
+        if let host {
+            return host
+        }
+        return String(absoluteString.split(separator: "@").last?.split(separator: ":").first ?? Substring(absoluteString))
     }
 }
 

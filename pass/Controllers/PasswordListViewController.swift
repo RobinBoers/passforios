@@ -502,24 +502,18 @@ private class PasswordListCell: UITableViewCell {
         }
     }
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(dot)
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
-        guard let content = contentView.subviews.first(where: { $0 is UIListContentView }) as? UIListContentView,
-              let text = content.textLayoutGuide?.layoutFrame else {
+        // A content configuration brings its own view, so the dot joins it once it is there.
+        let content = contentView as? UIListContentView ?? contentView.subviews.lazy.compactMap { $0 as? UIListContentView }.first
+        guard let content, let text = content.textLayoutGuide?.layoutFrame else {
             return
         }
-        let leading = content.convert(content.imageLayoutGuide?.layoutFrame ?? text, to: contentView)
+        if dot.superview != content {
+            content.addSubview(dot)
+        }
+        let leading = content.imageLayoutGuide?.layoutFrame ?? text
         let isRightToLeft = effectiveUserInterfaceLayoutDirection == .rightToLeft
-        dot.center = CGPoint(x: isRightToLeft ? leading.maxX + 12 : leading.minX - 12, y: content.convert(text, to: contentView).midY)
+        dot.center = CGPoint(x: isRightToLeft ? leading.maxX + 12 : leading.minX - 12, y: text.midY)
     }
 }

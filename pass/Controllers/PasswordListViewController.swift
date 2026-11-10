@@ -28,9 +28,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private var needsReload = false
     private var syncStatusGeneration = 0
 
-    private lazy var addButton = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
-        addPassword()
-    })
+    private lazy var addButton = UIBarButtonItem(systemItem: .add)
 
     private lazy var settingsButton = UIBarButtonItem(image: UIImage(systemName: "gearshape"), primaryAction: UIAction { [unowned self] _ in
         presentSettings()
@@ -101,6 +99,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         super.viewWillAppear(animated)
         navigationController?.setToolbarHidden(toolbarItems == nil, animated: animated)
         updateBarButtons()
+        updateAddButton()
     }
 
     // MARK: - Content
@@ -204,11 +203,12 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     @objc
     private func storeChanged() {
         DispatchQueue.main.async { [self] in
-            // Entities are recreated on every change; a folder that is gone takes the list back to the root.
+            // A folder that is gone takes the list back to the root.
             if let folderPath, PasswordStore.shared.fetchPasswordEntity(with: folderPath) == nil {
                 navigationController?.popToRootViewController(animated: true)
                 return
             }
+            updateAddButton()
             // The list holds still while a refresh shows; it catches up once that has ended.
             guard refreshControl?.isRefreshing != true else {
                 needsReload = true
@@ -304,14 +304,53 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         present(alert, animated: true)
     }
 
-    private func addPassword() {
+    /// With protos, adding starts from a menu of them, as `sec add` takes one; without, it starts right away.
+    private func updateAddButton() {
+        let protos = Defaults.storeFormat == .sec ? Defaults.protos : [:]
+        guard !protos.isEmpty else {
+            addButton.menu = nil
+            addButton.primaryAction = UIAction(image: UIImage(systemName: "plus")) { [unowned self] _ in
+                addPassword()
+            }
+            return
+        }
+        let plain = UIAction(title: "Password".localize(), image: UIImage(systemName: "key")) { [unowned self] _ in
+            addPassword()
+        }
+        let templates = protos.keys.sorted().map { name in
+            UIAction(title: name, image: UIImage(systemName: Self.protoSymbols[name] ?? "doc.text")) { [unowned self] _ in
+                addPassword(proto: Defaults.protos[name])
+            }
+        }
+        addButton.primaryAction = nil
+        addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: templates)])
+    }
+
+    private static let protoSymbols = [
+        "card": "creditcard",
+        "imap": "envelope",
+        "license": "checkmark.seal",
+        "postgres": "cylinder",
+        "smtp": "envelope",
+        "ssh": "terminal",
+        "web": "globe",
+        "wifi": "wifi",
+    ]
+
+    /// Without a proto, a sec entry starts from a password field, as `sec add` does.
+    private func addPassword(proto: String? = nil) {
         guard PGPAgent.shared.isPrepared, PasswordStore.shared.gitRepository != nil else {
             Utils.alert(title: "CannotAddPassword".localize(), message: "MakeSurePgpAndGitProperlySet.".localize(), controller: self)
             return
         }
         let navigation = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "addPassword") as! UINavigationController
-        if let add = navigation.topViewController as? AddPasswordTableViewController, let folderPath {
-            add.defaultDirPrefix = "\(folderPath)/"
+        if let add = navigation.topViewController as? AddPasswordTableViewController {
+            if let folderPath {
+                add.defaultDirPrefix = "\(folderPath)/"
+            }
+            if Defaults.storeFormat == .sec {
+                add.template = try? Entry(parsing: proto ?? "\(Constants.PASSWORD_KEYWORD)!:", format: .sec)
+            }
         }
         present(navigation, animated: true)
     }

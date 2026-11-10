@@ -92,6 +92,9 @@ final class EntryTest: XCTestCase {
         XCTAssertNil(try Entry(parsing: "user: me").primary)
         XCTAssertEqual(try Entry(parsing: "proto: ssh\npass!: ignored\n\nkey").primary, "key")
         XCTAssertNil(try Entry(parsing: "proto: ssh\npub: x").primary)
+        XCTAssertEqual(try Entry(parsing: "proto: license\nkey!: ABC-123\npass!: account").primary, "ABC-123")
+        XCTAssertEqual(try Entry(parsing: "proto: license\nkey!: ABC-123", format: .sec).primaryKey, "key")
+        XCTAssertEqual(try Entry(parsing: "proto: license\nkey: x", format: .pass).primaryKey, "pass")
     }
 
     func testFieldKeyValidity() {

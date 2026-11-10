@@ -251,7 +251,7 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             main.append(Row(kind: .field, key: Constants.USER_KEYWORD, value: user))
         }
         if !password.password.isEmpty {
-            main.append(Row(kind: .secret, key: password.entry.isBodyPrimary ? Constants.BODY_KEYWORD : Constants.PASSWORD_KEYWORD, value: password.password))
+            main.append(Row(kind: .secret, key: password.entry.primaryKey, value: password.password))
         }
         if password.otpType != .none, let otp = password.currentOtp {
             oneTimePasswordIndexPath = IndexPath(row: main.count, section: tableData.count)

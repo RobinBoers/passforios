@@ -269,6 +269,7 @@ extension Passport {
         }
 
         Defaults.storeFormat = format
+        Defaults.protos = protos
         Defaults.gitSignatureName = name
         Defaults.gitSignatureEmail = email
     }

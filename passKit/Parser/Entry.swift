@@ -109,14 +109,29 @@ public struct Entry: Equatable {
         fields.first { $0.key == key }?.value
     }
 
+    /// Where the secret is, as `sec` reads it: the body of an SSH key, the key of a license, the password otherwise.
+    public var primaryKey: String {
+        guard format == .sec else {
+            return Constants.PASSWORD_KEYWORD
+        }
+        switch value(of: Constants.PROTO_KEYWORD) {
+        case Constants.SSH_PROTO:
+            return Constants.BODY_KEYWORD
+        case Constants.LICENSE_PROTO:
+            return Constants.LICENSE_KEYWORD
+        default:
+            return Constants.PASSWORD_KEYWORD
+        }
+    }
+
     public var isBodyPrimary: Bool {
-        format == .sec && value(of: Constants.PROTO_KEYWORD) == Constants.SSH_PROTO
+        primaryKey == Constants.BODY_KEYWORD
     }
 
     public var primary: String? {
         if isBodyPrimary {
             return body.isEmpty ? nil : body
         }
-        return value(of: Constants.PASSWORD_KEYWORD)
+        return value(of: primaryKey)
     }
 }

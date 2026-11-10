@@ -17,4 +17,6 @@ public enum Constants {
     public static let PROTO_KEYWORD = "proto"
     public static let BODY_KEYWORD = "body"
     public static let SSH_PROTO = "ssh"
+    public static let LICENSE_PROTO = "license"
+    public static let LICENSE_KEYWORD = "key"
 }

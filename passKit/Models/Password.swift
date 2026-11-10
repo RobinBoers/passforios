@@ -65,7 +65,7 @@ public class Password {
     public var additionalFields: [Field] {
         entry.fields.filter { field in
             field.key != Constants.USER_KEYWORD
-                && (field.key != Constants.PASSWORD_KEYWORD || entry.isBodyPrimary)
+                && field.key != entry.primaryKey
                 && !field.isOtpauth
         }
     }

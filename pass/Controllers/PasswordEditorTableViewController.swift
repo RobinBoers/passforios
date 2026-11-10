@@ -20,6 +20,8 @@ class PasswordEditorTableViewController: UITableViewController {
     }
 
     var password: Password?
+    /// What a new entry starts from, like one of `sec`'s protos.
+    var template: Entry?
 
     /// The folder the entry is in, shown in front of its name but not part of what is typed.
     var folder = ""
@@ -88,6 +90,17 @@ class PasswordEditorTableViewController: UITableViewController {
         })
 
         guard let password else {
+            if let template {
+                // Like Add Password does, a password to keep, or to replace.
+                fields = template.fields.map { field in
+                    guard field.key == Constants.PASSWORD_KEYWORD, field.value.isEmpty else {
+                        return field
+                    }
+                    return Field(key: field.key, value: Defaults.passwordGenerator.generate(), isSecret: true)
+                }
+                body = template.body
+                hasBody = template.isBodyPrimary || !body.isEmpty
+            }
             return
         }
         let path = password.namePath

@@ -226,7 +226,7 @@
 "AutoFillMessage."      = "Fill in passwords from the keyboard in Safari and other apps.";
 "AutoFillIsOn"          = "AutoFill is on";
 "TurnOnAutoFill"        = "Turn On AutoFill";
-"ShowOneTimeCodes"      = "Show Verification Codes";
+"ShowOneTimeCodes"      = "Verification Codes";
 "ShowOneTimeCodes."     = "After filling in a password, a notification shows its verification code to copy.";
 "RememberPassphrase" = "Remember Passphrase";
 "Format" = "Format";

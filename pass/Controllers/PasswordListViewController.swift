@@ -273,10 +273,10 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         isSyncFinished = false
         // The header stays as it is while the refresh control shows: changing the subtitle or the buttons then
         // relays out the navigation bar mid-animation, which leaves the list scrolled down.
-        syncRepository(status: { _ in }) { [weak self] _ in
+        syncRepository(status: { _ in }, completion: { [weak self] _ in
             self?.isSyncFinished = true
             self?.endRefreshingIfReleased()
-        }
+        })
     }
 
     /// Like Mail, the refresh only ends once the list is let go.

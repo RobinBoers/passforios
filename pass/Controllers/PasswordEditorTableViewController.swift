@@ -80,10 +80,6 @@ class PasswordEditorTableViewController: UITableViewController {
         sections[section] == .fields ? fieldsRows.count : 1
     }
 
-    override func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
-        sections[section] == .fields && Defaults.storeFormat == .sec ? "FieldsExplanation.".localize() : nil
-    }
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch sections[indexPath.section] {
         case .name:

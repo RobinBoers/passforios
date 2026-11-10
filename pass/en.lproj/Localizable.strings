@@ -262,7 +262,6 @@
 "Copy"                              = "Copy";
 "Secret"                            = "Secret";
 "NotSecret"                         = "Not Secret";
-"FieldsExplanation."                = "Tap the lock to mark a field as secret. Fields left empty are removed.";
 "InvalidField."                     = "The field \"%@\" is invalid. Keys may only contain letters, digits, \"_\", \".\" and \"-\", values cannot span multiple lines, and \"body\" and a second \"pass\" are not allowed.";
 "Length"                            = "Length";
 "DeletePassword?"                   = "Delete Password?";

@@ -257,7 +257,6 @@
 "Copy"                              = "Copia";
 "Secret"                            = "Segreto";
 "NotSecret"                         = "Non segreto";
-"FieldsExplanation."                = "Tocca il lucchetto per contrassegnare un campo come segreto. I campi vuoti vengono rimossi.";
 "InvalidField."                     = "Il campo \"%@\" non è valido. Le chiavi possono contenere solo lettere, cifre, \"_\", \".\" e \"-\", i valori non possono occupare più righe, e \"body\" e un secondo \"pass\" non sono consentiti.";
 "Length"                            = "Lunghezza";
 "DeletePassword?"                   = "Eliminare la password?";

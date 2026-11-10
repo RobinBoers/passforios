@@ -261,7 +261,6 @@
 "Copy"                              = "Kopieren";
 "Secret"                            = "Geheim";
 "NotSecret"                         = "Nicht geheim";
-"FieldsExplanation."                = "Tippe auf das Schloss, um ein Feld als geheim zu markieren. Leere Felder werden entfernt.";
 "InvalidField."                     = "Das Feld \"%@\" ist ungültig. Schlüssel dürfen nur Buchstaben, Ziffern, \"_\", \".\" und \"-\" enthalten, Werte dürfen nicht mehrzeilig sein, und \"body\" sowie ein zweites \"pass\" sind nicht erlaubt.";
 "Length"                            = "Länge";
 "DeletePassword?"                   = "Passwort löschen?";

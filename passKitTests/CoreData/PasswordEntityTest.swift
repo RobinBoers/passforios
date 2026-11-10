@@ -141,6 +141,34 @@ final class PasswordEntityTest: CoreDataTestCase {
         XCTAssertNil(toplevelEntity!.parent)
     }
 
+    func testInitPasswordEntityCoreDataKeepsEntitiesOfRemainingFiles() throws {
+        let rootDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let emailDir = rootDir.appendingPathComponent("email")
+        try FileManager.default.createDirectory(at: emailDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: rootDir) }
+
+        try Data("test".utf8).write(to: emailDir.appendingPathComponent("work.gpg"))
+        try Data("test".utf8).write(to: emailDir.appendingPathComponent("personal.gpg"))
+
+        let context = controller.viewContext()
+        PasswordEntity.initPasswordEntityCoreData(url: rootDir, in: context)
+        let email = try XCTUnwrap(PasswordEntity.fetch(by: "email", isDir: true, in: context))
+        let work = try XCTUnwrap(PasswordEntity.fetch(by: "email/work.gpg", in: context))
+
+        try FileManager.default.removeItem(at: emailDir.appendingPathComponent("personal.gpg"))
+        try Data("test".utf8).write(to: emailDir.appendingPathComponent("private.gpg"))
+        PasswordEntity.initPasswordEntityCoreData(url: rootDir, in: context)
+
+        XCTAssertIdentical(PasswordEntity.fetch(by: "email", isDir: true, in: context), email)
+        XCTAssertIdentical(PasswordEntity.fetch(by: "email/work.gpg", in: context), work)
+        XCTAssertFalse(work.isDeleted)
+        XCTAssertIdentical(work.parent, email)
+        XCTAssertNil(PasswordEntity.fetch(by: "email/personal.gpg", in: context))
+        XCTAssertIdentical(PasswordEntity.fetch(by: "email/private.gpg", in: context)?.parent, email)
+        XCTAssertEqual(Set(email.children.map(\.name)), ["work", "private"])
+        XCTAssertEqual(PasswordEntity.fetchAll(in: context).count, 3)
+    }
+
     func testInitPasswordEntityCoreDataSkipsHiddenFiles() throws {
         let rootDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: rootDir, withIntermediateDirectories: true)

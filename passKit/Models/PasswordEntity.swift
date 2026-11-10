@@ -167,23 +167,23 @@ public final class PasswordEntity: NSManagedObject, Identifiable {
         return entity
     }
 
+    /// Brings the entities in line with the passwords under `url`. Those of files still there stay the same objects,
+    /// so whatever holds one keeps a valid entity across a sync; the others are inserted or deleted.
     public static func initPasswordEntityCoreData(url: URL, in context: NSManagedObjectContext) {
         let localFileManager = FileManager.default
         let url = url.resolvingSymlinksInPath()
 
-        let root = {
-            let entity = PasswordEntity(context: context)
-            entity.name = "root"
-            entity.isDir = true
-            entity.path = ""
-            return entity
-        }()
+        let grouped = Dictionary(grouping: fetchAll(in: context)) { "\($0.isDir)\($0.path)" }
+        grouped.values.flatMap { $0.dropFirst() }.forEach(context.delete)
+        var existing = grouped.compactMapValues(\.first)
+
         // Directories are enumerated through their resolved URL, so that symbolically linked
         // directories are traversed as well. A link pointing back up the tree would make the
         // traversal loop forever, hence every directory also carries the resolved paths of
         // itself and all its ancestors.
-        var queue: Deque = [(entity: root, url: url, ancestors: Set([url.path]))]
-        while let (current, currentURL, ancestors) = queue.popFirst() {
+        var queue: Deque = [Directory(entity: nil, path: "", url: url, ancestors: [url.path])]
+        while let directory = queue.popFirst() {
+            let (current, currentPath, currentURL, ancestors) = (directory.entity, directory.path, directory.url, directory.ancestors)
             let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
             let options = FileManager.DirectoryEnumerationOptions([.skipsHiddenFiles, .skipsSubdirectoryDescendants])
             guard let directoryEnumerator = localFileManager.enumerator(at: currentURL, includingPropertiesForKeys: Array(resourceKeys), options: options) else {
@@ -202,21 +202,26 @@ public final class PasswordEntity: NSManagedObject, Identifiable {
                 guard isDirectory || (name as NSString).pathExtension.lowercased() == "gpg" else {
                     continue
                 }
-                let passwordEntity = PasswordEntity(context: context)
-                passwordEntity.isDir = isDirectory
-                if isDirectory {
-                    passwordEntity.name = name
-                    if !ancestors.contains(resolvedURL.path) {
-                        queue.append((passwordEntity, resolvedURL, ancestors.union([resolvedURL.path])))
-                    }
-                } else {
-                    passwordEntity.name = (name as NSString).deletingPathExtension
+                let path = currentPath.isEmpty ? name : "\(currentPath)/\(name)"
+                let passwordEntity = existing.removeValue(forKey: "\(isDirectory)\(path)") ?? {
+                    let entity = PasswordEntity(context: context)
+                    entity.isDir = isDirectory
+                    entity.path = path
+                    return entity
+                }()
+                let entityName = isDirectory ? name : (name as NSString).deletingPathExtension
+                if passwordEntity.name != entityName {
+                    passwordEntity.name = entityName
                 }
-                passwordEntity.parent = current
-                passwordEntity.path = current.path.isEmpty ? name : "\(current.path)/\(name)"
+                if passwordEntity.parent != current {
+                    passwordEntity.parent = current
+                }
+                if isDirectory, !ancestors.contains(resolvedURL.path) {
+                    queue.append(Directory(entity: passwordEntity, path: path, url: resolvedURL, ancestors: ancestors.union([resolvedURL.path])))
+                }
             }
         }
-        context.delete(root)
+        existing.values.forEach(context.delete)
     }
 }
 
@@ -236,4 +241,12 @@ public extension PasswordEntity {
     @objc(removeChildren:)
     @NSManaged
     func removeFromChildren(_ values: NSSet)
+}
+
+/// A directory still to be enumerated, with the resolved paths of itself and its ancestors.
+private struct Directory {
+    let entity: PasswordEntity?
+    let path: String
+    let url: URL
+    let ancestors: Set<String>
 }

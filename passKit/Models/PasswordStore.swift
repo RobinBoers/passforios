@@ -141,7 +141,6 @@ public class PasswordStore {
         // The context belongs to the main queue, and pulling runs off it.
         DispatchQueue.main.async {
             self.setAllSynced()
-            self.deleteCoreData()
             self.initPasswordEntityCoreData()
             self.didUpdateStore()
         }
@@ -371,7 +370,6 @@ public class PasswordStore {
         let localCommitsCount = try getLocalCommits().count
         try gitRepository.reset()
         setAllSynced()
-        deleteCoreData()
         initPasswordEntityCoreData()
 
         didUpdateStore()

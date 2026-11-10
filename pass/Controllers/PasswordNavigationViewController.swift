@@ -209,18 +209,31 @@ class PasswordNavigationViewController: UIViewController {
         }
 
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.searchController = searchController
+        if navigationItem.searchController !== searchController {
+            navigationItem.searchController = searchController
+        }
         // On iOS 26 there is no tab bar: settings and syncing go at the top, and the search bar shares the
         // bottom toolbar with the add button. Before, the tab bar holds settings and the badge for changes.
         if #available(iOS 26.0, *) {
-            let localCommits = PasswordStore.shared.numberOfLocalCommits
-            syncUIBarButtonItem.badge = .count(localCommits)
-            navigationItem.rightBarButtonItems = isRootViewController() ? [settingsUIBarButtonItem] + (localCommits > 0 ? [syncUIBarButtonItem] : []) : nil
+            configureSyncButton()
             navigationItem.preferredSearchBarPlacement = .integrated
-            toolbarItems = [navigationItem.searchBarPlacementBarButtonItem, .fixedSpace(0), addPasswordUIBarButtonItem]
+            if toolbarItems == nil {
+                toolbarItems = [navigationItem.searchBarPlacementBarButtonItem, .fixedSpace(0), addPasswordUIBarButtonItem]
+            }
         } else {
             navigationItem.rightBarButtonItem = addPasswordUIBarButtonItem
-            navigationController?.tabBarItem.badgeValue = PasswordStore.shared.numberOfLocalCommits.nonZeroDescription
+            configureSyncButton()
+        }
+    }
+
+    /// Only the bar buttons: rebuilding the rest of the navigation item while the list settles after a sync moves it.
+    private func configureSyncButton() {
+        let localCommits = PasswordStore.shared.numberOfLocalCommits
+        if #available(iOS 26.0, *) {
+            syncUIBarButtonItem.badge = .count(localCommits)
+            navigationItem.rightBarButtonItems = isRootViewController() ? [settingsUIBarButtonItem] + (localCommits > 0 ? [syncUIBarButtonItem] : []) : nil
+        } else {
+            navigationController?.tabBarItem.badgeValue = localCommits.nonZeroDescription
         }
     }
 
@@ -486,7 +499,7 @@ extension PasswordNavigationViewController {
     @objc
     func actOnPasswordStoreSyncSucceeded() {
         DispatchQueue.main.async {
-            self.configureNavigationItem()
+            self.configureSyncButton()
         }
     }
 

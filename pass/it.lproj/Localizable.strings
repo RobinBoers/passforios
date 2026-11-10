@@ -336,7 +336,6 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 // Settings
 "About"                   = "Informazioni";
 "AutoFill"                = "Riempimento automatico";
-"BasedOnPassForIos."      = "Basata su Pass for iOS di Mingshen Sun e collaboratori.";
 "Branch"                  = "Branch";
 "ClearSavedSuggestions"   = "Cancella suggerimenti salvati";
 "Clone"                   = "Clona";

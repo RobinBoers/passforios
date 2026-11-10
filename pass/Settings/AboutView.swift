@@ -32,8 +32,6 @@ struct AboutView: View {
                 }
             } header: {
                 Text("Acknowledgements")
-            } footer: {
-                Text("BasedOnPassForIos.")
             }
         }
         .navigationTitle("About")

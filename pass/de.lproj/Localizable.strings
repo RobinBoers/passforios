@@ -340,7 +340,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 // Settings
 "About"                   = "Über";
 "AutoFill"                = "Automatisch ausfüllen";
-"BasedOnPassForIos."      = "Basiert auf Pass for iOS von Mingshen Sun und Mitwirkenden.";
 "Branch"                  = "Branch";
 "ClearSavedSuggestions"   = "Gespeicherte Vorschläge löschen";
 "Clone"                   = "Klonen";

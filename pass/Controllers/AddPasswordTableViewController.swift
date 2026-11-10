@@ -14,7 +14,7 @@ class AddPasswordTableViewController: PasswordEditorTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        name = defaultDirPrefix
+        folder = defaultDirPrefix
     }
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {

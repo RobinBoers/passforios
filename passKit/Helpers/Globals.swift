@@ -46,7 +46,7 @@ public final class Globals {
 
     public static let passwordDots = "••••••••••••"
     public static let oneTimePasswordDots = "••••••"
-    public static let passwordFont = UIFont(name: "Courier-Bold", size: UIFont.labelFontSize - 1)
+    public static let passwordFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .monospacedSystemFont(ofSize: 17, weight: .regular))
 
     public static let otpNotification = bundleIdentifier + ".notification.otp"
     public static let otpNotificationCategory = bundleIdentifier + ".notification.otp.category"

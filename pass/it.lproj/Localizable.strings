@@ -413,3 +413,6 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "KeepEditing" = "Continua a modificare";
 "SyncFailed" = "Sincronizzazione non riuscita";
 "CopyPassword" = "Copia password";
+"Show" = "Mostra";
+"Hide" = "Nascondi";
+"NotSynced" = "Non sincronizzato";

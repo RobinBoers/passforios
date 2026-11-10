@@ -157,7 +157,6 @@
 		DC0F7692283C00220042DA74 /* passKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A26075781EEC6F34005DB03E /* passKit.framework */; };
 		DC30F83A29BED611001EB12B /* PasswordGeneratorUISlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC30F83929BED611001EB12B /* PasswordGeneratorUISlider.swift */; };
 		DD8990E8F1136FB0AE07405A /* FieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */; };
-		DC4914961E434301007FF592 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4914941E434301007FF592 /* LabelTableViewCell.swift */; };
 		DC4914991E434600007FF592 /* PasswordDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4914981E434600007FF592 /* PasswordDetailTableViewController.swift */; };
 		DC6474532D20DD0C004B4BBC /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6474522D20DD0C004B4BBC /* PersistenceController.swift */; };
 		DC64745C2D29BE9B004B4BBC /* PasswordEntityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6474592D29BD43004B4BBC /* PasswordEntityTest.swift */; };
@@ -171,9 +170,6 @@
 		DC917BE11E2E8231000FDF54 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC917BDF1E2E8231000FDF54 /* LaunchScreen.storyboard */; };
 		DCB0EC272846857E00EFEE10 /* Objective-CBridgingHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = A2BC54C71EEE5669001FAFBD /* Objective-CBridgingHeader.h */; };
 		DCC441521E8F6C06008A90C4 /* RawPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC441511E8F6C06008A90C4 /* RawPasswordViewController.swift */; };
-		DCDDEAB01E4639F300F68193 /* LabelTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCDDEAAF1E4639F300F68193 /* LabelTableViewCell.xib */; };
-		DCDDEAB31E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDDEAB11E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift */; };
-		DCFB77A31E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DCFB77A21E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib */; };
 		DCFB77A71E502DF9008DE471 /* EditPasswordTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB77A61E502DF9008DE471 /* EditPasswordTableViewController.swift */; };
 		DCFB77A91E502FF6008DE471 /* PasswordEditorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFB77A81E502FF6008DE471 /* PasswordEditorTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -413,7 +409,6 @@
 		DC30F93929C6386E001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DC30F93A29C63875001EB12B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldTableViewCell.swift; sourceTree = "<group>"; };
-		DC4914941E434301007FF592 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
 		DC4914981E434600007FF592 /* PasswordDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordDetailTableViewController.swift; sourceTree = "<group>"; };
 		DC6474522D20DD0C004B4BBC /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		DC6474582D29BD43004B4BBC /* CoreDataTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTestCase.swift; sourceTree = "<group>"; };
@@ -427,9 +422,6 @@
 		DC917BE01E2E8231000FDF54 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC917BE21E2E8231000FDF54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCC441511E8F6C06008A90C4 /* RawPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawPasswordViewController.swift; sourceTree = "<group>"; };
-		DCDDEAAF1E4639F300F68193 /* LabelTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LabelTableViewCell.xib; sourceTree = "<group>"; };
-		DCDDEAB11E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordDetailTitleTableViewCell.swift; sourceTree = "<group>"; };
-		DCFB77A21E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PasswordDetailTitleTableViewCell.xib; sourceTree = "<group>"; };
 		DCFB77A61E502DF9008DE471 /* EditPasswordTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPasswordTableViewController.swift; sourceTree = "<group>"; };
 		DCFB77A81E502FF6008DE471 /* PasswordEditorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordEditorTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -882,10 +874,6 @@
 			children = (
 				9A8F9EE1259EDD520027CE15 /* PasswordTableViewCell.swift */,
 				B1E9EC2104A3BA3FB8CE5AAF /* FieldTableViewCell.swift */,
-				DC4914941E434301007FF592 /* LabelTableViewCell.swift */,
-				DCDDEAAF1E4639F300F68193 /* LabelTableViewCell.xib */,
-				DCDDEAB11E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift */,
-				DCFB77A21E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib */,
 				DC30F83929BED611001EB12B /* PasswordGeneratorUISlider.swift */,
 				DC037CBD1E4ED4E100609409 /* TextViewTableViewCell.swift */,
 				DC037CBE1E4ED4E100609409 /* TextViewTableViewCell.xib */,
@@ -1274,10 +1262,8 @@
 				DC917BE11E2E8231000FDF54 /* LaunchScreen.storyboard in Resources */,
 				30BF5EC821EA8FB5000E4154 /* Localizable.strings in Resources */,
 				30C25DBD21F3599E00BB27BB /* InfoPlist.strings in Resources */,
-				DCFB77A31E500D9C008DE471 /* PasswordDetailTitleTableViewCell.xib in Resources */,
 				DC917BDE1E2E8231000FDF54 /* Assets.xcassets in Resources */,
 				30BF5ED721ED2434000E4154 /* Localizable.stringsdict in Resources */,
-				DCDDEAB01E4639F300F68193 /* LabelTableViewCell.xib in Resources */,
 				DC917BDC1E2E8231000FDF54 /* Main.storyboard in Resources */,
 				DC037CC01E4ED4E100609409 /* TextViewTableViewCell.xib in Resources */,
 			);
@@ -1472,9 +1458,7 @@
 				9AFC880025B51EC3008D6060 /* PasswordEncryptor.swift in Sources */,
 				DC30F83A29BED611001EB12B /* PasswordGeneratorUISlider.swift in Sources */,
 				DD8990E8F1136FB0AE07405A /* FieldTableViewCell.swift in Sources */,
-				DC4914961E434301007FF592 /* LabelTableViewCell.swift in Sources */,
 				DCFB77A71E502DF9008DE471 /* EditPasswordTableViewController.swift in Sources */,
-				DCDDEAB31E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift in Sources */,
 				A2A7813F1E97DBD9001311F5 /* QRScannerController.swift in Sources */,
 				C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */,
 				219F1A7614266C9355CEAD8C /* AppLockViewController.swift in Sources */,

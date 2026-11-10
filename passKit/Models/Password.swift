@@ -53,6 +53,14 @@ public class Password {
         otpToken?.currentPassword
     }
 
+    /// How long a time-based one-time password lasts.
+    public var otpPeriod: TimeInterval? {
+        if case let .timer(period) = otpToken?.generator.factor {
+            return period
+        }
+        return nil
+    }
+
     /// Fields not already shown as the primary secret, user or one-time password.
     public var additionalFields: [Field] {
         entry.fields.filter { field in

@@ -14,10 +14,16 @@ struct OnboardingView: View {
             switch model.step {
             case .welcome:
                 WelcomeStep()
-            case .passphrase:
-                PassphraseStep()
+            case .gitPassphrase:
+                GitPassphraseStep()
+            case .gpgPassphrase:
+                GPGPassphraseStep()
             case .autoFill:
                 AutoFillStep()
+            case .oneTimeCodes:
+                OneTimeCodesStep()
+            case .appLock:
+                AppLockStep()
             }
         }
         .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
@@ -121,25 +127,32 @@ private struct Feature: View {
     }
 }
 
-private struct PassphraseStep: View {
+/// A secret to type in, with an option to remember it, shared by the Git and GPG steps.
+private struct SecretStep: View {
+    let symbol: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+    let placeholder: LocalizedStringKey
+    let action: (_ secret: String, _ remember: Bool) -> Void
+
     @EnvironmentObject private var model: OnboardingModel
 
-    @State private var passphrase = ""
+    @State private var secret = ""
     @State private var remember = true
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        StepLayout(symbol: "key.horizontal", title: "PgpPassphrase", message: "PgpPassphraseMessage.") {
+        StepLayout(symbol: symbol, title: title, message: message) {
             VStack(alignment: .leading, spacing: 16) {
-                SecureField("Passphrase", text: $passphrase)
+                SecureField(placeholder, text: $secret)
                     .textContentType(.password)
                     .focused($isFocused)
                     .submitLabel(.continue)
-                    .onSubmit(verify)
+                    .onSubmit(submit)
                     .padding(14)
                     .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color(.secondarySystemBackground)))
                 Toggle("RememberPassphrase", isOn: $remember)
-                if let error = model.passphraseError {
+                if let error = model.error {
                     Text(error).foregroundStyle(.red)
                 }
             }
@@ -147,58 +160,97 @@ private struct PassphraseStep: View {
                 isFocused = true
             }
         } buttons: {
-            Button(action: verify) {
-                if model.isVerifying {
+            Button(action: submit) {
+                if model.isWorking {
                     ProgressView().tint(.white)
                 } else {
                     Text("Continue")
                 }
             }
             .buttonStyle(PrimaryButtonStyle())
-            .disabled(passphrase.isEmpty || model.isVerifying)
-            Button("Skip", action: model.next)
-                .frame(minHeight: 44)
+            .disabled(secret.isEmpty || model.isWorking)
         }
     }
 
-    private func verify() {
-        guard !passphrase.isEmpty else {
+    private func submit() {
+        guard !secret.isEmpty else {
             return
         }
-        model.verify(passphrase: passphrase, remember: remember)
+        action(secret, remember)
+    }
+}
+
+private struct GitPassphraseStep: View {
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        SecretStep(
+            symbol: model.usesSSHKey ? "key.horizontal" : "person.badge.key",
+            title: model.usesSSHKey ? "SshPassphrase" : "GitPassword",
+            message: model.usesSSHKey ? "SshPassphraseMessage." : "GitPasswordMessage.",
+            placeholder: model.usesSSHKey ? "Passphrase" : "Password",
+            action: model.clone
+        )
+    }
+}
+
+private struct GPGPassphraseStep: View {
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        SecretStep(symbol: "key.horizontal", title: "PgpPassphrase", message: "PgpPassphraseMessage.", placeholder: "Passphrase", action: model.verify)
     }
 }
 
 private struct AutoFillStep: View {
     @EnvironmentObject private var model: OnboardingModel
 
-    @State private var showsCodes = false
-
     var body: some View {
         StepLayout(symbol: "person.badge.key", title: "AutoFill", message: "AutoFillMessage.") {
-            VStack(alignment: .leading, spacing: 16) {
-                if model.isAutoFillEnabled {
-                    Label("AutoFillIsOn", systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(.green)
-                } else {
-                    Button("TurnOnAutoFill", action: model.turnOnAutoFill)
-                }
-                Toggle("ShowOneTimeCodes", isOn: $showsCodes)
-                    .onChange(of: showsCodes) { isOn in
-                        if isOn {
-                            model.allowOneTimeCodeNotifications()
-                        }
-                    }
-                Text("ShowOneTimeCodes.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                if AppLock.isAvailable {
-                    Toggle("LockWith(%@)".localize(AppLock.methodName), isOn: model.appLock)
-                }
+            if model.isAutoFillEnabled {
+                Label("AutoFillIsOn", systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
             }
         } buttons: {
-            Button("Done", action: model.finish)
+            if model.isAutoFillEnabled {
+                Button("Continue") { model.go(to: .oneTimeCodes) }
+                    .buttonStyle(PrimaryButtonStyle())
+            } else {
+                Button("TurnOnAutoFill", action: model.turnOnAutoFill)
+                    .buttonStyle(PrimaryButtonStyle())
+                Button("NotNow") { model.go(to: .oneTimeCodes) }
+                    .frame(minHeight: 44)
+            }
+        }
+    }
+}
+
+private struct OneTimeCodesStep: View {
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        StepLayout(symbol: "bell.badge", title: "ShowOneTimeCodes", message: "ShowOneTimeCodes.") {
+            EmptyView()
+        } buttons: {
+            Button("AllowNotifications", action: model.allowOneTimeCodeNotifications)
                 .buttonStyle(PrimaryButtonStyle())
+            Button("NotNow", action: model.afterOneTimeCodes)
+                .frame(minHeight: 44)
+        }
+    }
+}
+
+private struct AppLockStep: View {
+    @EnvironmentObject private var model: OnboardingModel
+
+    var body: some View {
+        StepLayout(symbol: AppLock.symbolName, title: LocalizedStringKey("LockWith(%@)".localize(AppLock.methodName)), message: "AppLockMessage.") {
+            EmptyView()
+        } buttons: {
+            Button(LocalizedStringKey("UseMethod(%@)".localize(AppLock.methodName)), action: model.turnOnAppLock)
+                .buttonStyle(PrimaryButtonStyle())
+            Button("NotNow", action: model.finish)
+                .frame(minHeight: 44)
         }
     }
 }

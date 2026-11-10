@@ -30,19 +30,24 @@ struct KeysView: View {
                         Text(id).monospaced()
                     }
                 }
-                Button("PasteKey") { editing = .pgp }
-                if !model.pgpKeyIDs.isEmpty {
-                    Button("RemovePgpKeys", role: .destructive) { removing = .pgp }
+                if model.pgpKeyIDs.isEmpty {
+                    Button("PasteKey") { editing = .pgp }
+                } else {
+                    Button("RemoveKey", role: .destructive) { removing = .pgp }
                 }
             } header: {
                 Text("PGPKey")
             }
 
             SwiftUI.Section {
-                Text(LocalizedStringKey(model.hasSSHKey ? "Set" : "NotSet")).foregroundStyle(.secondary)
-                Button("PasteKey") { editing = .ssh }
                 if model.hasSSHKey {
-                    Button("RemoveSShKeys", role: .destructive) { removing = .ssh }
+                    Text(model.sshKeySummary ?? "Set".localize())
+                        .font(.footnote.monospaced())
+                        .textSelection(.enabled)
+                    Button("RemoveKey", role: .destructive) { removing = .ssh }
+                } else {
+                    Text("NotSet").foregroundStyle(.secondary)
+                    Button("PasteKey") { editing = .ssh }
                 }
             } header: {
                 Text("SSHKey")
@@ -80,7 +85,7 @@ enum KeyKind: String, Identifiable {
     }
 
     var removeTitle: String {
-        (self == .pgp ? "RemovePgpKeys" : "RemoveSShKeys").localize()
+        (self == .pgp ? "RemoveGpgKey?" : "RemoveSshKey?").localize()
     }
 }
 

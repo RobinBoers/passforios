@@ -103,7 +103,6 @@
 "FillInSshKeyPassphrase."   = "Bitte gib das Passwort des SSH-Schlüssels ein.";
 "CannotSelectSshKey"        = "SSH-Schlüssel kann nicht selektiert werden";
 "PleaseSetupSshKeyFirst."   = "Bitte richte erst den SSH-Schlüssel ein.";
-"RemoveSShKeys"             = "SSH-Schlüssel entfernen";
 "SetPrivateKeyUrl."         = "Bitte gibt erst die URL des privaten Schlüssels ein.";
 "SshCopyPrivateKeyToPass."  = "Kopiere den privaten Schlüssel im ASCII-Format verschlüsselt mit dem Namen \"ssh_key\" über iTunes zu Pass. Danach kann der Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 
@@ -142,7 +141,6 @@
 "FetchingPgpKey"                    = "GPG-Schlüssel wird geladen";
 "RememberToRemoveKey"               = "Vergiss das Löschen der Schlüssel nicht";
 "RememberToRemoveKeyFromServer."    = "Vergiss nicht, die Schlüssel wieder vom Server zu entfernen.";
-"RemovePgpKeys"                     = "GPG-Schlüssel entfernen";
 "PgpCopyPublicAndPrivateKeyToPass." = "Kopiere den öffentlichen und den privaten Schlüssel im ASCII-Format verschlüsselt mit den Namen \"gpg_key.pub\" bzw. \"gpg_key\" über iTunes zu Pass. Danach können die Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 "KeyExpiredOrIncompatibleError."    = "Der öffentliche GPG-Schlüssel ist eventuell abgelaufen oder inkompatibel mit dem privaten Schlüssel.";
 "WrongPassphraseError."             = "Das Passwort für den privaten GPG-Schlüssel ist falsch.";
@@ -171,13 +169,9 @@
 "FailedToClearQuickTypeSuggestions" = "Zurücksetzen der QuickType-Vorschläge fehlgeschlagen: %@";
 
 // Erase password store
-"ErasePasswordStoreData?"   = "Daten im Store löschen?";
-"ErasePasswordStoreData"    = "Daten im Store löschen";
 "EraseExplanation."         = "Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten auf einem entfernten Server sind nicht betroffen.";
 
 // Discard local changes
-"DiscardAllLocalChanges?"   = "Alle lokalen Änderungen verwerfen?";
-"DiscardAllLocalChanges"    = "Alle lokalen Änderungen verwerfen";
 "DiscardExplanation."       = "Möchtest du wirklich alle Änderungen an den lokalen Daten für immer verwerfen? Diese Aktion kann nicht rückgängig gemacht werden.";
 
 // Forget passcode
@@ -223,7 +217,6 @@
 "AboutRepository"       = "Über das Repository";
 "ValueNotAvailable"     = "Nicht verfügbar";
 "Size"                  = "Größe";
-"LocalCommits"          = "Lokale Commits";
 "LastSynced"            = "Zuletzt synchronisiert";
 "Commits"               = "Commits";
 "CommitLogs"            = "Commit Logs";
@@ -355,11 +348,10 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "Branch"                  = "Branch";
 "ClearSavedSuggestions"   = "Gespeicherte Vorschläge löschen";
 "Clone"                   = "Klonen";
-"CloneAgain"              = "Erneut klonen";
 "Email"                   = "E-Mail";
-"GitSignature"            = "Git-Signatur";
+"GitSignature"            = "Signatur";
 "GitURL"                  = "Git-URL";
-"GitURLFormats."          = "https://host/repo.git, ssh://user@host:port/repo.git oder user@host:repo.git";
+"GitURLFormats."          = "https://host/repo.git\nssh://user@host:port/repo.git\nuser@host:repo.git";
 "Keys"                    = "Schlüssel";
 "LockWith(%@)"            = "Mit %@ sperren";
 "Multiple"                = "Mehrere";
@@ -396,10 +388,29 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "TurnOnAutoFill"        = "Automatisch ausfüllen aktivieren";
 "ShowOneTimeCodes"      = "Einmalcodes anzeigen";
 "ShowOneTimeCodes."     = "Nach dem Ausfüllen eines Passworts zeigt eine Mitteilung den Einmalcode zum Kopieren.";
-"GPGKey" = "GPG-Schlüssel";
-"Git" = "Git";
-"RememberPassphrases" = "Passphrasen merken";
 "RememberPassphrase" = "Passphrase merken";
 "Format" = "Format";
 "FormatSec." = "Ein Kopf aus key: value-Zeilen, Geheimnisse mit ! markiert, dann Notizen nach einer Leerzeile.";
 "FormatPass." = "Das Passwort in der ersten Zeile, dann key: value-Zeilen und Notizen.";
+"RememberGpgPassphrase" = "GPG-Passphrase merken";
+"RememberSshPassphrase" = "SSH-Passphrase merken";
+"RememberGitPassword" = "Git-Passwort merken";
+"DiscardChanges" = "Änderungen verwerfen";
+"DiscardChanges?" = "Änderungen verwerfen?";
+"EraseStore" = "Store löschen";
+"EraseStore?" = "Store löschen?";
+"Changes" = "Änderungen";
+"Sync" = "Synchronisieren";
+"LastSynced(%@)" = "Zuletzt synchronisiert: %@";
+"GitURLFormats" = "URL-Formate";
+"RemoveKey" = "Schlüssel entfernen";
+"RemoveGpgKey?" = "GPG-Schlüssel entfernen?";
+"RemoveSshKey?" = "SSH-Schlüssel entfernen?";
+"SshPassphrase" = "SSH-Passphrase";
+"SshPassphraseMessage." = "Gib die Passphrase deines SSH-Schlüssels ein, um den Store zu klonen.";
+"GitPassword" = "Git-Passwort";
+"GitPasswordMessage." = "Gib das Passwort deines Git-Kontos ein, um den Store zu klonen.";
+"NotNow" = "Nicht jetzt";
+"AllowNotifications" = "Mitteilungen erlauben";
+"AppLockMessage." = "Vor dem Anzeigen oder Ausfüllen von Passwörtern nachfragen.";
+"UseMethod(%@)" = "%@ verwenden";

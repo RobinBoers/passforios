@@ -23,6 +23,7 @@ final class SettingsModel: ObservableObject {
     @Published var storeInfo = StoreInfo()
     @Published var pgpKeyIDs = [String]()
     @Published var hasSSHKey = false
+    @Published var sshKeySummary: String?
     @Published var hasStore = false
 
     private var observers = [NSObjectProtocol]()
@@ -42,7 +43,9 @@ final class SettingsModel: ObservableObject {
         let store = PasswordStore.shared
         hasStore = store.repositoryExists()
         pgpKeyIDs = (try? PGPAgent.shared.getShortKeyID()) ?? []
-        hasSSHKey = AppKeychain.shared.contains(key: SSHKey.PRIVATE.getKeychainKey())
+        let sshKey: String? = AppKeychain.shared.get(for: SSHKey.PRIVATE.getKeychainKey())
+        hasSSHKey = sshKey != nil
+        sshKeySummary = sshKey.flatMap(SSHKey.fingerprint)
         Task.detached(priority: .userInitiated) {
             let info = StoreInfo(
                 passwords: store.numberOfPasswords,
@@ -124,16 +127,35 @@ final class SettingsModel: ObservableObject {
     // MARK: - Actions
 
     func setUpFromComputer() {
-        host?.setUpFromComputer { [weak self] in
+        host?.presentOnboarding()
+    }
+
+    func sync() {
+        host?.syncRepository { [weak self] in
             self?.refresh()
         }
     }
 
+    /// The remote's host, also for `user@host:path` remotes, which Foundation parses without one.
+    var remoteHost: String {
+        let url = passKit.Defaults.gitURL
+        if let host = url.host {
+            return host
+        }
+        let remote = url.absoluteString
+        return String(remote.split(separator: "@").last?.split(separator: ":").first ?? Substring(remote))
+    }
+
+    /// SSH keys have a passphrase, HTTPS remotes a password.
+    var rememberGitCredentialTitle: String {
+        (passKit.Defaults.gitAuthenticationMethod == .key ? "RememberSshPassphrase" : "RememberGitPassword").localize()
+    }
+
     func clone(url: URL, branch: String, username: String, authentication: GitAuthenticationMethod) {
         passKit.Defaults.gitAuthenticationMethod = authentication
-        host?.cloneRepository(url: url, branch: branch, username: username) { [weak self] in
+        host?.cloneRepository(url: url, branch: branch, username: username, completion: { [weak self] in
             self?.refresh()
-        }
+        })
     }
 
     func importPGPKey(_ armor: String) throws {

@@ -16,11 +16,11 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 storeSection
-                securitySection
-                autoFillSection
                 SwiftUI.Section {
                     Toggle("ShowFolders", isOn: model.showFolders)
                 }
+                securitySection
+                autoFillSection
                 SwiftUI.Section {
                     NavigationLink("About") {
                         AboutView()
@@ -37,7 +37,7 @@ struct SettingsView: View {
             NavigationLink {
                 StoreView()
             } label: {
-                LabeledContent("Store", value: model.hasStore ? Defaults.gitURL.host ?? "" : "NotSet".localize())
+                LabeledContent("Store", value: model.hasStore ? model.remoteHost : "NotSet".localize())
             }
             NavigationLink {
                 KeysView()
@@ -52,19 +52,15 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder private var securitySection: some View {
+    private var securitySection: some View {
         SwiftUI.Section {
             if AppLock.isAvailable {
                 Toggle("LockWith(%@)".localize(AppLock.methodName), isOn: model.appLock)
             }
+            Toggle("RememberGpgPassphrase", isOn: model.rememberPGPPassphrase)
+            Toggle(model.rememberGitCredentialTitle, isOn: model.rememberGitCredential)
         } header: {
             Text("Security")
-        }
-        SwiftUI.Section {
-            Toggle("GPGKey", isOn: model.rememberPGPPassphrase)
-            Toggle("Git", isOn: model.rememberGitCredential)
-        } header: {
-            Text("RememberPassphrases")
         }
     }
 
@@ -83,23 +79,23 @@ struct SettingsView: View {
 
     private var dangerSection: some View {
         SwiftUI.Section {
-            Button("DiscardAllLocalChanges", role: .destructive) {
+            Button("DiscardChanges", role: .destructive) {
                 isConfirmingDiscard = true
             }
-            .disabled(!model.hasStore)
-            Button("ErasePasswordStoreData", role: .destructive) {
+            .disabled(model.storeInfo.localCommits == 0)
+            Button("EraseStore", role: .destructive) {
                 isConfirmingErase = true
             }
         }
-        .confirmationDialog("DiscardAllLocalChanges?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
-            Button("DiscardAllLocalChanges", role: .destructive) {
+        .confirmationDialog("DiscardChanges?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
+            Button("DiscardChanges", role: .destructive) {
                 model.discardLocalChanges()
             }
         } message: {
             Text("DiscardExplanation.")
         }
-        .confirmationDialog("ErasePasswordStoreData?", isPresented: $isConfirmingErase, titleVisibility: .visible) {
-            Button("ErasePasswordStoreData", role: .destructive) {
+        .confirmationDialog("EraseStore?", isPresented: $isConfirmingErase, titleVisibility: .visible) {
+            Button("EraseStore", role: .destructive) {
                 model.erase()
             }
         } message: {
@@ -108,13 +104,7 @@ struct SettingsView: View {
     }
 
     private var keysSummary: String {
-        switch model.pgpKeyIDs.count {
-        case 0:
-            "NotSet".localize()
-        case 1:
-            model.pgpKeyIDs[0]
-        default:
-            "Multiple".localize()
-        }
+        let keys = [model.pgpKeyIDs.isEmpty ? nil : "GPG", model.hasSSHKey ? "SSH" : nil].compactMap(\.self)
+        return keys.isEmpty ? "NotSet".localize() : keys.joined(separator: ", ")
     }
 }

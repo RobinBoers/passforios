@@ -3,17 +3,38 @@
 //  pass
 //
 
+import ObjectiveGit
 import passKit
 import UIKit
 
 extension PasswordAlertPresenter where Self: UIViewController {
-    func cloneRepository(url: URL, branch: String, username: String, completion: @escaping () -> Void) {
+    /// Clones the store. Without a password provider, the passphrase is asked for in an alert and the user is
+    /// asked afterwards whether to remember it. With a failure handler, errors go there instead of an alert.
+    func cloneRepository(
+        url: URL,
+        branch: String,
+        username: String,
+        passwordProvider: GitCredential.PasswordProvider? = nil,
+        completion: @escaping () -> Void,
+        failure: ((String) -> Void)? = nil
+    ) {
         Defaults.gitURL = url
         Defaults.gitBranchName = branch
         Defaults.gitUsername = username
 
-        // Remember git credential password/passphrase temporarily, ask whether users want this after a successful clone.
-        Defaults.isRememberGitCredentialPassphraseOn = true
+        if passwordProvider == nil {
+            // Remember git credential password/passphrase temporarily, ask whether users want this after a successful clone.
+            Defaults.isRememberGitCredentialPassphraseOn = true
+        }
+        let fail: (String) -> Void = { message in
+            if let failure {
+                ProgressSheet.dismiss {
+                    failure(message)
+                }
+            } else {
+                Utils.alert(title: "Error".localize(), message: message, controller: self)
+            }
+        }
         ProgressSheet.show("Cloning Remote Repository", on: self)
         // swiftlint:disable:next closure_body_length
         DispatchQueue.global(qos: .userInitiated).async {
@@ -43,7 +64,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 try passwordStore.cloneRepository(
                     remoteRepoURL: url,
                     branchName: branch,
-                    options: gitCredential.getCredentialOptions(passwordProvider: self.present),
+                    options: gitCredential.getCredentialOptions(passwordProvider: passwordProvider ?? self.present),
                     transferProgressBlock: transferProgressBlock,
                     checkoutProgressBlock: checkoutProgressBlock
                 )
@@ -52,14 +73,18 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 guard FileManager.default.fileExists(atPath: gpgIDFile) else {
                     passwordStore.eraseStoreData()
                     DispatchQueue.main.async {
-                        Utils.alert(title: "Error".localize(), message: "NoProperPassRepo.".localize(), controller: self)
+                        fail("NoProperPassRepo.".localize())
                     }
                     return
                 }
 
                 DispatchQueue.main.async {
                     ProgressSheet.dismiss {
-                        self.askToRememberGitCredential(completion: completion)
+                        if passwordProvider == nil {
+                            self.askToRememberGitCredential(completion: completion)
+                        } else {
+                            completion()
+                        }
                     }
                 }
             } catch {
@@ -70,7 +95,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                     message = "\(message)\n\("UnderlyingError".localize(underlyingError.localizedDescription))"
                 }
                 DispatchQueue.main.async {
-                    Utils.alert(title: "Error".localize(), message: message, controller: self)
+                    fail(message)
                 }
             }
         }
@@ -95,12 +120,63 @@ extension PasswordAlertPresenter where Self: UIViewController {
         present(alert, animated: true)
     }
 
-    /// Scans the code shown by `passport` on a computer, then imports its keys and clones its repository.
-    func setUpFromComputer(completion: @escaping () -> Void = {}) {
+    /// Pulls, then pushes any local commits.
+    func syncRepository(completion: @escaping () -> Void = {}) {
+        ProgressSheet.show("SyncingPasswordStore".localize(), on: self)
+        let gitCredential = GitCredential.from(
+            authenticationMethod: Defaults.gitAuthenticationMethod,
+            userName: Defaults.gitUsername,
+            keyStore: AppKeychain.shared
+        )
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                let pullOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
+                try PasswordStore.shared.pullRepository(options: pullOptions) { git_transfer_progress, _ in
+                    DispatchQueue.main.async {
+                        ProgressSheet.update(progress: Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), status: "PullingFromRemoteRepository".localize())
+                    }
+                }
+                if PasswordStore.shared.numberOfLocalCommits > 0 {
+                    let pushOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
+                    try PasswordStore.shared.pushRepository(options: pushOptions) { current, total, _, _ in
+                        DispatchQueue.main.async {
+                            ProgressSheet.update(progress: Float(current) / Float(total), status: "PushingToRemoteRepository".localize())
+                        }
+                    }
+                }
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .passwordStoreSyncSucceeded, object: nil)
+                    ProgressSheet.dismiss {
+                        Feedback.success()
+                        completion()
+                    }
+                }
+            } catch let error as NSError {
+                gitCredential.delete()
+                DispatchQueue.main.async {
+                    var message = error.localizedDescription
+                    if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
+                        message = message | "UnderlyingError".localize(underlyingError.localizedDescription)
+                        if underlyingError.localizedDescription.contains("WrongPassphrase".localize()) {
+                            message = message | "RecoverySuggestion.".localize()
+                        }
+                    }
+                    if let mergeConflictFiles = error.userInfo[GTPullMergeConflictedFiles] as? NSArray {
+                        let mergeConflictFilesString = mergeConflictFiles.componentsJoined(by: ", ")
+                        message = message | "MergeConflictError".localize(mergeConflictFilesString)
+                    }
+                    Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
+                }
+            }
+        }
+    }
+
+    /// Scans the code shown by `passport` on a computer, confirming first when it would replace a store.
+    func scanPassport(then handle: @escaping (Passport) -> Void) {
         let scanner = PassportScannerController()
         scanner.onScan = { passport in
             self.confirmOverwrite {
-                self.setUp(from: passport, completion: completion)
+                handle(passport)
             }
         }
         scanner.navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak scanner] _ in
@@ -119,25 +195,9 @@ extension PasswordAlertPresenter where Self: UIViewController {
         alert.addAction(UIAlertAction.cancel())
         topmostPresentedViewController.present(alert, animated: true)
     }
-
-    private func setUp(from passport: Passport, completion: @escaping () -> Void) {
-        ProgressSheet.show("ImportingKeys".localize(), on: self)
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                try passport.importKeys()
-                DispatchQueue.main.async {
-                    self.cloneRepository(url: passport.url, branch: passport.branch, username: passport.username ?? passport.url.user ?? "git", completion: completion)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
-                }
-            }
-        }
-    }
 }
 
-private extension Passport {
+extension Passport {
     func importKeys() throws {
         try PGPAgent.shared.importKeys(privateKey: pgpKey, otherPublicKeys: recipientKeys)
 
@@ -154,5 +214,10 @@ private extension Passport {
         Defaults.storeFormat = format
         Defaults.gitSignatureName = name
         Defaults.gitSignatureEmail = email
+    }
+
+    /// Whether cloning needs a passphrase or password, which onboarding asks for on a screen of its own.
+    var needsGitSecret: Bool {
+        sshKey.map(SSHKey.isEncrypted) ?? true
     }
 }

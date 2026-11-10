@@ -15,14 +15,13 @@ struct StoreView: View {
     @State private var username = Defaults.gitUsername
     @State private var authentication = Defaults.gitAuthenticationMethod
     @State private var format = Defaults.storeFormat
+    @State private var isShowingURLFormats = false
+    @State private var isConfirmingClone = false
 
     var body: some View {
         Form {
-            if model.hasStore {
-                infoSection
-            }
+            infoSection
             remoteSection
-            formatSection
             signatureSection
         }
         .navigationTitle("Store")
@@ -31,24 +30,30 @@ struct StoreView: View {
 
     private var infoSection: some View {
         SwiftUI.Section {
-            LabeledContent("Passwords", value: model.storeInfo.passwords.formatted())
-            LabeledContent("Size", value: model.storeInfo.size.formatted(.byteCount(style: .file)))
-            LabeledContent("Commits", value: model.storeInfo.commits.map(String.init) ?? "ValueNotAvailable".localize())
-            LabeledContent("LocalCommits", value: String(model.storeInfo.localCommits))
-            LabeledContent("LastSynced", value: model.storeInfo.lastSynced?.formatted(date: .abbreviated, time: .shortened) ?? "SyncAgain?".localize())
-            NavigationLink("CommitLogs") {
-                CommitLogView()
+            Picker("Format", selection: $format) {
+                ForEach(StoreFormat.allCases, id: \.self) { format in
+                    Text(verbatim: format.rawValue).tag(format)
+                }
+            }
+            .onChange(of: format) { format in
+                Defaults.storeFormat = format
+            }
+            if model.hasStore {
+                LabeledContent("Passwords", value: model.storeInfo.passwords.formatted())
+                LabeledContent("Size", value: model.storeInfo.size.formatted(.byteCount(style: .file)))
+                LabeledContent("Changes", value: model.storeInfo.localCommits.formatted())
+                NavigationLink {
+                    CommitLogView()
+                } label: {
+                    LabeledContent("Commits", value: model.storeInfo.commits?.formatted() ?? "ValueNotAvailable".localize())
+                }
             }
         }
     }
 
     private var remoteSection: some View {
         SwiftUI.Section {
-            TextField("GitURL", text: $url)
-                .textContentType(.URL)
-                .keyboardType(.URL)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
+            urlRow
             LabeledContent("Branch") {
                 TextField("Branch", text: $branch)
                     .multilineTextAlignment(.trailing)
@@ -65,30 +70,56 @@ struct StoreView: View {
                 Text("Password").tag(GitAuthenticationMethod.password)
                 Text("SSHKey").tag(GitAuthenticationMethod.key)
             }
-            Button(LocalizedStringKey(model.hasStore ? "CloneAgain" : "Clone"), action: clone)
-                .disabled(!canClone)
+            remoteAction
         } header: {
             Text("Remote")
         } footer: {
+            if model.hasStore {
+                Text("LastSynced(%@)".localize(model.storeInfo.lastSynced?.formatted(date: .abbreviated, time: .shortened) ?? "SyncAgain?".localize()))
+            }
+        }
+        .alert("GitURLFormats", isPresented: $isShowingURLFormats) {
+            Button("Ok", role: .cancel) {}
+        } message: {
             Text("GitURLFormats.")
+        }
+        .confirmationDialog("Overwrite?", isPresented: $isConfirmingClone, titleVisibility: .visible) {
+            Button("Overwrite", role: .destructive, action: clone)
+        } message: {
+            Text("OperationWillOverwriteData.")
         }
     }
 
-    private var formatSection: some View {
-        SwiftUI.Section {
-            Picker("Format", selection: $format) {
-                ForEach(StoreFormat.allCases, id: \.self) { format in
-                    Text(verbatim: format.rawValue).tag(format)
+    private var urlRow: some View {
+        HStack {
+            TextField("GitURL", text: $url)
+                .textContentType(.URL)
+                .keyboardType(.URL)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+            Button {
+                isShowingURLFormats = true
+            } label: {
+                Image(systemName: "info.circle")
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel("GitURLFormats")
+        }
+    }
+
+    /// Syncs the store as it is, or clones again once the remote is changed.
+    @ViewBuilder private var remoteAction: some View {
+        if model.hasStore, !isRemoteChanged {
+            Button("Sync", action: model.sync)
+        } else {
+            Button("Clone") {
+                if model.hasStore {
+                    isConfirmingClone = true
+                } else {
+                    clone()
                 }
             }
-            .pickerStyle(.segmented)
-            .onChange(of: format) { format in
-                Defaults.storeFormat = format
-            }
-        } header: {
-            Text("Format")
-        } footer: {
-            Text(LocalizedStringKey(format == .sec ? "FormatSec." : "FormatPass."))
+            .disabled(!canClone)
         }
     }
 
@@ -104,6 +135,11 @@ struct StoreView: View {
         } header: {
             Text("GitSignature")
         }
+    }
+
+    private var isRemoteChanged: Bool {
+        url.trimmed != Defaults.gitURL.absoluteString || branch.trimmed != Defaults.gitBranchName
+            || username.trimmed != Defaults.gitUsername || authentication != Defaults.gitAuthenticationMethod
     }
 
     private var remote: URL? {

@@ -104,7 +104,6 @@
 "FillInSshKeyPassphrase."   = "Please fill in the passphrase of your SSH key.";
 "CannotSelectSshKey"        = "Cannot Select SSH Key";
 "PleaseSetupSshKeyFirst."   = "Please setup SSH key first.";
-"RemoveSShKeys"             = "Remove Git SSH Keys";
 "SetPrivateKeyUrl."         = "Please set a valid private key URL first.";
 "SshCopyPrivateKeyToPass."  = "Copy your ASCII-armored private key to Pass with the name \"ssh_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
 
@@ -143,7 +142,6 @@
 "FetchingPgpKey"                    = "Fetching GPG Key";
 "RememberToRemoveKey"               = "Remember to Remove the Keys";
 "RememberToRemoveKeyFromServer."    = "Remember to remove the keys from the server.";
-"RemovePgpKeys"                     = "Remove GPG Keys";
 "PgpCopyPublicAndPrivateKeyToPass." = "Copy your ASCII-armored public and private keys to Pass with names \"gpg_key.pub\" and \"gpg_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
 "KeyExpiredOrIncompatibleError."    = "GPG public key may be expired or incompatible with the private key.";
 "WrongPassphraseError."             = "Passphrase of your GPG secret key is wrong.";
@@ -172,13 +170,9 @@
 "FailedToClearQuickTypeSuggestions" = "Failed to clear QuickType suggestions: %@";
 
 // Erase password store
-"ErasePasswordStoreData?"   = "Erase store data?";
-"ErasePasswordStoreData"    = "Erase Store Data";
 "EraseExplanation."         = "This will delete all local data and settings. Store data on your remote server will not be affected.";
 
 // Discard local changes
-"DiscardAllLocalChanges?"   = "Discard all local changes?";
-"DiscardAllLocalChanges"    = "Discard All Local Changes";
 "DiscardExplanation."       = "Do you want to permanently discard all changes to the local copy of your password data? You cannot undo this action.";
 
 // Forget passcode
@@ -224,7 +218,6 @@
 "AboutRepository"       = "About Repository";
 "ValueNotAvailable"     = "Value not available";
 "Size"                  = "Size";
-"LocalCommits"          = "Local Commits";
 "LastSynced"            = "Last Synced";
 "Commits"               = "Commits";
 "CommitLogs"            = "Commit Logs";
@@ -356,11 +349,10 @@ Finally, copy them to a location accessible by the Files app.";
 "Branch"                  = "Branch";
 "ClearSavedSuggestions"   = "Clear Saved Suggestions";
 "Clone"                   = "Clone";
-"CloneAgain"              = "Clone Again";
 "Email"                   = "Email";
-"GitSignature"            = "Git Signature";
+"GitSignature"            = "Signature";
 "GitURL"                  = "Git URL";
-"GitURLFormats."          = "https://host/repo.git, ssh://user@host:port/repo.git or user@host:repo.git";
+"GitURLFormats."          = "https://host/repo.git\nssh://user@host:port/repo.git\nuser@host:repo.git";
 "Keys"                    = "Keys";
 "LockWith(%@)"            = "Lock with %@";
 "Multiple"                = "Multiple";
@@ -397,10 +389,29 @@ Finally, copy them to a location accessible by the Files app.";
 "TurnOnAutoFill"        = "Turn On AutoFill";
 "ShowOneTimeCodes"      = "Show One-Time Codes";
 "ShowOneTimeCodes."     = "After filling in a password, a notification shows its one-time code to copy.";
-"GPGKey" = "GPG Key";
-"Git" = "Git";
-"RememberPassphrases" = "Remember Passphrases";
 "RememberPassphrase" = "Remember Passphrase";
 "Format" = "Format";
 "FormatSec." = "A header of key: value lines, secrets marked with !, then notes after a blank line.";
 "FormatPass." = "The password on the first line, then key: value lines and notes.";
+"RememberGpgPassphrase" = "Remember GPG Passphrase";
+"RememberSshPassphrase" = "Remember SSH Passphrase";
+"RememberGitPassword" = "Remember Git Password";
+"DiscardChanges" = "Discard Changes";
+"DiscardChanges?" = "Discard changes?";
+"EraseStore" = "Erase Store";
+"EraseStore?" = "Erase store?";
+"Changes" = "Changes";
+"Sync" = "Sync";
+"LastSynced(%@)" = "Last synced %@";
+"GitURLFormats" = "URL Formats";
+"RemoveKey" = "Remove Key";
+"RemoveGpgKey?" = "Remove GPG key?";
+"RemoveSshKey?" = "Remove SSH key?";
+"SshPassphrase" = "SSH Passphrase";
+"SshPassphraseMessage." = "Enter the passphrase of your SSH key to clone the store.";
+"GitPassword" = "Git Password";
+"GitPasswordMessage." = "Enter the password of your Git account to clone the store.";
+"NotNow" = "Not Now";
+"AllowNotifications" = "Allow Notifications";
+"AppLockMessage." = "Ask before showing or filling in passwords.";
+"UseMethod(%@)" = "Use %@";

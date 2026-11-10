@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77D3586697F68604A46B8444 /* SSHKeyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D4E1642FC2782576473DF2 /* SSHKeyTest.swift */; };
 		C787A007BE0118F6FC703B2B /* GPGRecipientsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58414B115B1778C642E4DF3F /* GPGRecipientsTest.swift */; };
 		938C532FDBE82768E0541159 /* GPGRecipients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14592228F6F3FE60E2C5D992 /* GPGRecipients.swift */; };
 		995D226FEF77AA46037F552E /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0A64199CE0F53174E9A69E /* OnboardingViewController.swift */; };
@@ -277,6 +278,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		06D4E1642FC2782576473DF2 /* SSHKeyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeyTest.swift; sourceTree = "<group>"; };
 		58414B115B1778C642E4DF3F /* GPGRecipientsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPGRecipientsTest.swift; sourceTree = "<group>"; };
 		14592228F6F3FE60E2C5D992 /* GPGRecipients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPGRecipients.swift; sourceTree = "<group>"; };
 		3A0A64199CE0F53174E9A69E /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 			children = (
 				8A4716682F5EF56900C7A64D /* AppKeychainTest.swift */,
 				3032328922C9FBA2009EBD9C /* KeyFileManagerTest.swift */,
+				06D4E1642FC2782576473DF2 /* SSHKeyTest.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1463,6 +1466,7 @@
 				30B04860209A5141001013CA /* PasswordTest.swift in Sources */,
 				30697C5F21F674800064FCAC /* String+UtilitiesTest.swift in Sources */,
 				3032328A22C9FBA2009EBD9C /* KeyFileManagerTest.swift in Sources */,
+				77D3586697F68604A46B8444 /* SSHKeyTest.swift in Sources */,
 				306623332406F1A8000E2AD6 /* PasswordGeneratorTest.swift in Sources */,
 				DC64745C2D29BE9B004B4BBC /* PasswordEntityTest.swift in Sources */,
 				8A4756A32F6374CC00131B6D /* PersistenceController+UnitTestHelpers.swift in Sources */,

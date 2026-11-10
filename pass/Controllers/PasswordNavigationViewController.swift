@@ -518,57 +518,9 @@ extension PasswordNavigationViewController: UITabBarControllerDelegate {
 extension PasswordNavigationViewController: PasswordAlertPresenter {
     private func syncPasswords() {
         guard PasswordStore.shared.repositoryExists() else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(800)) {
-                Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
-            }
+            Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
             return
         }
-        ProgressSheet.show("SyncingPasswordStore".localize(), on: self)
-        let keychain = AppKeychain.shared
-        var gitCredential: GitCredential {
-            GitCredential.from(
-                authenticationMethod: Defaults.gitAuthenticationMethod,
-                userName: Defaults.gitUsername,
-                keyStore: keychain
-            )
-        }
-        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
-            do {
-                let pullOptions = gitCredential.getCredentialOptions(passwordProvider: present)
-                try PasswordStore.shared.pullRepository(options: pullOptions) { git_transfer_progress, _ in
-                    DispatchQueue.main.async {
-                        ProgressSheet.update(progress: Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), status: "PullingFromRemoteRepository".localize())
-                    }
-                }
-                if PasswordStore.shared.numberOfLocalCommits > 0 {
-                    let pushOptions = gitCredential.getCredentialOptions(passwordProvider: present)
-                    try PasswordStore.shared.pushRepository(options: pushOptions) { current, total, _, _ in
-                        DispatchQueue.main.async {
-                            ProgressSheet.update(progress: Float(current) / Float(total), status: "PushingToRemoteRepository".localize())
-                        }
-                    }
-                }
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .passwordStoreSyncSucceeded, object: nil)
-                    ProgressSheet.dismiss(completion: Feedback.success)
-                }
-            } catch let error as NSError {
-                gitCredential.delete()
-                DispatchQueue.main.async {
-                    var message = error.localizedDescription
-                    if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
-                        message = message | "UnderlyingError".localize(underlyingError.localizedDescription)
-                        if underlyingError.localizedDescription.contains("WrongPassphrase".localize()) {
-                            message = message | "RecoverySuggestion.".localize()
-                        }
-                    }
-                    if let mergeConflictFiles = error.userInfo[GTPullMergeConflictedFiles] as? NSArray {
-                        let mergeConflictFilesString = mergeConflictFiles.componentsJoined(by: ", ")
-                        message = message | "MergeConflictError".localize(mergeConflictFilesString)
-                    }
-                    Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
-                }
-            }
-        }
+        syncRepository()
     }
 }

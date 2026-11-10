@@ -55,7 +55,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(PasswordListCell.self, forCellReuseIdentifier: "cell")
         if !isRoot {
             tableView.removeTopSpace()
         }
@@ -104,7 +104,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     private func makeDataSource() -> UITableViewDiffableDataSource<Section, String> {
         UITableViewDiffableDataSource(tableView: tableView) { [unowned self] tableView, indexPath, path in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PasswordListCell
             guard let entry = entries[path] else {
                 return cell
             }
@@ -117,10 +117,10 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                 content.secondaryText = entry.categoryText.isEmpty ? nil : entry.categoryText
                 content.secondaryTextProperties.color = .secondaryLabel
             }
+            content.directionalLayoutMargins.leading += PasswordListCell.gutter
             cell.contentConfiguration = content
             cell.accessoryType = entry.isDir ? .disclosureIndicator : .none
-            cell.accessoryView = entry.isSynced ? nil : UIImageView(image: UIImage(systemName: "arrow.triangle.2.circlepath", withConfiguration: UIImage.SymbolConfiguration(textStyle: .footnote)))
-            cell.accessoryView?.tintColor = .secondaryLabel
+            cell.isSynced = entry.isSynced
             return cell
         }
     }
@@ -479,5 +479,47 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 extension PasswordListViewController: UISearchResultsUpdating {
     func updateSearchResults(for _: UISearchController) {
         reload(animated: false)
+    }
+}
+
+/// Marks entries with changes that are not pushed yet with a dot before them, like unread mail.
+private class PasswordListCell: UITableViewCell {
+    /// Room before the content for the dot, kept on every row so that they line up.
+    static let gutter: CGFloat = 20
+
+    private let dot: UIView = {
+        let dot = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        dot.backgroundColor = .systemOrange
+        dot.layer.cornerRadius = 5
+        dot.isHidden = true
+        return dot
+    }()
+
+    var isSynced = true {
+        didSet {
+            dot.isHidden = isSynced
+            accessibilityValue = isSynced ? nil : "NotSynced".localize()
+        }
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(dot)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard let content = contentView.subviews.first(where: { $0 is UIListContentView }) as? UIListContentView,
+              let text = content.textLayoutGuide?.layoutFrame else {
+            return
+        }
+        let leading = content.convert(content.imageLayoutGuide?.layoutFrame ?? text, to: contentView)
+        let isRightToLeft = effectiveUserInterfaceLayoutDirection == .rightToLeft
+        dot.center = CGPoint(x: isRightToLeft ? leading.maxX + 12 : leading.minX - 12, y: content.convert(text, to: contentView).midY)
     }
 }

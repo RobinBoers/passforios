@@ -19,7 +19,7 @@ public class PasswordTableEntry: NSObject {
         self.passwordEntity = entity
         self.title = entity.name
         self.isDir = entity.isDir
-        self.isSynced = entity.isSynced
+        self.isSynced = !entity.hasUnsyncedChanges
         self.categoryText = entity.dirText
     }
 

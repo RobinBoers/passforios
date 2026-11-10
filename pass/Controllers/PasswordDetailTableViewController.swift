@@ -430,7 +430,7 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "header", for: indexPath)
         cell.contentConfiguration = UIHostingConfiguration {
-            PasswordDetailHeader(name: passwordEntity.name, folder: passwordEntity.dirText, isSynced: passwordEntity.isSynced)
+            PasswordDetailHeader(name: passwordEntity.name, folder: passwordEntity.dirText, isSynced: !passwordEntity.hasUnsyncedChanges)
         }
         cell.backgroundConfiguration = .clear()
         cell.selectionStyle = .none
@@ -559,6 +559,16 @@ private struct PasswordDetailHeader: View {
                 .foregroundStyle(.white)
                 .frame(width: tileSize, height: tileSize)
                 .background(color.gradient, in: RoundedRectangle(cornerRadius: tileSize * 0.225, style: .continuous))
+                .overlay(alignment: .topTrailing) {
+                    if !isSynced {
+                        Circle()
+                            .fill(.orange)
+                            .frame(width: tileSize * 0.26, height: tileSize * 0.26)
+                            .padding(tileSize * 0.04)
+                            .background(Color(uiColor: .systemGroupedBackground), in: Circle())
+                            .offset(x: tileSize * 0.1, y: -tileSize * 0.1)
+                    }
+                }
                 .padding(.bottom, 6)
                 .accessibilityHidden(true)
             Text(name)
@@ -569,13 +579,10 @@ private struct PasswordDetailHeader: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            if !isSynced {
-                Label("NotSynced".localize(), systemImage: "arrow.triangle.2.circlepath")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
         }
         .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(isSynced ? "" : "NotSynced".localize())
     }
 }
 

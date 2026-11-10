@@ -34,6 +34,11 @@ public final class PasswordEntity: NSManagedObject, Identifiable {
     /// A set of child password entities.
     @NSManaged public var children: Set<PasswordEntity>
 
+    /// Whether it, or for a folder anything in it, has changes that are not pushed yet.
+    public var hasUnsyncedChanges: Bool {
+        isDir ? children.contains(where: \.hasUnsyncedChanges) : !isSynced
+    }
+
     @nonobjc
     public static func fetchRequest() -> NSFetchRequest<PasswordEntity> {
         NSFetchRequest<PasswordEntity>(entityName: "PasswordEntity")

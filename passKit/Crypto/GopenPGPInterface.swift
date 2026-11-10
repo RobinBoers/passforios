@@ -108,25 +108,33 @@ struct GopenPGPInterface: PGPInterface {
         }
     }
 
-    func encrypt(plainData: Data, keyID: String?) throws -> Data {
-        let key: CryptoKey? = {
-            if let keyID {
-                return publicKeys.first(where: { key, _ in key.hasSuffix(keyID.lowercased()) })?.value
+    func encrypt(plainData: Data, keyIDs: [String]) throws -> Data {
+        let keys: [CryptoKey] = try {
+            guard !keyIDs.isEmpty else {
+                return publicKeys.first.map { [$0.value] } ?? []
             }
-            return publicKeys.first?.value
+            return try keyIDs.map { keyID in
+                guard let key = publicKeys.first(where: { fingerprint, _ in fingerprint.hasSuffix(keyID.lowercased()) })?.value else {
+                    throw AppError.pgpPublicKeyNotFound(keyID: keyID)
+                }
+                return key
+            }
         }()
 
-        guard let publicKey = key else {
+        guard let firstKey = keys.first else {
             throw AppError.encryption
         }
 
         var error: NSError?
 
-        guard let keyRing = CryptoNewKeyRing(publicKey, &error) else {
+        guard let keyRing = CryptoNewKeyRing(firstKey, &error) else {
             guard error == nil else {
                 throw error!
             }
             throw AppError.encryption
+        }
+        for key in keys.dropFirst() {
+            try keyRing.add(key)
         }
 
         let encryptedData = try keyRing.encrypt(CryptoNewPlainMessage(plainData.mutable as Data), privateKey: nil)

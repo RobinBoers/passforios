@@ -39,13 +39,13 @@
 "CannotCopyPassword"                                = "Cannot copy password";
 "CannotAddPassword"                                 = "Cannot add password";
 "WrongPassphrase"                                   = "Wrong passphrase";
-"MakeSurePgpAndGitProperlySet."                     = "Please make sure PGP key and Git server are properly set.";
+"MakeSurePgpAndGitProperlySet."                     = "Please make sure GPG key and Git server are properly set.";
 "RecoverySuggestion."                               = "Recovery suggestion: Wrong credential password/passphrase has been removed, please try again.";
 "NSURLFileAllocatedSizeKeyShouldAlwaysReturnValue." = "Huh? NSURLFileAllocatedSizeKey should always return a value.";
 "NoProperPassRepo."                                 = "The repository does not contain a .gpg-id file. Please set it up properly by performing 'pass init'. Then try again to load it into the app.";
 
 // Settings
-"RememberPgpKeyPassphrase"          = "Remember PGP Key Passphrase";
+"RememberPgpKeyPassphrase"          = "Remember GPG Key Passphrase";
 "RememberGitCredentialPassphrase"   = "Remember Git Credential Passphrase";
 "EnableGPGID"                       = "Enable .gpg-id (Beta)";
 "ShowFolders"                       = "Show Folders";
@@ -135,20 +135,20 @@
 
 // PGP
 "Decrypting"                        = "Decrypting";
-"PgpKeyNotSet."                     = "PGP Key is not set. Please set your PGP Key first.";
-"FillInPgpPassphrase."              = "Please fill in the passphrase of your PGP secret key.";
+"PgpKeyNotSet."                     = "GPG Key is not set. Please set your GPG Key first.";
+"FillInPgpPassphrase."              = "Please fill in the passphrase of your GPG secret key.";
 "WantToSavePassphrase?"             = "Do you want to save the passphrase for later decryption?";
-"CannotSavePgpKey"                  = "Cannot Save PGP Key";
-"SetPgpKeyUrlsFirst."               = "Please set valid PGP key URLs first.";
-"FetchingPgpKey"                    = "Fetching PGP Key";
+"CannotSavePgpKey"                  = "Cannot Save GPG Key";
+"SetPgpKeyUrlsFirst."               = "Please set valid GPG key URLs first.";
+"FetchingPgpKey"                    = "Fetching GPG Key";
 "RememberToRemoveKey"               = "Remember to Remove the Keys";
 "RememberToRemoveKeyFromServer."    = "Remember to remove the keys from the server.";
-"RemovePgpKeys"                     = "Remove PGP Keys";
+"RemovePgpKeys"                     = "Remove GPG Keys";
 "PgpCopyPublicAndPrivateKeyToPass." = "Copy your ASCII-armored public and private keys to Pass with names \"gpg_key.pub\" and \"gpg_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
-"KeyExpiredOrIncompatibleError."    = "PGP public key may be expired or incompatible with the private key.";
-"WrongPassphraseError."             = "Passphrase of your PGP secret key is wrong.";
-"PgpPublicKeyNotFoundError."        = "PGP public key (%@) not found.";
-"PgpPrivateKeyNotFoundError."       = "PGP private key (%@) not found.";
+"KeyExpiredOrIncompatibleError."    = "GPG public key may be expired or incompatible with the private key.";
+"WrongPassphraseError."             = "Passphrase of your GPG secret key is wrong.";
+"PgpPublicKeyNotFoundError."        = "GPG public key (%@) not found.";
+"PgpPrivateKeyNotFoundError."       = "GPG private key (%@) not found.";
 "CannotImportFile"                  = "Cannot Import File";
 "LoadFromFiles"                     = "Load From File";
 "FileCannotBeImported."             = "An error occurred importing the file '%@'. Please make sure its location is readable.";
@@ -367,7 +367,7 @@ Finally, copy them to a location accessible by the Files app.";
 "PasteKey"                = "Paste Key";
 "PastePgpKeyExplanation." = "Paste the ASCII-armored private key. It also holds the public key.";
 "PasteSshKeyExplanation." = "Paste the private key, starting with -----BEGIN.";
-"PGPKey"                  = "PGP Key";
+"PGPKey"                  = "GPG Key";
 "Remote"                  = "Remote";
 "Security"                = "Security";
 "Set"                     = "Set";
@@ -381,6 +381,7 @@ Finally, copy them to a location accessible by the Files app.";
 "Authentication"          = "Authentication";
 
 // Onboarding
+"SetUp" = "Set Up";
 "WelcomeMessage."       = "Your sec store, on your phone.";
 "FeatureSync"           = "Synced with Git";
 "FeatureSync."          = "The same store as on your computer, pulled and pushed over SSH.";
@@ -389,8 +390,8 @@ Finally, copy them to a location accessible by the Files app.";
 "FeaturePrivate"        = "Encrypted with your key";
 "FeaturePrivate."       = "Entries are decrypted on this phone only, behind Face ID if you like.";
 "SetUpManually"         = "Set Up Manually";
-"PgpPassphrase"         = "PGP Passphrase";
-"PgpPassphraseMessage." = "Enter the passphrase of your PGP key. It is checked against one of your passwords.";
+"PgpPassphrase"         = "GPG Passphrase";
+"PgpPassphraseMessage." = "Enter the passphrase of your GPG key. It is checked against one of your passwords.";
 "Continue"              = "Continue";
 "Skip"                  = "Skip";
 "AutoFillMessage."      = "Fill in passwords from the keyboard in Safari and other apps.";
@@ -398,3 +399,7 @@ Finally, copy them to a location accessible by the Files app.";
 "TurnOnAutoFill"        = "Turn On AutoFill";
 "ShowOneTimeCodes"      = "Show One-Time Codes";
 "ShowOneTimeCodes."     = "After filling in a password, a notification shows its one-time code to copy.";
+"GPGKey" = "GPG Key";
+"Git" = "Git";
+"RememberPassphrases" = "Remember Passphrases";
+"RememberPassphrase" = "Remember Passphrase";

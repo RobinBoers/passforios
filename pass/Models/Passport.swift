@@ -23,6 +23,8 @@ struct Passport: Equatable {
     let email: String?
     let sshKey: String?
     let pgpKey: String
+    /// The public keys of the store's other recipients, so entries saved here stay readable for them.
+    let recipientKeys: [String]
 
     init(parsing text: String) throws {
         let entry = try Entry(parsing: text)
@@ -40,7 +42,7 @@ struct Passport: Equatable {
         guard let branch = value(of: "branch") else {
             throw ParseError.missingField("branch")
         }
-        let blocks = Self.armoredBlocks(in: entry.body)
+        let blocks = entry.body.armoredBlocks
         guard let pgpKey = blocks.first(where: { $0.hasPrefix("-----BEGIN PGP PRIVATE KEY BLOCK-----") }) else {
             throw ParseError.missingPGPKey
         }
@@ -52,23 +54,7 @@ struct Passport: Equatable {
         self.email = value(of: "email")
         self.sshKey = blocks.first { !$0.hasPrefix("-----BEGIN PGP") }
         self.pgpKey = pgpKey
-    }
-
-    private static func armoredBlocks(in text: String) -> [String] {
-        var blocks = [String]()
-        var block: [String]?
-        for line in text.splitByNewline() {
-            if line.hasPrefix("-----BEGIN ") {
-                block = [line]
-            } else if block != nil {
-                block?.append(line)
-                if line.hasPrefix("-----END "), let lines = block {
-                    blocks.append(lines.joined(separator: "\n") + "\n")
-                    block = nil
-                }
-            }
-        }
-        return blocks
+        self.recipientKeys = blocks.filter { $0.hasPrefix("-----BEGIN PGP PUBLIC KEY BLOCK-----") }
     }
 }
 

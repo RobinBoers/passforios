@@ -111,7 +111,7 @@
 "RFc-J6-hAe.headerTitle" = "CHIAVE PRIVATA";
 
 /* Class = "UILabel"; text = "PGP Key"; ObjectID = "RR9-xr-9ko"; */
-"RR9-xr-9ko.text" = "Chiave PGP";
+"RR9-xr-9ko.text" = "Chiave GPG";
 
 /* Class = "UILabel"; text = "Passcode Lock"; ObjectID = "RaZ-6t-0CU"; */
 "RaZ-6t-0CU.text" = "Codice di blocco";
@@ -132,7 +132,7 @@
 "Uoy-58-5ug.headerTitle" = "Nome branch";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "V4w-cf-d9g"; */
-"V4w-cf-d9g.title" = "Chiave PGP";
+"V4w-cf-d9g.title" = "Chiave GPG";
 
 /* Class = "UITextField"; placeholder = "Branch Name"; ObjectID = "VVI-gJ-e37"; */
 "VVI-gJ-e37.placeholder" = "Nome branch";
@@ -189,7 +189,7 @@
 "duN-f7-Rak.title" = "Componenti open source";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "eK3-bb-419"; */
-"eK3-bb-419.title" = "Chiave PGP";
+"eK3-bb-419.title" = "Chiave GPG";
 
 /* Class = "UITableViewSection"; headerTitle = "Username"; ObjectID = "fRu-A2-SCk"; */
 "fRu-A2-SCk.headerTitle" = "Nome utente";
@@ -252,7 +252,7 @@
 "ugP-R2-9M7.headerTitle" = "Configurazione GPG";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "waZ-gh-rQt"; */
-"waZ-gh-rQt.title" = "Chiave PGP";
+"waZ-gh-rQt.title" = "Chiave GPG";
 
 /* Class = "UILabel"; text = "✓"; ObjectID = "wbx-rk-i8H"; */
 "wbx-rk-i8H.text" = "✓";

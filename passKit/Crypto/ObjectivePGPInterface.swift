@@ -30,9 +30,15 @@ struct ObjectivePGPInterface: PGPInterface {
         }
     }
 
-    func encrypt(plainData: Data, keyID _: String?) throws -> Data {
-        try catchingObjectiveCException(orThrow: .encryption) {
-            try ObjectivePGP.encrypt(plainData, addSignature: false, using: keyring.keys, passphraseForKey: nil)
+    func encrypt(plainData: Data, keyIDs: [String]) throws -> Data {
+        let keys = try keyIDs.isEmpty ? keyring.keys : keyIDs.map { keyID in
+            guard let key = keyring.findKey(String(keyID.suffix(16))) else {
+                throw AppError.pgpPublicKeyNotFound(keyID: keyID)
+            }
+            return key
+        }
+        return try catchingObjectiveCException(orThrow: .encryption) {
+            try ObjectivePGP.encrypt(plainData, addSignature: false, using: keys, passphraseForKey: nil)
         }
     }
 

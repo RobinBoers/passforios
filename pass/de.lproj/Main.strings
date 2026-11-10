@@ -117,7 +117,7 @@
 "RFc-J6-hAe.headerTitle" = "PRIVATER SCHLÜSSEL";
 
 /* Class = "UILabel"; text = "PGP Key"; ObjectID = "RR9-xr-9ko"; */
-"RR9-xr-9ko.text" = "PGP-Schlüssel";
+"RR9-xr-9ko.text" = "GPG-Schlüssel";
 
 /* Class = "UILabel"; text = "Passcode Lock"; ObjectID = "RaZ-6t-0CU"; */
 "RaZ-6t-0CU.text" = "Passwortsperre";
@@ -138,7 +138,7 @@
 "Uoy-58-5ug.headerTitle" = "Name des Branches";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "V4w-cf-d9g"; */
-"V4w-cf-d9g.title" = "PGP-Schlüssel";
+"V4w-cf-d9g.title" = "GPG-Schlüssel";
 
 /* Class = "UITextField"; placeholder = "Branch Name"; ObjectID = "VVI-gJ-e37"; */
 "VVI-gJ-e37.placeholder" = "Name des Branches";
@@ -195,7 +195,7 @@
 "duN-f7-Rak.title" = "Open-Source-Komponenten";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "eK3-bb-419"; */
-"eK3-bb-419.title" = "PGP-Schlüssel";
+"eK3-bb-419.title" = "GPG-Schlüssel";
 
 /* Class = "UITableViewSection"; headerTitle = "Username"; ObjectID = "fRu-A2-SCk"; */
 "fRu-A2-SCk.headerTitle" = "Benutzername";
@@ -264,7 +264,7 @@
 "vaA-as-6yJ.title" = "SSH-Schlüssel";
 
 /* Class = "UINavigationItem"; title = "PGP Key"; ObjectID = "waZ-gh-rQt"; */
-"waZ-gh-rQt.title" = "PGP-Schlüssel";
+"waZ-gh-rQt.title" = "GPG-Schlüssel";
 
 /* Class = "UILabel"; text = "✓"; ObjectID = "wbx-rk-i8H"; */
 "wbx-rk-i8H.text" = "✓";

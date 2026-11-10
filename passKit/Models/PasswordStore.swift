@@ -424,6 +424,10 @@ public class PasswordStore {
         if let keyID {
             return try PGPAgent.shared.encrypt(plainData: password.plainData, keyID: keyID)
         }
+        let recipients = GPGRecipients.read(from: storeURL)
+        if !recipients.isEmpty {
+            return try PGPAgent.shared.encrypt(plainData: password.plainData, recipients: recipients)
+        }
         return try PGPAgent.shared.encrypt(plainData: password.plainData)
     }
 

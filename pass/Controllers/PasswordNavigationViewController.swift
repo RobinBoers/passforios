@@ -143,10 +143,10 @@ class PasswordNavigationViewController: UIViewController {
         message.textColor = .secondaryLabel
 
         var configuration = UIButton.Configuration.borderedProminent()
-        configuration.title = "SetUpFromComputer".localize()
+        configuration.title = "SetUp".localize()
         configuration.cornerStyle = .capsule
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
-            setUpFromComputer()
+            presentOnboarding()
         })
 
         let stack = UIStackView(arrangedSubviews: [image, title, message, button])

@@ -6,6 +6,19 @@
 import passKit
 import SwiftUI
 
+extension UIViewController {
+    /// Shows onboarding over the tab bar; setting up manually ends on the Settings tab.
+    func presentOnboarding(animated: Bool = true) {
+        let tabBarController = (view.window?.rootViewController ?? self) as? UITabBarController
+        let onboarding = OnboardingViewController { showingSettings in
+            if showingSettings, let tabBarController {
+                tabBarController.selectedIndex = (tabBarController.viewControllers?.count ?? 1) - 1
+            }
+        }
+        topmostPresentedViewController.present(onboarding, animated: animated)
+    }
+}
+
 final class OnboardingViewController: UIHostingController<AnyView>, PasswordAlertPresenter {
     private let model: OnboardingModel
     private let onFinish: (_ showingSettings: Bool) -> Void

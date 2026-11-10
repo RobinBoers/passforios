@@ -139,12 +139,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
 
 private extension Passport {
     func importKeys() throws {
-        AppKeychain.shared.removeAllContent(withPrefix: Globals.pgpKeyPassphrase)
-        // The private key carries its public half, which is all encryption needs.
-        try KeyFileManager.PublicPGP.importKey(from: pgpKey)
-        try KeyFileManager.PrivatePGP.importKey(from: pgpKey)
-        try PGPAgent.shared.initKeys()
-        Defaults.pgpKeySource = .armor
+        try PGPAgent.shared.importKeys(privateKey: pgpKey, otherPublicKeys: recipientKeys)
 
         PasswordStore.shared.gitPassword = nil
         PasswordStore.shared.gitSSHPrivateKeyPassphrase = nil

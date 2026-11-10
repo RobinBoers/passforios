@@ -21,6 +21,24 @@ public extension String {
     func splitByNewline() -> [String] {
         split(omittingEmptySubsequences: false) { $0 == "\n" || $0 == "\r\n" }.map(Self.init)
     }
+
+    /// The ASCII-armored blocks in the text, like keys, each from its BEGIN to its END line.
+    var armoredBlocks: [String] {
+        var blocks = [String]()
+        var block: [String]?
+        for line in splitByNewline() {
+            if line.hasPrefix("-----BEGIN ") {
+                block = [line]
+            } else if block != nil {
+                block?.append(line)
+                if line.hasPrefix("-----END "), let lines = block {
+                    blocks.append(lines.joined(separator: "\n") + "\n")
+                    block = nil
+                }
+            }
+        }
+        return blocks
+    }
 }
 
 public extension String {

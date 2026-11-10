@@ -45,17 +45,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func presentOnboardingIfNeeded() {
-        guard !Defaults.isOnboarded, !PasswordStore.shared.repositoryExists(),
-              let tabBarController = window?.rootViewController as? UITabBarController else {
+        guard !Defaults.isOnboarded, !PasswordStore.shared.repositoryExists() else {
             return
         }
-        let onboarding = OnboardingViewController { showingSettings in
-            if showingSettings {
-                tabBarController.selectedIndex = (tabBarController.viewControllers?.count ?? 1) - 1
-            }
-        }
         DispatchQueue.main.async {
-            tabBarController.present(onboarding, animated: false)
+            self.window?.rootViewController?.presentOnboarding(animated: false)
         }
     }
 

@@ -137,12 +137,11 @@ final class SettingsModel: ObservableObject {
     }
 
     func importPGPKey(_ armor: String) throws {
-        AppKeychain.shared.removeAllContent(withPrefix: Globals.pgpKeyPassphrase)
-        // The private key carries its public half, which is all encryption needs.
-        try KeyFileManager.PublicPGP.importKey(from: armor)
-        try KeyFileManager.PrivatePGP.importKey(from: armor)
-        try PGPAgent.shared.initKeys()
-        passKit.Defaults.pgpKeySource = .armor
+        let blocks = armor.armoredBlocks
+        guard let privateKey = blocks.first(where: { $0.hasPrefix("-----BEGIN PGP PRIVATE KEY BLOCK-----") }) else {
+            throw AppError.keyImport
+        }
+        try PGPAgent.shared.importKeys(privateKey: privateKey, otherPublicKeys: blocks.filter { $0.hasPrefix("-----BEGIN PGP PUBLIC KEY BLOCK-----") })
         refresh()
     }
 

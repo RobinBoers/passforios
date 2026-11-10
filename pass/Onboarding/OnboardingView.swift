@@ -136,7 +136,7 @@ private struct PassphraseStep: View {
                     .onSubmit(verify)
                     .padding(14)
                     .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color(.secondarySystemBackground)))
-                Toggle("RememberPgpKeyPassphrase", isOn: $remember)
+                Toggle("RememberPassphrase", isOn: $remember)
                 if let error = model.passphraseError {
                     Text(error).foregroundStyle(.red)
                 }

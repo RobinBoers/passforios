@@ -6,6 +6,8 @@
 //  Copyright © 2019 Bob Sun. All rights reserved.
 //
 
+import Gopenpgp
+
 public class PGPAgent {
     public static let shared = PGPAgent()
 
@@ -30,6 +32,23 @@ public class PGPAgent {
             pgpInterface = try ObjectivePGPInterface(publicArmoredKey: publicKey, privateArmoredKey: privateKey)
         }
         loadedKeys = (publicKey, privateKey)
+    }
+
+    /// Stores a private key, and as public keys its own plus those of the store's other recipients.
+    public func importKeys(privateKey: String, otherPublicKeys: [String] = []) throws {
+        var error: NSError?
+        guard let key = CryptoNewKeyFromArmored(privateKey, &error) else {
+            throw error ?? AppError.keyImport
+        }
+        let ownPublicKey = key.getArmoredPublicKey(&error)
+        if let error {
+            throw error
+        }
+        AppKeychain.shared.removeAllContent(withPrefix: Globals.pgpKeyPassphrase)
+        try KeyFileManager.PublicPGP.importKey(from: ([ownPublicKey] + otherPublicKeys).joined(separator: "\n"))
+        try KeyFileManager.PrivatePGP.importKey(from: privateKey)
+        try initKeys()
+        Defaults.pgpKeySource = .armor
     }
 
     public func uninitKeys() {
@@ -100,7 +119,17 @@ public class PGPAgent {
                 throw AppError.pgpPublicKeyNotFound(keyID: keyID)
             }
         }
-        return try pgpInterface.encrypt(plainData: plainData, keyID: keyID)
+        return try pgpInterface.encrypt(plainData: plainData, keyIDs: [keyID])
+    }
+
+    /// Encrypts to everyone a `.gpg-id` names, so entries stay readable for every recipient.
+    public func encrypt(plainData: Data, recipients: [String]) throws -> Data {
+        try checkAndInit()
+        guard let pgpInterface, let publicKeys: String = keyStore.get(for: PGPKey.PUBLIC.getKeychainKey()) else {
+            throw AppError.encryption
+        }
+        let fingerprints = try GPGRecipients.fingerprints(for: recipients, in: publicKeys)
+        return try pgpInterface.encrypt(plainData: plainData, keyIDs: fingerprints)
     }
 
     public func decrypt(encryptedData: Data, requestPGPKeyPassphrase: (String) -> String) throws -> Data? {
@@ -130,7 +159,7 @@ public class PGPAgent {
         guard let pgpInterface else {
             throw AppError.encryption
         }
-        return try pgpInterface.encrypt(plainData: plainData, keyID: nil)
+        return try pgpInterface.encrypt(plainData: plainData, keyIDs: [])
     }
 
     public var isPrepared: Bool {

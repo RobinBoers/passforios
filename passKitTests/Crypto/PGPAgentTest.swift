@@ -51,6 +51,17 @@ final class PGPAgentTest: XCTestCase {
         }
     }
 
+    func testEncryptToRecipients() throws {
+        try importKeys(RSA2048_RSA4096.publicKeys, RSA2048_RSA4096.privateKeys)
+        let encryptedData = try pgpAgent.encrypt(plainData: testData, recipients: RSA2048_RSA4096.fingerprints)
+        for id in RSA2048_RSA4096.fingerprints {
+            XCTAssertEqual(try pgpAgent.decrypt(encryptedData: encryptedData, keyID: id, requestPGPKeyPassphrase: requestPGPKeyPassphrase), testData)
+        }
+        XCTAssertThrowsError(try pgpAgent.encrypt(plainData: testData, recipients: ["nobody@example.com"])) {
+            XCTAssertEqual($0 as? AppError, AppError.pgpPublicKeyNotFound(keyID: "nobody@example.com"))
+        }
+    }
+
     func testBasicEncryptDecrypt() throws {
         try [
             RSA2048,

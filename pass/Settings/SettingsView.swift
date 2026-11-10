@@ -52,15 +52,19 @@ struct SettingsView: View {
         }
     }
 
-    private var securitySection: some View {
+    @ViewBuilder private var securitySection: some View {
         SwiftUI.Section {
             if AppLock.isAvailable {
                 Toggle("LockWith(%@)".localize(AppLock.methodName), isOn: model.appLock)
             }
-            Toggle("RememberPgpKeyPassphrase", isOn: model.rememberPGPPassphrase)
-            Toggle("RememberGitCredentialPassphrase", isOn: model.rememberGitCredential)
         } header: {
             Text("Security")
+        }
+        SwiftUI.Section {
+            Toggle("GPGKey", isOn: model.rememberPGPPassphrase)
+            Toggle("Git", isOn: model.rememberGitCredential)
+        } header: {
+            Text("RememberPassphrases")
         }
     }
 

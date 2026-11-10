@@ -38,13 +38,13 @@
 "CannotCopyPassword"                                = "Impossibile copiare la password";
 "CannotAddPassword"                                 = "Impossibile aggiungere la password";
 "WrongPassphrase"                                   = "Password errata";
-"MakeSurePgpAndGitProperlySet."                     = "Assicurarsi che la chiave PGP e il server Git siano configurati correttamente.";
+"MakeSurePgpAndGitProperlySet."                     = "Assicurarsi che la chiave GPG e il server Git siano configurati correttamente.";
 "RecoverySuggestion."                               = "Suggerimento: è stata rimossa la password errata, riprovare.";
 "NSURLFileAllocatedSizeKeyShouldAlwaysReturnValue." = "Cosa? NSURLFileAllocatedSizeKey Dovrebbe sempre restituire un valore.";
 "NoProperPassRepo."                                 = "Il repository non contiene un file .gpg-id. Impostarlo correttamente eseguendo 'pass init', poi riprovare a caricarlo nell'app.";
 
 // Settings
-"RememberPgpKeyPassphrase"          = "Ricorda la password di PGP";
+"RememberPgpKeyPassphrase"          = "Ricorda la password di GPG";
 "RememberGitCredentialPassphrase"   = "Ricorda la password di Git";
 "EnableGPGID"                       = "Attiva .gpg-id (Sperimentale)";
 "ShowFolders"                       = "Mostra cartelle";
@@ -133,20 +133,20 @@
 
 // PGP
 "Decrypting"                        = "Decriptazione";
-"PgpKeyNotSet."                     = "La chiave PGP non è impostata. Impostare la chiave PGP.";
-"FillInPgpPassphrase."              = "Inserire la password della chiave PGP privata.";
+"PgpKeyNotSet."                     = "La chiave GPG non è impostata. Impostare la chiave GPG.";
+"FillInPgpPassphrase."              = "Inserire la password della chiave GPG privata.";
 "WantToSavePassphrase?"             = "Salvare la password?";
-"CannotSavePgpKey"                  = "Impossibile salvare la chiave PGP";
-"SetPgpKeyUrlsFirst."               = "Impostare URL validi per le chiavi PGP.";
-"FetchingPgpKey"                    = "Caricamento della chiave PGP";
+"CannotSavePgpKey"                  = "Impossibile salvare la chiave GPG";
+"SetPgpKeyUrlsFirst."               = "Impostare URL validi per le chiavi GPG.";
+"FetchingPgpKey"                    = "Caricamento della chiave GPG";
 "RememberToRemoveKey"               = "Ricorda di eliminare le chiavi";
 "RememberToRemoveKeyFromServer."    = "Ricorda di eliminare le chiavi dal server.";
-"RemovePgpKeys"                     = "Elimina chiavi PGP";
+"RemovePgpKeys"                     = "Elimina chiavi GPG";
 "PgpCopyPublicAndPrivateKeyToPass." = "Copiare la chiave pubblica e quella privata con armatura ASCII in Pass con i nomi \"gpg_key.pub\" e \"gpg_key\" (senza virgolette) con iTunes. Poi tornare qui e selezionare \"Condivisione file iTunes\" per completare.";
-"KeyExpiredOrIncompatibleError."    = "La chiave PGP pubblica potrebbe essere scaduta o non corrispondente alla chiave privata.";
-"WrongPassphraseError."             = "La password della chiave PGP segreta è errata.";
-"PgpPublicKeyNotFoundError."        = "Impossibile trovare la chiave PGP pubblica (%@).";
-"PgpPrivateKeyNotFoundError."       = "Impossibile trovare la chiave PGP privata (%@).";
+"KeyExpiredOrIncompatibleError."    = "La chiave GPG pubblica potrebbe essere scaduta o non corrispondente alla chiave privata.";
+"WrongPassphraseError."             = "La password della chiave GPG segreta è errata.";
+"PgpPublicKeyNotFoundError."        = "Impossibile trovare la chiave GPG pubblica (%@).";
+"PgpPrivateKeyNotFoundError."       = "Impossibile trovare la chiave GPG privata (%@).";
 "CannotImportFile"                  = "Impossibile importare il file";
 "LoadFromFiles"                     = "Carica da File";
 "FileCannotBeImported."             = "Impossibile importare il file '%@'. Assicurarsi che si abbiano i permessi necessari per leggere la sua posizione.";
@@ -362,7 +362,7 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "PasteKey"                = "Incolla chiave";
 "PastePgpKeyExplanation." = "Incolla la chiave privata ASCII-armored. Contiene anche la chiave pubblica.";
 "PasteSshKeyExplanation." = "Incolla la chiave privata, che inizia con -----BEGIN.";
-"PGPKey"                  = "Chiave PGP";
+"PGPKey"                  = "Chiave GPG";
 "Remote"                  = "Remoto";
 "Security"                = "Sicurezza";
 "Set"                     = "Impostata";
@@ -376,6 +376,7 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Authentication"          = "Autenticazione";
 
 // Onboarding
+"SetUp" = "Configura";
 "WelcomeMessage."       = "Il tuo store sec, sul telefono.";
 "FeatureSync"           = "Sincronizzato con Git";
 "FeatureSync."          = "Lo stesso store del computer, scaricato e inviato via SSH.";
@@ -384,8 +385,8 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "FeaturePrivate"        = "Cifrato con la tua chiave";
 "FeaturePrivate."       = "Le voci vengono decifrate solo su questo telefono, se vuoi dietro Face ID.";
 "SetUpManually"         = "Configura manualmente";
-"PgpPassphrase"         = "Passphrase PGP";
-"PgpPassphraseMessage." = "Inserisci la passphrase della tua chiave PGP. Viene verificata su una delle tue password.";
+"PgpPassphrase"         = "Passphrase GPG";
+"PgpPassphraseMessage." = "Inserisci la passphrase della tua chiave GPG. Viene verificata su una delle tue password.";
 "Continue"              = "Continua";
 "Skip"                  = "Salta";
 "AutoFillMessage."      = "Inserisci le password dalla tastiera in Safari e in altre app.";
@@ -393,3 +394,7 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "TurnOnAutoFill"        = "Attiva riempimento automatico";
 "ShowOneTimeCodes"      = "Mostra codici monouso";
 "ShowOneTimeCodes."     = "Dopo aver inserito una password, una notifica mostra il suo codice monouso da copiare.";
+"GPGKey" = "Chiave GPG";
+"Git" = "Git";
+"RememberPassphrases" = "Ricorda passphrase";
+"RememberPassphrase" = "Ricorda passphrase";

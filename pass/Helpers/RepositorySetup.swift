@@ -40,7 +40,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 Utils.alert(title: "Error".localize(), message: message, controller: self)
             }
         }
-        ProgressSheet.show("Cloning Remote Repository", on: self)
+        ProgressSheet.show("CloningStore".localize(), on: self)
         // swiftlint:disable:next closure_body_length
         DispatchQueue.global(qos: .userInitiated).async {
             let passwordStore = PasswordStore.shared
@@ -49,7 +49,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                     let gitTransferProgress = git_transfer_progress.pointee
                     let progress = Float(gitTransferProgress.received_objects) / Float(gitTransferProgress.total_objects)
                     DispatchQueue.main.async {
-                        ProgressSheet.update(progress: progress, status: "Cloning Remote Repository")
+                        ProgressSheet.update(progress: progress, status: "CloningStore".localize())
                     }
                 }
 

@@ -75,7 +75,7 @@
 "EncodingError."                        = "Key is not ASCII encoded.";
 "UnknownError."                         = "Unknown error.";
 "PrepareRepository"                     = "Prepare Repository";
-"CheckingOutBranch"                     = "Checking out branch '%@'";
+"CheckingOutBranch"                     = "Checking Out %@…";
 "WantToSaveGitCredential?"              = "Do you want to save the Git credential password/passphrase?";
 
 // Repository
@@ -95,9 +95,9 @@
 "Tips"                                  = "Tips";
 "FillInGitAccountPassword."             = "Please fill in the password of your Git account.";
 "NoPasswordStore."                      = "There is no store yet.";
-"SyncingPasswordStore"                  = "Syncing Store";
-"PullingFromRemoteRepository"           = "Pulling from Remote Repository";
-"PushingToRemoteRepository"             = "Pushing to Remote Repository";
+"SyncingPasswordStore"                  = "Syncing…";
+"PullingFromRemoteRepository"           = "Pulling Changes…";
+"PushingToRemoteRepository"             = "Pushing Changes…";
 "SpecifyBranchName."                    = "Please specify the name of the branch to be used.";
 
 // SSH
@@ -114,7 +114,7 @@
 "ScanPassport."          = "Point the camera at the code shown by passport.";
 "ScannedPassport(%d,%d)" = "Scanned %1$d of %2$d codes";
 "InvalidPassport."       = "This code cannot be read. Update passport and the app, then try again.";
-"ImportingKeys"          = "Importing Keys";
+"ImportingKeys"          = "Importing Keys…";
 
 // QR code scanning
 "LookingForStartingFrame."                  = "Looking for the starting frame.";
@@ -414,3 +414,4 @@ Finally, copy them to a location accessible by the Files app.";
 "GeneratePassword" = "Generate Password";
 "ScanQRCode" = "Scan QR Code";
 "SyncedJustNow" = "Synced Just Now";
+"CloningStore" = "Cloning Store…";

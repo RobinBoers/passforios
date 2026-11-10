@@ -74,7 +74,7 @@
 "EncodingError."                        = "Schlüssel ist nicht in ASCII kodiert.";
 "UnknownError."                         = "Ein unbekannter Fehler ist aufgetreten.";
 "PrepareRepository"                     = "Repository vorbereiten";
-"CheckingOutBranch"                     = "Branch '%@' wird ausgecheckt";
+"CheckingOutBranch"                     = "%@ wird ausgecheckt …";
 "WantToSaveGitCredential?"              = "Möchtest du das Passwort für den Git-Server speichern?";
 
 // Repository
@@ -94,9 +94,9 @@
 "Tips"                                  = "Tipps";
 "FillInGitAccountPassword."             = "Bitte gib das Passwort deines Git-Accounts ein.";
 "NoPasswordStore."                      = "Es gibt noch keinen Store.";
-"SyncingPasswordStore"                  = "Store wird synchronisiert";
-"PullingFromRemoteRepository"           = "Update lokales Repository";
-"PushingToRemoteRepository"             = "Update Remote-Repository";
+"SyncingPasswordStore"                  = "Wird synchronisiert …";
+"PullingFromRemoteRepository"           = "Änderungen werden geholt …";
+"PushingToRemoteRepository"             = "Änderungen werden gesendet …";
 "SpecifyBranchName."                    = "Der Name des zu verwendenden Branches muss angegeben werden.";
 
 // SSH
@@ -113,7 +113,7 @@
 "ScanPassport."          = "Richte die Kamera auf den Code von passport.";
 "ScannedPassport(%d,%d)" = "%1$d von %2$d Codes gescannt";
 "InvalidPassport."       = "Dieser Code kann nicht gelesen werden. Aktualisiere passport und die App und versuche es erneut.";
-"ImportingKeys"          = "Schlüssel werden importiert";
+"ImportingKeys"          = "Schlüssel werden importiert …";
 
 // QR code scanning
 "LookingForStartingFrame."                  = "Suche nach dem Anfang.";
@@ -413,3 +413,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "GeneratePassword" = "Passwort erzeugen";
 "ScanQRCode" = "QR-Code scannen";
 "SyncedJustNow" = "Gerade synchronisiert";
+"CloningStore" = "Store wird geklont …";

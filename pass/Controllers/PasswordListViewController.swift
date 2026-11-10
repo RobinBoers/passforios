@@ -71,7 +71,6 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
 
         if #available(iOS 26.0, *) {
             navigationItem.preferredSearchBarPlacement = .integrated

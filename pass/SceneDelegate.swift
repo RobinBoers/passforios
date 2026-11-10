@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         appLockPresenter = AppLockPresenter(windowScene: windowScene)
         appLockPresenter?.lockIfEnabled()
+        presentOnboardingIfNeeded()
         if connectionOptions.shortcutItem?.type == Globals.bundleIdentifier + ".search" {
             perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         }
@@ -41,6 +42,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (tabBarController.selectedViewController as? UINavigationController)?.popToRootViewController(animated: false)
         perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         completionHandler(true)
+    }
+
+    private func presentOnboardingIfNeeded() {
+        guard !Defaults.isOnboarded, !PasswordStore.shared.repositoryExists(),
+              let tabBarController = window?.rootViewController as? UITabBarController else {
+            return
+        }
+        let onboarding = OnboardingViewController { showingSettings in
+            if showingSettings {
+                tabBarController.selectedIndex = (tabBarController.viewControllers?.count ?? 1) - 1
+            }
+        }
+        DispatchQueue.main.async {
+            tabBarController.present(onboarding, animated: false)
+        }
     }
 
     @objc

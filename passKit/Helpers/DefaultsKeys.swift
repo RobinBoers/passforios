@@ -44,6 +44,7 @@ public extension DefaultsKeys {
     var pgpPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("pgpPrivateKeyArmor") }
     var gitSSHPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("gitSSHPrivateKeyArmor") }
     var isAppLockOn: DefaultsKey<Bool> { DefaultsKey("isAppLockOn", defaultValue: false) }
+    var isOnboarded: DefaultsKey<Bool> { DefaultsKey("isOnboarded", defaultValue: false) }
 
     var gitURL: DefaultsKey<URL> { DefaultsKey("gitURL", defaultValue: URL(string: "https://")!) }
     var gitAuthenticationMethod: DefaultsKey<GitAuthenticationMethod> { DefaultsKey("gitAuthenticationMethod", defaultValue: GitAuthenticationMethod.password) }

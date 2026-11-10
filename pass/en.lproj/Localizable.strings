@@ -379,3 +379,22 @@ Finally, copy them to a location accessible by the Files app.";
 "Username"                = "Username";
 "Version"                 = "Version";
 "Authentication"          = "Authentication";
+
+// Onboarding
+"WelcomeMessage."       = "Your sec store, on your phone.";
+"FeatureSync"           = "Synced with Git";
+"FeatureSync."          = "The same store as on your computer, pulled and pushed over SSH.";
+"FeatureAutoFill"       = "AutoFill";
+"FeatureAutoFill."      = "Passwords and one-time codes, filled in by the keyboard.";
+"FeaturePrivate"        = "Encrypted with your key";
+"FeaturePrivate."       = "Entries are decrypted on this phone only, behind Face ID if you like.";
+"SetUpManually"         = "Set Up Manually";
+"PgpPassphrase"         = "PGP Passphrase";
+"PgpPassphraseMessage." = "Enter the passphrase of your PGP key. It is checked against one of your passwords.";
+"Continue"              = "Continue";
+"Skip"                  = "Skip";
+"AutoFillMessage."      = "Fill in passwords from the keyboard in Safari and other apps.";
+"AutoFillIsOn"          = "AutoFill is on";
+"TurnOnAutoFill"        = "Turn On AutoFill";
+"ShowOneTimeCodes"      = "Show One-Time Codes";
+"ShowOneTimeCodes."     = "After filling in a password, a notification shows its one-time code to copy.";

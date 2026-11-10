@@ -67,14 +67,11 @@ class PasswordNavigationViewController: UIViewController {
         configureNotification()
         configureSearchBar()
         configureNavigationBar()
-        requestNotificationPermission()
+        registerNotificationCategories()
     }
 
-    private func requestNotificationPermission() {
-        // Ask for permission to receive notifications
+    private func registerNotificationCategories() {
         let notificationCenter = UNUserNotificationCenter.current()
-        let permissionOptions = UNAuthorizationOptions(arrayLiteral: .alert)
-        notificationCenter.requestAuthorization(options: permissionOptions) { _, _ in }
 
         // Register notification action
         let copyAction = UNNotificationAction(

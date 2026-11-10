@@ -374,3 +374,22 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Username"                = "Nome utente";
 "Version"                 = "Versione";
 "Authentication"          = "Autenticazione";
+
+// Onboarding
+"WelcomeMessage."       = "Il tuo store sec, sul telefono.";
+"FeatureSync"           = "Sincronizzato con Git";
+"FeatureSync."          = "Lo stesso store del computer, scaricato e inviato via SSH.";
+"FeatureAutoFill"       = "Riempimento automatico";
+"FeatureAutoFill."      = "Password e codici monouso, inseriti dalla tastiera.";
+"FeaturePrivate"        = "Cifrato con la tua chiave";
+"FeaturePrivate."       = "Le voci vengono decifrate solo su questo telefono, se vuoi dietro Face ID.";
+"SetUpManually"         = "Configura manualmente";
+"PgpPassphrase"         = "Passphrase PGP";
+"PgpPassphraseMessage." = "Inserisci la passphrase della tua chiave PGP. Viene verificata su una delle tue password.";
+"Continue"              = "Continua";
+"Skip"                  = "Salta";
+"AutoFillMessage."      = "Inserisci le password dalla tastiera in Safari e in altre app.";
+"AutoFillIsOn"          = "Riempimento automatico attivo";
+"TurnOnAutoFill"        = "Attiva riempimento automatico";
+"ShowOneTimeCodes"      = "Mostra codici monouso";
+"ShowOneTimeCodes."     = "Dopo aver inserito una password, una notifica mostra il suo codice monouso da copiare.";

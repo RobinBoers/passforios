@@ -28,7 +28,7 @@ struct OnboardingView: View {
 private struct StepLayout<Content: View, Buttons: View>: View {
     let symbol: String?
     let title: LocalizedStringKey
-    let message: LocalizedStringKey
+    var message: LocalizedStringKey?
     @ViewBuilder let content: Content
     @ViewBuilder let buttons: Buttons
 
@@ -51,9 +51,11 @@ private struct StepLayout<Content: View, Buttons: View>: View {
                     Text(title)
                         .font(.largeTitle.bold())
                         .multilineTextAlignment(.center)
-                    Text(message)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                    if let message {
+                        Text(message)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
                     content
                         .padding(.top, 16)
                 }
@@ -84,11 +86,11 @@ private struct WelcomeStep: View {
     @EnvironmentObject private var model: OnboardingModel
 
     var body: some View {
-        StepLayout(symbol: nil, title: "PassForIos", message: "WelcomeMessage.") {
-            VStack(alignment: .leading, spacing: 24) {
-                Feature(symbol: "arrow.triangle.2.circlepath", title: "FeatureSync", message: "FeatureSync.")
-                Feature(symbol: "person.badge.key", title: "FeatureAutoFill", message: "FeatureAutoFill.")
-                Feature(symbol: "faceid", title: "FeaturePrivate", message: "FeaturePrivate.")
+        StepLayout(symbol: nil, title: "PassForIos") {
+            VStack(alignment: .leading, spacing: 20) {
+                Feature(symbol: "arrow.triangle.2.circlepath", title: "FeatureSync")
+                Feature(symbol: "person.badge.key", title: "AutoFill")
+                Feature(symbol: "lock", title: "FeatureEncrypted")
             }
         } buttons: {
             Button("SetUpFromComputer", action: model.setUpFromComputer)
@@ -102,20 +104,17 @@ private struct WelcomeStep: View {
 private struct Feature: View {
     let symbol: String
     let title: LocalizedStringKey
-    let message: LocalizedStringKey
 
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
+        Label {
+            Text(title).font(.headline)
+        } icon: {
             Image(systemName: symbol)
-                .font(.title)
                 .foregroundStyle(.tint)
-                .frame(width: 40)
+                .frame(width: 32)
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title).font(.headline)
-                Text(message).foregroundStyle(.secondary)
-            }
         }
+        .font(.title3)
     }
 }
 

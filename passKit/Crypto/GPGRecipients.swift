@@ -7,7 +7,7 @@ import ObjectivePGP
 
 /// Resolves the recipients a `.gpg-id` names to public keys, the way `gpg --recipient` does.
 public enum GPGRecipients {
-    /// The recipients in the `.gpg-id` at the root of the store; `sec` reads no other.
+    /// The recipients in the `.gpg-id` at the root of the store, which covers the whole store.
     public static func read(from storeURL: URL) -> [String] {
         guard let text = try? String(contentsOf: storeURL.appendingPathComponent(".gpg-id"), encoding: .utf8) else {
             return []

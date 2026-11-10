@@ -380,14 +380,9 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "Authentication"          = "Authentifizierung";
 
 // Onboarding
+"FeatureEncrypted" = "Mit GPG verschlüsselt";
 "SetUp" = "Einrichten";
-"WelcomeMessage."       = "Dein sec-Store, auf deinem Telefon.";
 "FeatureSync"           = "Mit Git synchronisiert";
-"FeatureSync."          = "Derselbe Store wie auf deinem Computer, über SSH geholt und gepusht.";
-"FeatureAutoFill"       = "Automatisch ausfüllen";
-"FeatureAutoFill."      = "Passwörter und Einmalcodes, von der Tastatur eingesetzt.";
-"FeaturePrivate"        = "Mit deinem Schlüssel verschlüsselt";
-"FeaturePrivate."       = "Einträge werden nur auf diesem Telefon entschlüsselt, auf Wunsch hinter Face ID.";
 "SetUpManually"         = "Manuell einrichten";
 "PgpPassphrase"         = "GPG-Passphrase";
 "PgpPassphraseMessage." = "Gib die Passphrase deines GPG-Schlüssels ein. Sie wird an einem deiner Passwörter geprüft.";

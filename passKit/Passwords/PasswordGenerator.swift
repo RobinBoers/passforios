@@ -6,7 +6,7 @@
 //  Copyright © 2020 Bob Sun. All rights reserved.
 //
 
-/// Generates Apple-style passwords like `abcdef-ghij4k-lmnopq-rsTuvw`, the same as `sec gen`.
+/// Generates Apple-style passwords like `abcdef-ghij4k-lmnopq-rsTuvw`.
 public struct PasswordGenerator: Codable {
     public static let lengthLimits = (min: 8, max: 64)
 

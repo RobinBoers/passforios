@@ -376,14 +376,9 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Authentication"          = "Autenticazione";
 
 // Onboarding
+"FeatureEncrypted" = "Cifrato con GPG";
 "SetUp" = "Configura";
-"WelcomeMessage."       = "Il tuo store sec, sul telefono.";
 "FeatureSync"           = "Sincronizzato con Git";
-"FeatureSync."          = "Lo stesso store del computer, scaricato e inviato via SSH.";
-"FeatureAutoFill"       = "Riempimento automatico";
-"FeatureAutoFill."      = "Password e codici monouso, inseriti dalla tastiera.";
-"FeaturePrivate"        = "Cifrato con la tua chiave";
-"FeaturePrivate."       = "Le voci vengono decifrate solo su questo telefono, se vuoi dietro Face ID.";
 "SetUpManually"         = "Configura manualmente";
 "PgpPassphrase"         = "Passphrase GPG";
 "PgpPassphraseMessage." = "Inserisci la passphrase della tua chiave GPG. Viene verificata su una delle tue password.";

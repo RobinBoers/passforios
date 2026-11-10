@@ -381,14 +381,9 @@ Finally, copy them to a location accessible by the Files app.";
 "Authentication"          = "Authentication";
 
 // Onboarding
+"FeatureEncrypted" = "Encrypted with GPG";
 "SetUp" = "Set Up";
-"WelcomeMessage."       = "Your sec store, on your phone.";
 "FeatureSync"           = "Synced with Git";
-"FeatureSync."          = "The same store as on your computer, pulled and pushed over SSH.";
-"FeatureAutoFill"       = "AutoFill";
-"FeatureAutoFill."      = "Passwords and one-time codes, filled in by the keyboard.";
-"FeaturePrivate"        = "Encrypted with your key";
-"FeaturePrivate."       = "Entries are decrypted on this phone only, behind Face ID if you like.";
 "SetUpManually"         = "Set Up Manually";
 "PgpPassphrase"         = "GPG Passphrase";
 "PgpPassphraseMessage." = "Enter the passphrase of your GPG key. It is checked against one of your passwords.";

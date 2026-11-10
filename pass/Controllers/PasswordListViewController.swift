@@ -469,11 +469,6 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         let titleFont = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
         title.font = UIFont(descriptor: titleFont.withSymbolicTraits(.traitBold) ?? titleFont, size: 0)
 
-        let message = UILabel()
-        message.text = "SetUpFromComputer.".localize()
-        message.font = .preferredFont(forTextStyle: .body)
-        message.textColor = .secondaryLabel
-
         var configuration = UIButton.Configuration.borderedProminent()
         configuration.title = "SetUp".localize()
         configuration.cornerStyle = .capsule
@@ -481,16 +476,15 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             presentOnboarding()
         })
 
-        let stack = UIStackView(arrangedSubviews: [image, title, message, button])
+        title.adjustsFontForContentSizeCategory = true
+        title.textAlignment = .center
+        title.numberOfLines = 0
+
+        let stack = UIStackView(arrangedSubviews: [image, title, button])
         stack.axis = .vertical
         stack.alignment = .center
         stack.spacing = 12
-        stack.setCustomSpacing(24, after: message)
-        for label in [title, message] {
-            label.adjustsFontForContentSizeCategory = true
-            label.textAlignment = .center
-            label.numberOfLines = 0
-        }
+        stack.setCustomSpacing(24, after: title)
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         let view = UIView()

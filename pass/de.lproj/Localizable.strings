@@ -74,7 +74,6 @@
 // Set up from computer
 "NoPasswordStore"        = "Kein Store";
 "SetUpFromComputer"      = "Vom Computer einrichten";
-"SetUpFromComputer."     = "Führe passport auf deinem Computer aus und scanne den angezeigten Code.";
 "ScanPassport."          = "Richte die Kamera auf den Code von passport.";
 "ScannedPassport(%d,%d)" = "%1$d von %2$d Codes gescannt";
 "InvalidPassport."       = "Dieser Code kann nicht gelesen werden. Aktualisiere passport und die App und versuche es erneut.";

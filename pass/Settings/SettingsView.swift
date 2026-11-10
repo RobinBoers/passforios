@@ -52,8 +52,6 @@ struct SettingsView: View {
             } label: {
                 Label("SetUpFromComputer", systemImage: "qrcode.viewfinder")
             }
-        } footer: {
-            Text("SetUpFromComputer.")
         }
     }
 

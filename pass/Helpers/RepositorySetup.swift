@@ -117,11 +117,12 @@ extension PasswordAlertPresenter where Self: UIViewController {
             }
         )
         alert.addAction(
-            UIAlertAction(title: "Yes".localize(), style: .destructive) { _ in
+            UIAlertAction(title: "Yes".localize(), style: .default) { _ in
                 Defaults.isRememberGitCredentialPassphraseOn = true
                 completion()
             }
         )
+        alert.preferredAction = alert.actions.last
         present(alert, animated: true)
     }
 

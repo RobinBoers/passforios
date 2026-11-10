@@ -419,3 +419,4 @@ Finally, copy them to a location accessible by the Files app.";
 "SyncFailed" = "Couldn't Sync";
 "CopyPassword" = "Copy Password";
 "NotSynced" = "Not Synced";
+"CouldNotClone" = "Couldn't Clone Store";

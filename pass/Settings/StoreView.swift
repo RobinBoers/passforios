@@ -167,6 +167,7 @@ struct StoreView: View {
             return
         }
         let user = remote.user ?? (username.trimmed.isEmpty ? "git" : username.trimmed)
+        username = user
         model.clone(url: remote, branch: branch.trimmed, username: user, authentication: authentication)
     }
 }

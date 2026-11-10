@@ -7,37 +7,18 @@
 //
 
 import UIKit
+import UniformTypeIdentifiers
 
 class SecurePasteboard {
     static let shared = SecurePasteboard()
 
-    private var backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-
+    /// Copies to this device only, not to others through Universal Clipboard, and lets the system clear the
+    /// copy after `expirationTime` seconds, unless something else was copied since.
     func copy(textToCopy: String?, expirationTime: Double = 45) {
-        // copy to the pasteboard
-        UIPasteboard.general.string = textToCopy ?? ""
-
-        // clean the pasteboard after expirationTime
-        guard expirationTime > 0 else {
-            return
+        var options: [UIPasteboard.OptionsKey: Any] = [.localOnly: true]
+        if expirationTime > 0 {
+            options[.expirationDate] = Date(timeIntervalSinceNow: expirationTime)
         }
-
-        // exit the existing background task, if any
-        if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-            UIApplication.shared.endBackgroundTask(UIBackgroundTaskIdentifier.invalid)
-            backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-        }
-
-        backgroundTaskID = UIApplication.shared.beginBackgroundTask { [weak self] in
-            UIPasteboard.general.string = ""
-            UIApplication.shared.endBackgroundTask(UIBackgroundTaskIdentifier.invalid)
-            self?.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-        }
-
-        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + expirationTime) { [weak self] in
-            UIPasteboard.general.string = ""
-            UIApplication.shared.endBackgroundTask(UIBackgroundTaskIdentifier.invalid)
-            self?.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-        }
+        UIPasteboard.general.setItems([[UTType.utf8PlainText.identifier: textToCopy ?? ""]], options: options)
     }
 }

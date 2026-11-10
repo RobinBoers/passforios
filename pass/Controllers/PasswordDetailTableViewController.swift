@@ -75,9 +75,12 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setToolbarHidden(true, animated: animated)
-        oneTimePasswordTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+        // On whole seconds, as codes change on them, and in the common mode so that they tick while scrolling.
+        let timer = Timer(fire: Date(timeIntervalSince1970: Date().timeIntervalSince1970.rounded(.up)), interval: 1, repeats: true) { [weak self] _ in
             self?.updateOneTimePassword()
         }
+        RunLoop.main.add(timer, forMode: .common)
+        oneTimePasswordTimer = timer
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -116,6 +119,10 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
                 let requestPGPKeyPassphrase = Utils.createRequestPGPKeyPassphraseHandler(controller: self)
                 self.password = try self.passwordStore.decrypt(passwordEntity: passwordEntity, keyID: keyID, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
                 self.showPassword()
+            } catch is CancellationError {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
             } catch let AppError.pgpPrivateKeyNotFound(keyID: key) {
                 DispatchQueue.main.async {
                     // alert: cancel or try again

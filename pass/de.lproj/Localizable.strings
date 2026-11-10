@@ -418,3 +418,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "SyncFailed" = "Synchronisierung fehlgeschlagen";
 "CopyPassword" = "Passwort kopieren";
 "NotSynced" = "Nicht synchronisiert";
+"CouldNotClone" = "Klonen fehlgeschlagen";

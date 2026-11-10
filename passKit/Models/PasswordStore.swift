@@ -385,7 +385,7 @@ public class PasswordStore {
         return try gitRepository.getLocalCommits()
     }
 
-    public func decrypt(passwordEntity: PasswordEntity, keyID: String? = nil, requestPGPKeyPassphrase: @escaping (String) -> String) throws -> Password {
+    public func decrypt(passwordEntity: PasswordEntity, keyID: String? = nil, requestPGPKeyPassphrase: @escaping (String) throws -> String) throws -> Password {
         let url = passwordEntity.fileURL(in: storeURL)
         let encryptedData = try Data(contentsOf: url)
         let data: Data? = try {
@@ -401,7 +401,7 @@ public class PasswordStore {
         return Password(name: passwordEntity.name, path: passwordEntity.path, plainText: plainText)
     }
 
-    public func decrypt(path: String, keyID: String? = nil, requestPGPKeyPassphrase: @escaping (String) -> String) throws -> Password {
+    public func decrypt(path: String, keyID: String? = nil, requestPGPKeyPassphrase: @escaping (String) throws -> String) throws -> Password {
         guard let passwordEntity = fetchPasswordEntity(with: path) else {
             throw AppError.decryption
         }

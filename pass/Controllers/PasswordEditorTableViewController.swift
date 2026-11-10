@@ -61,6 +61,13 @@ class PasswordEditorTableViewController: UITableViewController {
         tableView.dragInteractionEnabled = true
         tableView.dragDelegate = self
         tableView.dropDelegate = self
+        navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [unowned self] _ in
+            if hasChanges {
+                confirmDiscard()
+            } else {
+                dismiss(animated: true)
+            }
+        })
 
         guard let password else {
             return
@@ -374,6 +381,10 @@ extension PasswordEditorTableViewController: UIAdaptivePresentationControllerDel
     }
 
     func presentationControllerDidAttemptToDismiss(_: UIPresentationController) {
+        confirmDiscard()
+    }
+
+    func confirmDiscard() {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "DiscardChanges".localize(), style: .destructive) { [weak self] _ in
             self?.navigationController?.dismiss(animated: true)

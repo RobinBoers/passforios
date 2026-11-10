@@ -38,10 +38,11 @@ public enum Utils {
         controller.present(alert, animated: true, completion: completion)
     }
 
-    public static func createRequestPGPKeyPassphraseHandler(controller: UIViewController) -> (String) -> String {
+    /// Asks for the passphrase of a key, throwing `CancellationError` when the user cancels.
+    public static func createRequestPGPKeyPassphraseHandler(controller: UIViewController) -> (String) throws -> String {
         { keyID in
             let sem = DispatchSemaphore(value: 0)
-            var passphrase = ""
+            var passphrase: String?
             DispatchQueue.main.async {
                 var title: String!
                 if keyID.isEmpty {
@@ -51,12 +52,14 @@ public enum Utils {
                 }
                 let message = "FillInPgpPassphrase.".localize()
                 let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction.cancel { _ in sem.signal() })
                 alert.addAction(
                     UIAlertAction.ok { _ in
                         passphrase = alert.textFields?.first?.text ?? ""
                         sem.signal()
                     }
                 )
+                alert.preferredAction = alert.actions.last
                 alert.addTextField { textField in
                     textField.text = AppKeychain.shared.get(for: AppKeychain.getPGPKeyPassphraseKey(keyID: keyID)) ?? ""
                     textField.isSecureTextEntry = true
@@ -64,6 +67,9 @@ public enum Utils {
                 controller.present(alert, animated: true)
             }
             _ = sem.wait(timeout: DispatchTime.distantFuture)
+            guard let passphrase else {
+                throw CancellationError()
+            }
             if Defaults.isRememberPGPPassphraseOn {
                 AppKeychain.shared.add(string: passphrase, for: AppKeychain.getPGPKeyPassphraseKey(keyID: keyID))
             }

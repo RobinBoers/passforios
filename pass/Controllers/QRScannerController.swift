@@ -195,9 +195,9 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
             message: "CameraAccessDenied.".localize() | "WarningToggleCameraPermissionsResetsApp.".localize(),
             preferredStyle: .alert
         )
-        alertController.addAction(UIAlertAction(title: "Cancel".localize(), style: .default))
+        alertController.addAction(UIAlertAction(title: "Cancel".localize(), style: .cancel))
         alertController.addAction(
-            UIAlertAction(title: "Settings".localize(), style: .cancel) { _ in
+            UIAlertAction(title: "Settings".localize(), style: .default) { _ in
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }

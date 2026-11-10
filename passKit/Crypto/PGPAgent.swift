@@ -70,7 +70,7 @@ public class PGPAgent {
         return pgpInterface?.shortKeyID.sorted() ?? []
     }
 
-    public func decrypt(encryptedData: Data, keyID: String, requestPGPKeyPassphrase: @escaping (String) -> String) throws -> Data? {
+    public func decrypt(encryptedData: Data, keyID: String, requestPGPKeyPassphrase: @escaping (String) throws -> String) throws -> Data? {
         // Init keys.
         try checkAndInit()
         guard let pgpInterface else {
@@ -93,9 +93,9 @@ public class PGPAgent {
         // Get the PGP key passphrase.
         var passphrase = ""
         if previousDecryptStatus == false {
-            passphrase = requestPGPKeyPassphrase(keyID)
+            passphrase = try requestPGPKeyPassphrase(keyID)
         } else {
-            passphrase = keyStore.get(for: AppKeychain.getPGPKeyPassphraseKey(keyID: keyID)) ?? requestPGPKeyPassphrase(keyID)
+            passphrase = try keyStore.get(for: AppKeychain.getPGPKeyPassphraseKey(keyID: keyID)) ?? requestPGPKeyPassphrase(keyID)
         }
         // Decrypt.
         guard let result = try pgpInterface.decrypt(encryptedData: encryptedData, keyID: keyID, passphrase: passphrase) else {
@@ -132,7 +132,7 @@ public class PGPAgent {
         return try pgpInterface.encrypt(plainData: plainData, keyIDs: fingerprints)
     }
 
-    public func decrypt(encryptedData: Data, requestPGPKeyPassphrase: (String) -> String) throws -> Data? {
+    public func decrypt(encryptedData: Data, requestPGPKeyPassphrase: (String) throws -> String) throws -> Data? {
         // Remember the previous status and set the current status
         let previousDecryptStatus = latestDecryptStatus
         latestDecryptStatus = false
@@ -141,9 +141,9 @@ public class PGPAgent {
         // Get the PGP key passphrase.
         var passphrase = ""
         if previousDecryptStatus == false {
-            passphrase = requestPGPKeyPassphrase("")
+            passphrase = try requestPGPKeyPassphrase("")
         } else {
-            passphrase = keyStore.get(for: AppKeychain.getPGPKeyPassphraseKey(keyID: "")) ?? requestPGPKeyPassphrase("")
+            passphrase = try keyStore.get(for: AppKeychain.getPGPKeyPassphraseKey(keyID: "")) ?? requestPGPKeyPassphrase("")
         }
         // Decrypt.
         guard let result = try pgpInterface!.decrypt(encryptedData: encryptedData, keyID: nil, passphrase: passphrase) else {

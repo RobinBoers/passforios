@@ -88,6 +88,10 @@ final class OnboardingModel: ObservableObject {
                 self?.go(to: .gpgPassphrase)
             },
             failure: { [weak self] message in
+                guard passport.needsGitSecret else {
+                    Utils.alert(title: "CouldNotClone".localize(), message: message, controller: host)
+                    return
+                }
                 self?.error = message
                 self?.go(to: .gitPassphrase)
             }

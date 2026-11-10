@@ -23,6 +23,8 @@ func decryptPassword(
             DispatchQueue.main.async {
                 completion(decryptedPassword)
             }
+        } catch is CancellationError {
+            return
         } catch let AppError.pgpPrivateKeyNotFound(keyID: key) {
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "CannotShowPassword".localize(), message: AppError.pgpPrivateKeyNotFound(keyID: key).localizedDescription, preferredStyle: .alert)

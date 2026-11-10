@@ -414,3 +414,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "SyncFailed" = "Sincronizzazione non riuscita";
 "CopyPassword" = "Copia password";
 "NotSynced" = "Non sincronizzato";
+"CouldNotClone" = "Clonazione non riuscita";

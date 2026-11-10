@@ -62,6 +62,8 @@ class FieldTableViewCell: UITableViewCell, UITextFieldDelegate {
             stack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
             keyTextField.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
             keyTextField.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 0.35),
+            // The open lock is wider than the closed one; a fixed width keeps the value from shifting.
+            secretButton.widthAnchor.constraint(equalToConstant: UIFontMetrics(forTextStyle: .body).scaledValue(for: 28)),
         ])
     }
 

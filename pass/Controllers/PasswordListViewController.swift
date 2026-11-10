@@ -239,8 +239,39 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                 UIAction(title: "CopyPassword".localize(), image: UIImage(systemName: "doc.on.doc")) { _ in
                     self?.passwordManager.providePasswordPasteboard(with: path)
                 },
+                UIAction(title: "Delete".localize(), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                    self?.confirmDelete(entry.passwordEntity)
+                },
             ])
         })
+    }
+
+    override func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let path = dataSource.itemIdentifier(for: indexPath), let entry = entries[path], !entry.isDir else {
+            return nil
+        }
+        let delete = UIContextualAction(style: .destructive, title: "Delete".localize()) { [unowned self] _, _, completion in
+            confirmDelete(entry.passwordEntity, completion: completion)
+        }
+        delete.image = UIImage(systemName: "trash")
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+
+    private func confirmDelete(_ passwordEntity: PasswordEntity, completion: @escaping (Bool) -> Void = { _ in }) {
+        let alert = UIAlertController(title: "DeletePassword?".localize(), message: passwordEntity.name, preferredStyle: .alert)
+        alert.addAction(
+            UIAlertAction(title: "Delete".localize(), style: .destructive) { [unowned self] _ in
+                do {
+                    try PasswordStore.shared.delete(passwordEntity: passwordEntity)
+                    completion(true)
+                } catch {
+                    completion(false)
+                    Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
+                }
+            }
+        )
+        alert.addAction(UIAlertAction.cancel { _ in completion(false) })
+        present(alert, animated: true)
     }
 
     private func addPassword() {

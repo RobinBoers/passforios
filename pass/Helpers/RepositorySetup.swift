@@ -169,7 +169,6 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .passwordStoreSyncSucceeded, object: nil)
                     ProgressSheet.dismiss {
-                        Feedback.success()
                         completion(true)
                     }
                 }
@@ -183,7 +182,8 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 gitCredential.delete()
                 DispatchQueue.main.async {
                     completion(false)
-                    Utils.alert(title: "Error".localize(), message: Self.syncErrorMessage(error), controller: self, completion: nil)
+                    Feedback.error()
+                    Utils.alert(title: "SyncFailed".localize(), message: Self.syncErrorMessage(error), controller: self, completion: nil)
                 }
             }
         }

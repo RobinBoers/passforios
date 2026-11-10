@@ -317,7 +317,6 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             do {
                 passwordEntity = try passwordStore.edit(passwordEntity: passwordEntity!, password: password!)
                 reloadTableData()
-                Feedback.success()
             } catch {
                 Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
             }
@@ -331,7 +330,6 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             }
             return
         }
-        SecurePasteboard.shared.copy(textToCopy: password?.password)
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 
@@ -485,13 +483,12 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         var actions = [
             UIAction(title: "Copy".localize(), image: UIImage(systemName: "doc.on.doc")) { _ in
                 SecurePasteboard.shared.copy(textToCopy: row.value)
-                Feedback.success()
             },
         ]
         switch row.kind {
         case .link:
             actions.append(
-                UIAction(title: "CopyAndOpen".localize(), image: UIImage(systemName: "safari")) { [weak self] _ in
+                UIAction(title: "OpenWebsite".localize(), image: UIImage(systemName: "safari")) { [weak self] _ in
                     self?.openLink(to: row.value)
                 }
             )

@@ -19,7 +19,6 @@ class PasswordManager {
     func providePasswordPasteboard(with passwordPath: String) {
         decryptPassword(in: viewController, with: passwordPath) { password in
             SecurePasteboard.shared.copy(textToCopy: password.password)
-            Feedback.success()
         }
     }
 

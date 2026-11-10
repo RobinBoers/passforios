@@ -246,7 +246,6 @@
 "Reveal"                        = "Anzeigen";
 "Conceal"                       = "Verstecken";
 "NextPassword"                  = "Nächstes Passwort";
-"CopyAndOpen"                   = "Passwort kopieren & Link folgen";
 "GetNextPasswordOfNonHotp."     = "Zeige das nächste Passwort eines Nicht-HOTP-Eintrags.";
 "CannotFindValidUrl"            = "Gültige URL kann nicht gefunden werden";
 "LastUpdated"                   = "Zuletzt aktualisiert: %@";
@@ -360,7 +359,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "SSHKey"                  = "SSH-Schlüssel";
 "Store"                   = "Store";
 "TurnOnAppLock"           = "Sperre aktivieren";
-"Unlock"                  = "Entsperren";
 "UnlockPass"              = "Deine Passwörter entsperren";
 "Username"                = "Benutzername";
 "Version"                 = "Version";
@@ -419,3 +417,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "CopyPassword" = "Passwort kopieren";
 "NotSynced" = "Nicht synchronisiert";
 "CouldNotClone" = "Klonen fehlgeschlagen";
+"OpenWebsite" = "Website öffnen";
+"IsLocked(%@)" = "%@ ist gesperrt";
+"Use(%@)" = "%@ verwenden";

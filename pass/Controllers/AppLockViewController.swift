@@ -25,22 +25,41 @@ final class AppLockViewController: UIViewController {
         image.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .largeTitle, scale: .large)
         image.tintColor = .secondaryLabel
 
-        var configuration = UIButton.Configuration.borderedProminent()
-        configuration.title = "Unlock".localize()
-        configuration.cornerStyle = .capsule
+        let title = UILabel()
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
+        title.text = "IsLocked(%@)".localize(appName)
+        title.font = .preferredFont(forTextStyle: .title2, compatibleWith: UITraitCollection(legibilityWeight: .bold))
+        title.adjustsFontForContentSizeCategory = true
+        title.numberOfLines = 0
+        title.textAlignment = .center
+
+        var configuration: UIButton.Configuration
+        if #available(iOS 26.0, *) {
+            configuration = .prominentGlass()
+        } else {
+            configuration = .borderedProminent()
+            configuration.cornerStyle = .capsule
+        }
+        configuration.title = "Use(%@)".localize(AppLock.methodName)
+        configuration.image = UIImage(systemName: AppLock.symbolName)
+        configuration.imagePadding = 8
+        configuration.buttonSize = .large
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
             authenticate()
         })
 
-        let stack = UIStackView(arrangedSubviews: [image, button])
+        let stack = UIStackView(arrangedSubviews: [image, title, button])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 24
+        stack.spacing = 12
+        stack.setCustomSpacing(32, after: title)
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stack.leadingAnchor.constraint(greaterThanOrEqualTo: view.readableContentGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(lessThanOrEqualTo: view.readableContentGuide.trailingAnchor),
         ])
     }
 

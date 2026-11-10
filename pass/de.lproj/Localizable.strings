@@ -380,6 +380,9 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "Authentication"          = "Authentifizierung";
 
 // Onboarding
+"FeatureSync." = "Holt und pusht dasselbe Repository wie dein Computer.";
+"FeatureAutoFill." = "Setzt Passwörter und Einmalcodes in Safari und anderen Apps ein.";
+"FeatureEncrypted." = "Einträge werden nur auf diesem iPhone entschlüsselt.";
 "FeatureEncrypted" = "Mit GPG verschlüsselt";
 "SetUp" = "Einrichten";
 "FeatureSync"           = "Mit Git synchronisiert";

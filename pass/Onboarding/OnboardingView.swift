@@ -87,10 +87,10 @@ private struct WelcomeStep: View {
 
     var body: some View {
         StepLayout(symbol: nil, title: "PassForIos") {
-            VStack(alignment: .leading, spacing: 20) {
-                Feature(symbol: "arrow.triangle.2.circlepath", title: "FeatureSync")
-                Feature(symbol: "person.badge.key", title: "AutoFill")
-                Feature(symbol: "lock", title: "FeatureEncrypted")
+            VStack(alignment: .leading, spacing: 24) {
+                Feature(symbol: "arrow.triangle.2.circlepath", title: "FeatureSync", message: "FeatureSync.")
+                Feature(symbol: "person.badge.key", title: "AutoFill", message: "FeatureAutoFill.")
+                Feature(symbol: "lock", title: "FeatureEncrypted", message: "FeatureEncrypted.")
             }
         } buttons: {
             Button("SetUpFromComputer", action: model.setUpFromComputer)
@@ -104,17 +104,20 @@ private struct WelcomeStep: View {
 private struct Feature: View {
     let symbol: String
     let title: LocalizedStringKey
+    let message: LocalizedStringKey
 
     var body: some View {
-        Label {
-            Text(title).font(.headline)
-        } icon: {
+        HStack(alignment: .top, spacing: 16) {
             Image(systemName: symbol)
+                .font(.title)
                 .foregroundStyle(.tint)
-                .frame(width: 32)
+                .frame(width: 40)
                 .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title).font(.headline)
+                Text(message).foregroundStyle(.secondary)
+            }
         }
-        .font(.title3)
     }
 }
 

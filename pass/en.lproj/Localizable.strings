@@ -381,6 +381,9 @@ Finally, copy them to a location accessible by the Files app.";
 "Authentication"          = "Authentication";
 
 // Onboarding
+"FeatureSync." = "Pulls and pushes the same repository as your computer.";
+"FeatureAutoFill." = "Fills in passwords and one-time codes in Safari and other apps.";
+"FeatureEncrypted." = "Entries are decrypted on this iPhone only.";
 "FeatureEncrypted" = "Encrypted with GPG";
 "SetUp" = "Set Up";
 "FeatureSync"           = "Synced with Git";

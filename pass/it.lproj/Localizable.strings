@@ -376,6 +376,9 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Authentication"          = "Autenticazione";
 
 // Onboarding
+"FeatureSync." = "Scarica e invia lo stesso repository del tuo computer.";
+"FeatureAutoFill." = "Inserisce password e codici monouso in Safari e in altre app.";
+"FeatureEncrypted." = "Le voci vengono decifrate solo su questo iPhone.";
 "FeatureEncrypted" = "Cifrato con GPG";
 "SetUp" = "Configura";
 "FeatureSync"           = "Sincronizzato con Git";

@@ -21,6 +21,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     /// The sync finished while the list was still pulled down; the refresh ends once it is let go.
     private var isSyncFinished = false
+    /// Kept apart from the refresh control, which is replaced after every refresh.
+    private var refreshTitle: NSAttributedString?
     private var syncStatusGeneration = 0
 
     private lazy var addButton = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
@@ -289,9 +291,13 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
         isSyncFinished = false
         refreshControl?.endRefreshing()
-        // Since iOS 27 an ended refresh control keeps its height reserved at the top, which leaves the list
-        // scrolled down; only detaching it gives that back, and a detached control never fires again.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+        // Since iOS 27 an ended refresh control keeps its height reserved at the top, so the list bounces back
+        // too far. Detaching it gives that back, the list then returns to the actual top, and as a detached
+        // control never fires again, a new one takes its place.
+        refreshControl = nil
+        tableView.layoutIfNeeded()
+        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: true)
+        DispatchQueue.main.async { [weak self] in
             self?.installRefreshControl()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
@@ -306,9 +312,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     private func installRefreshControl() {
         let control = UIRefreshControl()
-        control.attributedTitle = refreshControl?.attributedTitle
+        control.attributedTitle = refreshTitle
         control.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        refreshControl = nil
         refreshControl = control
     }
 
@@ -353,7 +358,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             subtitle.uiKit.foregroundColor = .secondaryLabel
             navigationItem.largeAttributedSubtitle = subtitle
         } else {
-            refreshControl?.attributedTitle = status.map { NSAttributedString(string: $0) }
+            refreshTitle = status.map { NSAttributedString(string: $0) }
+            refreshControl?.attributedTitle = refreshTitle
         }
     }
 

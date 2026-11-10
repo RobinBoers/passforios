@@ -417,3 +417,4 @@ Finally, copy them to a location accessible by the Files app.";
 "CloningStore" = "Cloning Store…";
 "KeepEditing" = "Keep Editing";
 "SyncFailed" = "Couldn't Sync";
+"CopyPassword" = "Copy Password";

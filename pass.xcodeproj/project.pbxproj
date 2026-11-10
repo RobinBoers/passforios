@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5EA3B1551888D57F0B95AD13 /* PasswordListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 079FD0FC340BE821F14BF5E8 /* PasswordListViewController.swift */; };
 		77D3586697F68604A46B8444 /* SSHKeyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D4E1642FC2782576473DF2 /* SSHKeyTest.swift */; };
 		C787A007BE0118F6FC703B2B /* GPGRecipientsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58414B115B1778C642E4DF3F /* GPGRecipientsTest.swift */; };
 		938C532FDBE82768E0541159 /* GPGRecipients.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14592228F6F3FE60E2C5D992 /* GPGRecipients.swift */; };
@@ -133,8 +134,6 @@
 		9A996C6E26DEB99200A4485D /* passKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A26075781EEC6F34005DB03E /* passKit.framework */; };
 		9ADAB21D26DDA52400900F10 /* Gopenpgp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ADAB21C26DDA52400900F10 /* Gopenpgp.xcframework */; };
 		9ADC954124418A5F0005402E /* PasswordStoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ADC954024418A5F0005402E /* PasswordStoreTest.swift */; };
-		9AFC87D325B39FF3008D6060 /* PasswordNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC87D225B39FF2008D6060 /* PasswordNavigationViewController.swift */; };
-		9AFC87E225B3B5C6008D6060 /* PasswordNavigationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC87E125B3B5C6008D6060 /* PasswordNavigationDataSource.swift */; };
 		9AFC87F025B514AD008D6060 /* PasswordDecryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC87EF25B514AD008D6060 /* PasswordDecryptor.swift */; };
 		9AFC87F825B51742008D6060 /* PasswordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC87F725B51742008D6060 /* PasswordManager.swift */; };
 		9AFC880025B51EC3008D6060 /* PasswordEncryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFC87FF25B51EC3008D6060 /* PasswordEncryptor.swift */; };
@@ -272,6 +271,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		079FD0FC340BE821F14BF5E8 /* PasswordListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordListViewController.swift; sourceTree = "<group>"; };
 		06D4E1642FC2782576473DF2 /* SSHKeyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeyTest.swift; sourceTree = "<group>"; };
 		58414B115B1778C642E4DF3F /* GPGRecipientsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPGRecipientsTest.swift; sourceTree = "<group>"; };
 		14592228F6F3FE60E2C5D992 /* GPGRecipients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPGRecipients.swift; sourceTree = "<group>"; };
@@ -377,8 +377,6 @@
 		9A8F9EE1259EDD520027CE15 /* PasswordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordTableViewCell.swift; sourceTree = "<group>"; };
 		9ADAB21C26DDA52400900F10 /* Gopenpgp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Gopenpgp.xcframework; path = go/dist/Gopenpgp.xcframework; sourceTree = "<group>"; };
 		9ADC954024418A5F0005402E /* PasswordStoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordStoreTest.swift; sourceTree = "<group>"; };
-		9AFC87D225B39FF2008D6060 /* PasswordNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordNavigationViewController.swift; sourceTree = "<group>"; };
-		9AFC87E125B3B5C6008D6060 /* PasswordNavigationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordNavigationDataSource.swift; sourceTree = "<group>"; };
 		9AFC87EF25B514AD008D6060 /* PasswordDecryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordDecryptor.swift; sourceTree = "<group>"; };
 		9AFC87F725B51742008D6060 /* PasswordManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManager.swift; sourceTree = "<group>"; };
 		9AFC87FF25B51EC3008D6060 /* PasswordEncryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordEncryptor.swift; sourceTree = "<group>"; };
@@ -729,7 +727,6 @@
 				9AFC87EF25B514AD008D6060 /* PasswordDecryptor.swift */,
 				9AFC87FF25B51EC3008D6060 /* PasswordEncryptor.swift */,
 				9AFC87F725B51742008D6060 /* PasswordManager.swift */,
-				9AFC87E125B3B5C6008D6060 /* PasswordNavigationDataSource.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -858,10 +855,10 @@
 				DCFB77A61E502DF9008DE471 /* EditPasswordTableViewController.swift */,
 				DC4914981E434600007FF592 /* PasswordDetailTableViewController.swift */,
 				DCFB77A81E502FF6008DE471 /* PasswordEditorTableViewController.swift */,
-				9AFC87D225B39FF2008D6060 /* PasswordNavigationViewController.swift */,
 				A2A7813E1E97DBD9001311F5 /* QRScannerController.swift */,
 				2E1290894DF7397F414F0D2E /* PassportScannerController.swift */,
 				DEC0F601AD00B6EBB26FAE9B /* AppLockViewController.swift */,
+				079FD0FC340BE821F14BF5E8 /* PasswordListViewController.swift */,
 				DCC441511E8F6C06008A90C4 /* RawPasswordViewController.swift */,
 			);
 			path = Controllers;
@@ -1472,7 +1469,6 @@
 				A8F7552B206F9082F738305B /* ProgressSheet.swift in Sources */,
 				8AD4CEA6B4D58292184B5613 /* RepositorySetup.swift in Sources */,
 				9AFC87F025B514AD008D6060 /* PasswordDecryptor.swift in Sources */,
-				9AFC87E225B3B5C6008D6060 /* PasswordNavigationDataSource.swift in Sources */,
 				9AFC880025B51EC3008D6060 /* PasswordEncryptor.swift in Sources */,
 				DC30F83A29BED611001EB12B /* PasswordGeneratorUISlider.swift in Sources */,
 				DD8990E8F1136FB0AE07405A /* FieldTableViewCell.swift in Sources */,
@@ -1482,13 +1478,13 @@
 				A2A7813F1E97DBD9001311F5 /* QRScannerController.swift in Sources */,
 				C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */,
 				219F1A7614266C9355CEAD8C /* AppLockViewController.swift in Sources */,
+				5EA3B1551888D57F0B95AD13 /* PasswordListViewController.swift in Sources */,
 				BBCE3CD450CE8D9AED0275DD /* Passport.swift in Sources */,
 				DC4914991E434600007FF592 /* PasswordDetailTableViewController.swift in Sources */,
 				30C25DD821F4834D00BB27BB /* UICodeHighlightingLabel.swift in Sources */,
 				9A5D06EE25A56F0800FA59D4 /* PasswordTableViewCell.swift in Sources */,
 				9AFC87F825B51742008D6060 /* PasswordManager.swift in Sources */,
 				30C25DD721F4834D00BB27BB /* UILocalizedLabel.swift in Sources */,
-				9AFC87D325B39FF3008D6060 /* PasswordNavigationViewController.swift in Sources */,
 				300713C52219D54100F553AC /* AutoCellHeightUITableViewController.swift in Sources */,
 				A20691F41F2A3D0E0096483D /* SecurePasteboard.swift in Sources */,
 				30695E2024FA6C6500C9D46E /* PasswordAlertPresenter.swift in Sources */,

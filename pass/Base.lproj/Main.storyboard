@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="5ZN-vm-3gw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -8,65 +8,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Passwords-->
-        <scene sceneID="Qd0-Fd-Lct">
-            <objects>
-                <viewController storyboardIdentifier="passwordNavigation" id="cwm-DY-Eli" customClass="PasswordNavigationViewController" customModule="Pass" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="zEx-Wa-Uh0"/>
-                        <viewControllerLayoutGuide type="bottom" id="G6Y-6n-xyC"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="dfS-FV-A7r">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Tn1-q5-vaJ">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="843"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="passwordTableViewCell" textLabel="Eu3-i0-M5v" detailTextLabel="EXI-3Z-dd4" style="IBUITableViewCellStyleValue1" id="bEm-K1-de5" customClass="PasswordTableViewCell" customModule="Pass" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="38" width="350" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bEm-K1-de5" id="kV8-N2-jWc">
-                                            <rect key="frame" x="0.0" y="0.0" width="319.66666666666669" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Eu3-i0-M5v">
-                                                    <rect key="frame" x="20" y="11.999999999999998" width="33" height="20.333333333333332"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EXI-3Z-dd4">
-                                                    <rect key="frame" x="268" y="11.999999999999998" width="43.666666666666664" height="20.333333333333332"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" systemColor="systemGray3Color"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <sections/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Passwords" id="Cio-ZG-zCS">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="qVW-c1-xgh"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="tableView" destination="Tn1-q5-vaJ" id="DBn-bd-fJm"/>
-                        <segue destination="tW4-E9-CGv" kind="show" identifier="showPasswordDetail" id="gXF-zd-527"/>
-                        <segue destination="fyR-Cj-h6o" kind="show" identifier="addPasswordSegue" id="40c-jj-6wh"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6ju-JT-yds" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2560" y="151.4218009478673"/>
-        </scene>
         <!--Add Password-->
         <scene sceneID="738-Zk-wRb">
             <objects>
@@ -103,7 +44,7 @@
         <!--Password Detail Table View Controller-->
         <scene sceneID="9wY-d0-fB1">
             <objects>
-                <tableViewController id="tW4-E9-CGv" customClass="PasswordDetailTableViewController" customModule="Pass" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="passwordDetail" id="tW4-E9-CGv" customClass="PasswordDetailTableViewController" customModule="Pass" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hfi-6O-04U">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -121,24 +62,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9sC-44-OKL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3845" y="152"/>
-        </scene>
-        <!--Passwords-->
-        <scene sceneID="ACd-rk-Zf3">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5ZN-vm-3gw" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="DUk-ZD-z4m">
-                        <rect key="frame" x="0.0" y="47" width="390" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="cwm-DY-Eli" kind="relationship" relationship="rootViewController" id="eSw-Hb-O48"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="25X-hm-lLo" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1451" y="152"/>
         </scene>
         <!--Edit Password-->
         <scene sceneID="NhX-bh-UBe">
@@ -234,7 +157,7 @@ Secret Question 1: What is your childhood best friend's most bizarre superhero f
         <!--Navigation Controller-->
         <scene sceneID="zfZ-pX-bff">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fyR-Cj-h6o" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="addPassword" automaticallyAdjustsScrollViewInsets="NO" id="fyR-Cj-h6o" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="cfr-Us-uHx"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jtR-Sj-1XE">

@@ -416,3 +416,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "CloningStore" = "Store wird geklont …";
 "KeepEditing" = "Weiter bearbeiten";
 "SyncFailed" = "Synchronisierung fehlgeschlagen";
+"CopyPassword" = "Passwort kopieren";

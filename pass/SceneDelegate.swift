@@ -19,14 +19,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else {
             return
         }
-        if #unavailable(iOS 26.0), let passwords = window?.rootViewController {
+        let passwords = UINavigationController(rootViewController: PasswordListViewController())
+        passwords.navigationBar.prefersLargeTitles = true
+        let window = UIWindow(windowScene: windowScene)
+        // Before iOS 26 settings has a tab of its own; after, the password list opens it.
+        if #available(iOS 26.0, *) {
+            window.rootViewController = passwords
+        } else {
             let settings = SettingsViewController()
             settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
             passwords.tabBarItem = UITabBarItem(title: "Passwords".localize(), image: UIImage(systemName: "key"), selectedImage: UIImage(systemName: "key.fill"))
             let tabBarController = UITabBarController()
             tabBarController.viewControllers = [passwords, settings]
-            window?.rootViewController = tabBarController
+            window.rootViewController = tabBarController
         }
+        window.makeKeyAndVisible()
+        self.window = window
         appLockPresenter = AppLockPresenter(windowScene: windowScene)
         appLockPresenter?.lockIfEnabled()
         presentOnboardingIfNeeded()

@@ -73,6 +73,14 @@ class PasswordNavigationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // The storyboard gives the table neither constraints nor autoresizing to follow the screen with.
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
         searchBar.delegate = self
         configureTableView(in: parentPasswordEntity)
         configureNotification()

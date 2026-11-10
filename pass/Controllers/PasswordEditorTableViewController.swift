@@ -12,11 +12,11 @@ import UIKit
 
 class PasswordEditorTableViewController: UITableViewController {
     private enum Section {
-        case name, fields, body, delete
+        case name, fields, actions, body, delete
     }
 
-    private enum FieldsRow {
-        case field(Int), addPassword, addOneTimePassword, addText
+    private enum Action {
+        case addText, addPassword, scanQRCode
     }
 
     var password: Password?
@@ -30,12 +30,13 @@ class PasswordEditorTableViewController: UITableViewController {
     private var hasBody = false
 
     private var sections: [Section] {
-        [.name, .fields] + (hasBody ? [.body] : []) + (password == nil ? [] : [.delete])
+        [.name, .fields, .actions] + (hasBody ? [.body] : []) + (password == nil ? [] : [.delete])
     }
 
-    private var fieldsRows: [FieldsRow] {
+    /// In the pass format, the password is the first line, so there is room for one only.
+    private var actions: [Action] {
         let canAddPassword = Defaults.storeFormat == .sec || !fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
-        return fields.indices.map(FieldsRow.field) + [.addText] + (canAddPassword ? [.addPassword] : []) + [.addOneTimePassword]
+        return [.addText] + (canAddPassword ? [.addPassword] : []) + [.scanQRCode]
     }
 
     var entry: Entry {
@@ -77,7 +78,14 @@ class PasswordEditorTableViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section] == .fields ? fieldsRows.count : 1
+        switch sections[section] {
+        case .fields:
+            return fields.count
+        case .actions:
+            return actions.count
+        case .body, .delete, .name:
+            return 1
+        }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -88,7 +96,24 @@ class PasswordEditorTableViewController: UITableViewController {
             cell.onChange = { [weak self] in self?.name = $0 }
             return cell
         case .fields:
-            return fieldsCell(for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "fieldCell", for: indexPath) as! FieldTableViewCell
+            cell.set(field: fields[indexPath.row], allowsSecret: Defaults.storeFormat == .sec)
+            cell.onChange = { [weak self, weak cell] field in
+                guard let self, let cell, let row = tableView.indexPath(for: cell)?.row else {
+                    return
+                }
+                fields[row] = field
+            }
+            return cell
+        case .actions:
+            switch actions[indexPath.row] {
+            case .addText:
+                return actionCell(for: indexPath, title: "AddText".localize(), image: "text.alignleft")
+            case .addPassword:
+                return actionCell(for: indexPath, title: "AddPasswordField".localize(), image: "key")
+            case .scanQRCode:
+                return actionCell(for: indexPath, title: "ScanQRCode".localize(), image: "qrcode.viewfinder")
+            }
         case .body:
             let cell = tableView.dequeueReusableCell(withIdentifier: "textViewCell", for: indexPath) as! TextViewTableViewCell
             cell.setContent(content: body)
@@ -106,27 +131,6 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
-    private func fieldsCell(for indexPath: IndexPath) -> UITableViewCell {
-        switch fieldsRows[indexPath.row] {
-        case let .field(index):
-            let cell = tableView.dequeueReusableCell(withIdentifier: "fieldCell", for: indexPath) as! FieldTableViewCell
-            cell.set(field: fields[index], allowsSecret: Defaults.storeFormat == .sec)
-            cell.onChange = { [weak self, weak cell] field in
-                guard let self, let cell, let row = tableView.indexPath(for: cell)?.row else {
-                    return
-                }
-                fields[row] = field
-            }
-            return cell
-        case .addPassword:
-            return actionCell(for: indexPath, title: "AddPasswordField".localize(), image: "key")
-        case .addOneTimePassword:
-            return actionCell(for: indexPath, title: "ScanQRCode".localize(), image: "qrcode.viewfinder")
-        case .addText:
-            return actionCell(for: indexPath, title: "AddText".localize(), image: "text.alignleft")
-        }
-    }
-
     private func actionCell(for indexPath: IndexPath, title: String, image: String) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
         var content = cell.defaultContentConfiguration()
@@ -140,10 +144,7 @@ class PasswordEditorTableViewController: UITableViewController {
     // MARK: - Table view delegate
 
     override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard sections[indexPath.section] == .fields, case .field = fieldsRows[indexPath.row] else {
-            return false
-        }
-        return true
+        sections[indexPath.section] == .fields
     }
 
     override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -154,23 +155,23 @@ class PasswordEditorTableViewController: UITableViewController {
         fields.insert(fields.remove(at: source.row), at: destination.row)
     }
 
-    /// Fields only move among themselves, above the buttons that add them.
+    /// Fields only move among themselves.
     override func tableView(_: UITableView, targetIndexPathForMoveFromRowAt source: IndexPath, toProposedIndexPath proposed: IndexPath) -> IndexPath {
         guard proposed.section == source.section else {
             return proposed.section < source.section ? IndexPath(row: 0, section: source.section) : IndexPath(row: fields.count - 1, section: source.section)
         }
-        return IndexPath(row: min(proposed.row, fields.count - 1), section: source.section)
+        return proposed
     }
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete, case let .field(index) = fieldsRows[indexPath.row] else {
+        guard editingStyle == .delete else {
             return
         }
-        let rowsBefore = fieldsRows.count
-        fields.remove(at: index)
+        let actionsBefore = actions
+        fields.remove(at: indexPath.row)
         tableView.performBatchUpdates {
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            updateAddPasswordRow(rowsBefore: rowsBefore - 1, section: indexPath.section)
+            updateActions(from: actionsBefore)
         }
     }
 
@@ -178,17 +179,15 @@ class PasswordEditorTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
 
         switch sections[indexPath.section] {
-        case .fields:
-            switch fieldsRows[indexPath.row] {
+        case .actions:
+            switch actions[indexPath.row] {
+            case .addText:
+                addField(Field(key: "", value: ""))
             case .addPassword:
                 let hasPassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
                 addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: Defaults.passwordGenerator.generate(), isSecret: true))
-            case .addOneTimePassword:
+            case .scanQRCode:
                 performSegue(withIdentifier: "showQRScannerSegue", sender: self)
-            case .addText:
-                addField(Field(key: "", value: ""))
-            case .field:
-                break
             }
         case .delete:
             let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: .alert)
@@ -208,12 +207,12 @@ class PasswordEditorTableViewController: UITableViewController {
         guard let section = sections.firstIndex(of: .fields) else {
             return
         }
-        let rowsBefore = fieldsRows.count
+        let actionsBefore = actions
         fields.append(field)
         let indexPath = IndexPath(row: fields.count - 1, section: section)
         tableView.performBatchUpdates {
             tableView.insertRows(at: [indexPath], with: .automatic)
-            updateAddPasswordRow(rowsBefore: rowsBefore + 1, section: section)
+            updateActions(from: actionsBefore)
         }
         let cell = tableView.cellForRow(at: indexPath) as? FieldTableViewCell
         if field.key.isEmpty {
@@ -223,12 +222,14 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
-    /// In the pass format, the password is the first line, so there is room for one only.
-    private func updateAddPasswordRow(rowsBefore: Int, section: Int) {
-        let row = IndexPath(row: fields.count + 1, section: section)
-        if fieldsRows.count < rowsBefore {
+    private func updateActions(from before: [Action]) {
+        guard let section = sections.firstIndex(of: .actions), before != actions else {
+            return
+        }
+        let row = IndexPath(row: 1, section: section)
+        if actions.count < before.count {
             tableView.deleteRows(at: [row], with: .automatic)
-        } else if fieldsRows.count > rowsBefore {
+        } else {
             tableView.insertRows(at: [row], with: .automatic)
         }
     }

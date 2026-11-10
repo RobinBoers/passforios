@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA7518352D39105A27E5147E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63219CFBD6EE49C671897A /* SceneDelegate.swift */; };
+		8AD4CEA6B4D58292184B5613 /* RepositorySetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C80790B13DDE035EDB07B56 /* RepositorySetup.swift */; };
+		C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1290894DF7397F414F0D2E /* PassportScannerController.swift */; };
+		BBCE3CD450CE8D9AED0275DD /* Passport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CA7132E57DF5BC0985E407 /* Passport.swift */; };
 		300713C52219D54100F553AC /* AutoCellHeightUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300713C42219D54100F553AC /* AutoCellHeightUITableViewController.swift */; };
 		3010CB6026DA4F87008964D2 /* SwiftyUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 3010CB5F26DA4F87008964D2 /* SwiftyUserDefaults */; };
 		3010CB6326DA4FE9008964D2 /* FavIcon in Frameworks */ = {isa = PBXBuildFile; productRef = 3010CB6226DA4FE9008964D2 /* FavIcon */; };
@@ -331,6 +335,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CA63219CFBD6EE49C671897A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		2C80790B13DDE035EDB07B56 /* RepositorySetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositorySetup.swift; sourceTree = "<group>"; };
+		2E1290894DF7397F414F0D2E /* PassportScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassportScannerController.swift; sourceTree = "<group>"; };
+		51CA7132E57DF5BC0985E407 /* Passport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Passport.swift; sourceTree = "<group>"; };
 		300713C42219D54100F553AC /* AutoCellHeightUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCellHeightUITableViewController.swift; sourceTree = "<group>"; };
 		301F6462216162550071A4CE /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		302202EE222F14E400555236 /* SearchBarScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarScope.swift; sourceTree = "<group>"; };
@@ -613,6 +621,7 @@
 			isa = PBXGroup;
 			children = (
 				308800C224EDA5F600E87ED3 /* QRKeyScanner.swift */,
+				51CA7132E57DF5BC0985E407 /* Passport.swift */,
 				308800C624EDC08D00E87ED3 /* ScannableKeyType.swift */,
 			);
 			path = Models;
@@ -1000,6 +1009,7 @@
 				3066AD6723EE0D6500F65535 /* PGPKeyImporter.swift */,
 				DCA0499B1E3362F400522E8F /* PGPKeyURLImportTableViewController.swift */,
 				A2A7813E1E97DBD9001311F5 /* QRScannerController.swift */,
+				2E1290894DF7397F414F0D2E /* PassportScannerController.swift */,
 				DCC441511E8F6C06008A90C4 /* RawPasswordViewController.swift */,
 				DCD3C65D1EFB9BB400CBE842 /* SettingsSplitViewController.swift */,
 				DCAAF7441E2FA66800AB94BC /* SettingsTableViewController.swift */,
@@ -1019,6 +1029,7 @@
 				A20691F31F2A3D0E0096483D /* SecurePasteboard.swift */,
 				A2A61C1F1EEFABAD00CFE063 /* UtilsExtension.swift */,
 				DEF7D540FB92568C3086E1A1 /* ProgressSheet.swift */,
+				2C80790B13DDE035EDB07B56 /* RepositorySetup.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1095,6 +1106,7 @@
 				DC19400F1E4B3A9E0077E0A3 /* Views */,
 				DC917BDD1E2E8231000FDF54 /* Assets.xcassets */,
 				DC917BD61E2E8231000FDF54 /* AppDelegate.swift */,
+				CA63219CFBD6EE49C671897A /* SceneDelegate.swift */,
 				A26700321EEC46C400176B8A /* pass.entitlements */,
 				9A1EF0B324C50DD80074FEAC /* passBeta.entitlements */,
 				DC917BDF1E2E8231000FDF54 /* LaunchScreen.storyboard */,
@@ -1700,6 +1712,7 @@
 				DCC441541E916382008A90C4 /* SSHKeyArmorImportTableViewController.swift in Sources */,
 				A2A61C201EEFABAD00CFE063 /* UtilsExtension.swift in Sources */,
 				A8F7552B206F9082F738305B /* ProgressSheet.swift in Sources */,
+				8AD4CEA6B4D58292184B5613 /* RepositorySetup.swift in Sources */,
 				DC8963C01E38EEB900828B09 /* SSHKeyURLImportTableViewController.swift in Sources */,
 				9AFC87F025B514AD008D6060 /* PasswordDecryptor.swift in Sources */,
 				3066AD6823EE0D6500F65535 /* PGPKeyImporter.swift in Sources */,
@@ -1717,8 +1730,10 @@
 				DCA0499A1E335CC800522E8F /* GitRepositorySettingsTableViewController.swift in Sources */,
 				DCDDEAB31E4896BF00F68193 /* PasswordDetailTitleTableViewCell.swift in Sources */,
 				A2A7813F1E97DBD9001311F5 /* QRScannerController.swift in Sources */,
+				C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */,
 				308800C724EDC08D00E87ED3 /* ScannableKeyType.swift in Sources */,
 				308800C324EDA5F600E87ED3 /* QRKeyScanner.swift in Sources */,
+				BBCE3CD450CE8D9AED0275DD /* Passport.swift in Sources */,
 				DC4914991E434600007FF592 /* PasswordDetailTableViewController.swift in Sources */,
 				30C25DD821F4834D00BB27BB /* UICodeHighlightingLabel.swift in Sources */,
 				9A5D06EE25A56F0800FA59D4 /* PasswordTableViewCell.swift in Sources */,
@@ -1744,6 +1759,7 @@
 				DC037CB81E4DD1A500609409 /* AddPasswordTableViewController.swift in Sources */,
 				DCC441521E8F6C06008A90C4 /* RawPasswordViewController.swift in Sources */,
 				DC917BD71E2E8231000FDF54 /* AppDelegate.swift in Sources */,
+				EA7518352D39105A27E5147E /* SceneDelegate.swift in Sources */,
 				DC037CBB1E4DD47B00609409 /* TextFieldTableViewCell.swift in Sources */,
 				DCFB77A91E502FF6008DE471 /* PasswordEditorTableViewController.swift in Sources */,
 			);

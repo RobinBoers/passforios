@@ -24,14 +24,6 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
     private var sshLabel: UILabel?
     private let passwordStore = PasswordStore.shared
     private let keychain = AppKeychain.shared
-    private var gitCredential: GitCredential {
-        GitCredential.from(
-            authenticationMethod: Defaults.gitAuthenticationMethod,
-            userName: Defaults.gitUsername,
-            keyStore: keychain
-        )
-    }
-
     private var gitAuthenticationMethod: GitAuthenticationMethod {
         get { Defaults.gitAuthenticationMethod }
         set {
@@ -64,6 +56,9 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
         branchNameTextField.text = gitBranchName
         sshLabel = authSSHKeyCell.subviews[0].subviews[0] as? UILabel
         authSSHKeyCell.accessoryType = .detailButton
+        navigationItem.rightBarButtonItems = (navigationItem.rightBarButtonItems ?? []) + [
+            UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(scanPassport)),
+        ]
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -165,91 +160,15 @@ class GitRepositorySettingsTableViewController: UITableViewController, PasswordA
     }
 
     private func cloneAndSegueIfSuccess(url: URL, branch: String, username: String) {
-        gitURL = url
-        gitBranchName = branch
-        gitUsername = username
-
-        // Remember git credential password/passphrase temporarily, ask whether users want this after a successful clone.
-        Defaults.isRememberGitCredentialPassphraseOn = true
-        ProgressSheet.show("Cloning Remote Repository", on: self)
-        // swiftlint:disable:next closure_body_length
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                let transferProgressBlock: (UnsafePointer<git_transfer_progress>, UnsafeMutablePointer<ObjCBool>) -> Void = { git_transfer_progress, _ in
-                    let gitTransferProgress = git_transfer_progress.pointee
-                    let progress = Float(gitTransferProgress.received_objects) / Float(gitTransferProgress.total_objects)
-                    DispatchQueue.main.async {
-                        ProgressSheet.update(progress: progress, status: "Cloning Remote Repository")
-                    }
-                }
-
-                let checkoutProgressBlock: (String, UInt, UInt) -> Void = { _, completedSteps, totalSteps in
-                    let progress = Float(completedSteps) / Float(totalSteps)
-                    DispatchQueue.main.async {
-                        ProgressSheet.update(progress: progress, status: "CheckingOutBranch".localize(self.gitBranchName))
-                    }
-                }
-
-                let options = self.gitCredential.getCredentialOptions(passwordProvider: self.present)
-
-                try self.passwordStore.cloneRepository(
-                    remoteRepoURL: self.gitURL,
-                    branchName: self.gitBranchName,
-                    options: options,
-                    transferProgressBlock: transferProgressBlock,
-                    checkoutProgressBlock: checkoutProgressBlock
-                )
-
-                let gpgIDFile = self.passwordStore.storeURL.appendingPathComponent(".gpg-id").path
-                guard FileManager.default.fileExists(atPath: gpgIDFile) else {
-                    self.passwordStore.eraseStoreData()
-                    DispatchQueue.main.async {
-                        Utils.alert(title: "Error".localize(), message: "NoProperPassRepo.".localize(), controller: self)
-                    }
-                    return
-                }
-
-                DispatchQueue.main.async {
-                    ProgressSheet.dismiss {
-                        self.savePassphraseAndSegue()
-                    }
-                }
-            } catch {
-                self.passwordStore.eraseStoreData()
-                let error = error as NSError
-                var message = error.localizedDescription
-                if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
-                    message = "\(message)\n\("UnderlyingError".localize(underlyingError.localizedDescription))"
-                }
-                DispatchQueue.main.async {
-                    Utils.alert(title: "Error".localize(), message: message, controller: self)
-                }
-            }
+        cloneRepository(url: url, branch: branch, username: username) {
+            self.performSegue(withIdentifier: "saveGitServerSettingSegue", sender: self)
         }
     }
 
-    private func savePassphraseAndSegue() {
-        let savePassphraseAlert = UIAlertController(
-            title: "Done".localize(),
-            message: "WantToSaveGitCredential?".localize(),
-            preferredStyle: .alert
-        )
-        savePassphraseAlert.addAction(
-            UIAlertAction(title: "No".localize(), style: .default) { _ in
-                Defaults.isRememberGitCredentialPassphraseOn = false
-                self.passwordStore.gitPassword = nil
-                self.passwordStore.gitSSHPrivateKeyPassphrase = nil
-                self.performSegue(withIdentifier: "saveGitServerSettingSegue", sender: self)
-            }
-        )
-        savePassphraseAlert.addAction(
-            UIAlertAction(title: "Yes".localize(), style: .destructive) { _ in
-                Defaults.isRememberGitCredentialPassphraseOn = true
-                self.performSegue(withIdentifier: "saveGitServerSettingSegue", sender: self)
-            }
-        )
-        DispatchQueue.main.async {
-            self.present(savePassphraseAlert, animated: true)
+    @objc
+    private func scanPassport() {
+        setUpFromComputer {
+            self.performSegue(withIdentifier: "saveGitServerSettingSegue", sender: self)
         }
     }
 

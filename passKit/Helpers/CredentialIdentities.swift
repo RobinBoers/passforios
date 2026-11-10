@@ -14,7 +14,7 @@ public struct SavedCredentialIdentity: Codable, Equatable, DefaultsSerializable 
 
     var asIdentity: ASPasswordCredentialIdentity {
         ASPasswordCredentialIdentity(
-            serviceIdentifier: ASCredentialServiceIdentifier(identifier: service, type: .init(rawValue: serviceType) ?? .URL),
+            serviceIdentifier: ASCredentialServiceIdentifier(identifier: service, type: ASCredentialServiceIdentifier.IdentifierType(rawValue: serviceType) ?? .URL),
             user: user,
             recordIdentifier: path
         )

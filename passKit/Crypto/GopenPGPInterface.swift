@@ -11,6 +11,7 @@ import Gopenpgp
 struct GopenPGPInterface: PGPInterface {
     private static let errorMapping: [String: Error] = [
         "gopenpgp: error in unlocking key: openpgp: invalid data: private key checksum failure": AppError.wrongPassphrase,
+        "gopenpgp: error in unlocking sub key: openpgp: invalid data: private key checksum failure": AppError.wrongPassphrase,
         "gopenpgp: error in reading message: openpgp: incorrect key": AppError.keyExpiredOrIncompatible,
     ]
 

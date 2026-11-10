@@ -75,7 +75,7 @@ class LabelTableViewCell: UITableViewCell {
             },
         ]
         switch type {
-        case .secret, .HOTP:
+        case .HOTP, .secret:
             actions.append(
                 UIAction(title: (isReveal ? "Conceal" : "Reveal").localize(), image: UIImage(systemName: isReveal ? "eye.slash" : "eye")) { [weak self] _ in
                     self?.reversePasswordDisplay()
@@ -114,7 +114,7 @@ class LabelTableViewCell: UITableViewCell {
         case .HOTP:
             contentLabel.font = Globals.passwordFont
             contentLabel.text = isReveal ? content : Globals.oneTimePasswordDots
-        case .URL, .other:
+        case .other, .URL:
             contentLabel.font = .preferredFont(forTextStyle: .body)
             contentLabel.textColor = .label
             contentLabel.text = content

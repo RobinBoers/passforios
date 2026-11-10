@@ -27,8 +27,14 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
 
     weak var delegate: QRScannerControllerDelegate?
 
+    var idleMessage = "NoQrCodeDetected.".localize()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if scannerOutput == nil {
+            addScannerOutput()
+        }
 
         if AVCaptureDevice.authorizationStatus(for: .video) == .denied {
             presentCameraSettings()
@@ -68,7 +74,7 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
 
             // Move the message label to the front
             scannerOutput.layer.cornerRadius = 10
-            scannerOutput.text = "NoQrCodeDetected.".localize()
+            scannerOutput.text = idleMessage
             view.bringSubviewToFront(scannerOutput)
 
             // Initialize QR Code Frame to highlight the QR code
@@ -126,9 +132,28 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         }
     }
 
+    private func addScannerOutput() {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = .preferredFont(forTextStyle: .body)
+        label.adjustsFontForContentSizeCategory = true
+        label.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        label.clipsToBounds = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.widthAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            label.heightAnchor.constraint(greaterThanOrEqualToConstant: 45),
+            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),
+        ])
+        scannerOutput = label
+    }
+
     private func setNotDetected() {
         qrCodeFrameView?.frame = CGRect.zero
-        scannerOutput.text = "NoQrCodeDetected.".localize()
+        scannerOutput.text = idleMessage
     }
 
     private func presentCameraSettings() {

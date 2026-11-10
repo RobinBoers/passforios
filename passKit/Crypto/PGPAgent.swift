@@ -11,6 +11,7 @@ public class PGPAgent {
 
     private let keyStore: KeyStore
     private var pgpInterface: PGPInterface?
+    private var loadedKeys: (public: String, private: String)?
     private var latestDecryptStatus = true
 
     public init(keyStore: KeyStore = AppKeychain.shared) {
@@ -18,9 +19,9 @@ public class PGPAgent {
     }
 
     public func initKeys() throws {
+        uninitKeys()
         guard let publicKey: String = keyStore.get(for: PGPKey.PUBLIC.getKeychainKey()),
               let privateKey: String = keyStore.get(for: PGPKey.PRIVATE.getKeychainKey()) else {
-            pgpInterface = nil
             throw AppError.keyImport
         }
         do {
@@ -28,10 +29,12 @@ public class PGPAgent {
         } catch {
             pgpInterface = try ObjectivePGPInterface(publicArmoredKey: publicKey, privateArmoredKey: privateKey)
         }
+        loadedKeys = (publicKey, privateKey)
     }
 
     public func uninitKeys() {
         pgpInterface = nil
+        loadedKeys = nil
     }
 
     public var isInitialized: Bool {
@@ -135,8 +138,11 @@ public class PGPAgent {
             && keyStore.contains(key: PGPKey.PRIVATE.getKeychainKey())
     }
 
+    /// The keychain is shared with the extensions, so another process may have replaced the keys since they were loaded.
     private func checkAndInit() throws {
-        if pgpInterface == nil {
+        let publicKey: String? = keyStore.get(for: PGPKey.PUBLIC.getKeychainKey())
+        let privateKey: String? = keyStore.get(for: PGPKey.PRIVATE.getKeychainKey())
+        if pgpInterface == nil || publicKey != loadedKeys?.public || privateKey != loadedKeys?.private {
             try initKeys()
         }
     }

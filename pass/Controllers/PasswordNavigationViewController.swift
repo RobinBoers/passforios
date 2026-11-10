@@ -127,6 +127,51 @@ class PasswordNavigationViewController: UIViewController {
         let atribbutedTitle = "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)"
         refreshControl.attributedTitle = NSAttributedString(string: atribbutedTitle)
         tableView.refreshControl = refreshControl
+        tableView.backgroundView = isRootViewController() && !PasswordStore.shared.repositoryExists() ? makeSetUpView() : nil
+    }
+
+    private func makeSetUpView() -> UIView {
+        let image = UIImageView(image: UIImage(systemName: "qrcode.viewfinder"))
+        image.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .largeTitle, scale: .large)
+        image.tintColor = .secondaryLabel
+
+        let title = UILabel()
+        title.text = "NoPasswordStore".localize()
+        let titleFont = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .title2)
+        title.font = UIFont(descriptor: titleFont.withSymbolicTraits(.traitBold) ?? titleFont, size: 0)
+
+        let message = UILabel()
+        message.text = "SetUpFromComputer.".localize()
+        message.font = .preferredFont(forTextStyle: .body)
+        message.textColor = .secondaryLabel
+
+        var configuration = UIButton.Configuration.borderedProminent()
+        configuration.title = "SetUpFromComputer".localize()
+        configuration.cornerStyle = .capsule
+        let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
+            setUpFromComputer()
+        })
+
+        let stack = UIStackView(arrangedSubviews: [image, title, message, button])
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 12
+        stack.setCustomSpacing(24, after: message)
+        for label in [title, message] {
+            label.adjustsFontForContentSizeCategory = true
+            label.textAlignment = .center
+            label.numberOfLines = 0
+        }
+        stack.translatesAutoresizingMaskIntoConstraints = false
+
+        let view = UIView()
+        view.addSubview(stack)
+        NSLayoutConstraint.activate([
+            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            stack.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor),
+        ])
+        return view
     }
 
     private func configureTableViewDataSource(in dir: PasswordEntity?, isShowFolder: Bool) {

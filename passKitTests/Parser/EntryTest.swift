@@ -78,11 +78,11 @@ final class EntryTest: XCTestCase {
     }
 
     func testRoundTrip() throws {
-        [
+        for plainText in [
             "proto: web\nuser: me\npass!: secret\n",
             "proto: ssh\npub: ssh-ed25519 AAAA\n\n-----BEGIN OPENSSH PRIVATE KEY-----\nabc\n-----END OPENSSH PRIVATE KEY-----\n",
             "\nonly a body\n",
-        ].forEach { plainText in
+        ] {
             XCTAssertEqual(try Entry(parsing: plainText).plainText, plainText)
         }
     }

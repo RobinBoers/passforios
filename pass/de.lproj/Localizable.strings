@@ -107,6 +107,15 @@
 "SetPrivateKeyUrl."         = "Bitte gibt erst die URL des privaten Schlüssels ein.";
 "SshCopyPrivateKeyToPass."  = "Kopiere den privaten Schlüssel im ASCII-Format verschlüsselt mit dem Namen \"ssh_key\" über iTunes zu Pass. Danach kann der Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 
+// Set up from computer
+"NoPasswordStore"        = "Kein Passwort Store";
+"SetUpFromComputer"      = "Vom Computer einrichten";
+"SetUpFromComputer."     = "Führe passport auf deinem Computer aus und scanne den angezeigten Code.";
+"ScanPassport."          = "Richte die Kamera auf den Code von passport.";
+"ScannedPassport(%d,%d)" = "%1$d von %2$d Codes gescannt";
+"InvalidPassport."       = "Dieser Code kann nicht gelesen werden. Aktualisiere passport und die App und versuche es erneut.";
+"ImportingKeys"          = "Schlüssel werden importiert";
+
 // QR code scanning
 "LookingForStartingFrame."                  = "Suche nach dem Anfang.";
 "TooManyQrCodes"                            = "Zu viele QR-Codes";

@@ -28,7 +28,10 @@ open class PasscodeLockPresenter {
 
         // new window
         mainWindow?.endEditing(true)
-        passcodeLockWindow = UIWindow(frame: mainWindow!.frame)
+        guard let windowScene = mainWindow?.windowScene else {
+            return
+        }
+        passcodeLockWindow = UIWindow(windowScene: windowScene)
         moveWindowsToFront(windowLevel: windowLevel)
         passcodeLockWindow?.isHidden = false
 

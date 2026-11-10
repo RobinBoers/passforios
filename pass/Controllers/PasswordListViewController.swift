@@ -54,6 +54,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         super.viewDidLoad()
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        if !isRoot {
+            tableView.removeTopSpace()
+        }
         tableView.dataSource = dataSource
 
         navigationItem.title = folder?.name ?? "PasswordStore".localize()

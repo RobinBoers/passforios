@@ -52,6 +52,7 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.removeTopSpace()
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(UINib(nibName: "LabelTableViewCell", bundle: nil), forCellReuseIdentifier: "labelCell")

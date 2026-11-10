@@ -75,8 +75,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
 
         if isRoot {
-            refreshControl = UIRefreshControl()
-            refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+            installRefreshControl()
         }
 
         let center = NotificationCenter.default
@@ -290,6 +289,11 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
         isSyncFinished = false
         refreshControl?.endRefreshing()
+        // Since iOS 27 an ended refresh control keeps its height reserved at the top, which leaves the list
+        // scrolled down; only detaching it gives that back, and a detached control never fires again.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+            self?.installRefreshControl()
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
             self?.showLastSynced()
             self?.updateBarButtons()
@@ -298,6 +302,14 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     override func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {
         endRefreshingIfReleased()
+    }
+
+    private func installRefreshControl() {
+        let control = UIRefreshControl()
+        control.attributedTitle = refreshControl?.attributedTitle
+        control.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        refreshControl = nil
+        refreshControl = control
     }
 
     /// Pulls when the app opens, unless there are local changes to push, which is left to the user.

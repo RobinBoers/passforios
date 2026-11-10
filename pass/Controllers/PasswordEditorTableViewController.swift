@@ -50,6 +50,7 @@ class PasswordEditorTableViewController: UITableViewController {
         tableView.register(UINib(nibName: "TextViewTableViewCell", bundle: nil), forCellReuseIdentifier: "textViewCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "default")
         tableView.keyboardDismissMode = .interactive
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.dragInteractionEnabled = true
         tableView.dragDelegate = self
         tableView.dropDelegate = self

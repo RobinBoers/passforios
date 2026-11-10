@@ -6,7 +6,7 @@
 //  Copyright © 2018 Bob Sun. All rights reserved.
 //
 
-/// A store entry: a header of `key: value` lines, where `key!:` marks a secret,
+/// A store entry in the format of `sec`: a header of `key: value` lines, where `key!:` marks a secret,
 /// optionally followed by a blank line and a free-form body.
 public struct Entry: Equatable {
     public enum ParseError: Error, Equatable {
@@ -45,7 +45,7 @@ public struct Entry: Equatable {
         self.init(fields: fields, body: body)
     }
 
-    /// Fields left empty are dropped.
+    /// Fields left empty are dropped, like `sec edit` does.
     public var plainText: String {
         let header = fields.filter { !$0.value.isEmpty }.map(\.line)
         let lines = body.isEmpty ? header : header + ["", body]

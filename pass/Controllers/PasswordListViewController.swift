@@ -20,6 +20,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private let searchController = UISearchController(searchResultsController: nil)
 
     private var isSyncing = false
+    /// The sync finished while the list was still pulled down; the refresh ends once it is let go.
+    private var isSyncFinished = false
     private var syncStatusGeneration = 0
 
     private lazy var addButton = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
@@ -53,6 +55,11 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         super.viewDidLoad()
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        // Estimated heights get corrected as rows appear, which moves the content while a refresh ends and
+        // leaves the large title out of place; without estimates the heights are exact from the start.
+        tableView.estimatedRowHeight = 0
+        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedSectionFooterHeight = 0
         if !isRoot {
             tableView.removeTopSpace()
         }
@@ -259,30 +266,43 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     // MARK: - Syncing
 
     private func sync() {
-        guard !isSyncing, PasswordStore.shared.repositoryExists() else {
+        guard let refreshControl, !refreshControl.isRefreshing else {
             return
         }
-        isSyncing = true
-        syncRepository(status: { [weak self] status in
-            self?.showSyncStatus(status)
-        }, completion: { [weak self] _ in
-            self?.isSyncing = false
-            self?.showLastSynced()
-            self?.updateBarButtons()
-        })
+        refreshControl.beginRefreshing()
+        refresh()
     }
 
     @objc
     private func refresh() {
-        sync()
+        guard !isSyncing, PasswordStore.shared.repositoryExists() else {
+            refreshControl?.endRefreshing()
+            return
+        }
+        isSyncing = true
+        isSyncFinished = false
+        syncRepository(status: { [weak self] status in
+            self?.showSyncStatus(status)
+        }, completion: { [weak self] _ in
+            self?.isSyncing = false
+            self?.isSyncFinished = true
+            self?.endRefreshingIfReleased()
+        })
     }
 
-    /// The refresh ends as the list is let go, before UIKit holds it open for the spinner: since iOS 27 a list
-    /// held open does not return to its top afterwards. The sync goes on, with its progress in the subtitle.
-    override func scrollViewWillEndDragging(_: UIScrollView, withVelocity _: CGPoint, targetContentOffset _: UnsafeMutablePointer<CGPoint>) {
-        if refreshControl?.isRefreshing == true {
-            refreshControl?.endRefreshing()
+    /// Like Mail, the refresh only ends once the list is let go.
+    private func endRefreshingIfReleased() {
+        guard isSyncFinished, !tableView.isDragging else {
+            return
         }
+        isSyncFinished = false
+        refreshControl?.endRefreshing()
+        showLastSynced()
+        updateBarButtons()
+    }
+
+    override func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {
+        endRefreshingIfReleased()
     }
 
     /// Pulls when the app opens, unless there are local changes to push, which is left to the user.

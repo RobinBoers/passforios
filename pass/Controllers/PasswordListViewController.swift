@@ -317,29 +317,43 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         let plain = UIAction(title: "Password".localize(), image: UIImage(systemName: "key")) { [unowned self] _ in
             addPassword()
         }
-        let templates = protos.keys.map { name in
-            let known = Self.knownProtos[name]
-            let title = known?.0.localize() ?? name.prefix(1).uppercased() + name.dropFirst()
-            return UIAction(title: title, image: UIImage(systemName: known?.1 ?? "doc.text")) { [unowned self] _ in
-                addPassword(proto: Defaults.protos[name])
+        let known = Self.knownProtos
+            .filter { protos[$0.name] != nil }
+            .map { KnownProto(name: $0.name, title: $0.title.localize(), symbol: $0.symbol) }
+        let others = protos.keys
+            .filter { name in !Self.knownProtos.contains { $0.name == name } }
+            .map { KnownProto(name: $0, title: $0.prefix(1).uppercased() + $0.dropFirst(), symbol: "doc.text") }
+            .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        let split = known.firstIndex { Self.bottomProtos.contains($0.name) } ?? known.count
+        let templates = (known[..<split] + others + known[split...]).map { proto in
+            UIAction(title: proto.title, image: UIImage(systemName: proto.symbol)) { [unowned self] _ in
+                addPassword(proto: Defaults.protos[proto.name])
             }
         }
-        .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         addButton.primaryAction = nil
         addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: templates)])
     }
 
-    /// Names and symbols for the protos `sec` users are likely to have; others show their name.
+    private struct KnownProto {
+        let name: String
+        let title: String
+        let symbol: String
+    }
+
+    /// The protos `sec` users are likely to have, named and in the menu's order; others show their name.
     private static let knownProtos = [
-        "card": ("ProtoCard", "creditcard"),
-        "imap": ("ProtoImap", "envelope"),
-        "license": ("ProtoLicense", "checkmark.seal"),
-        "postgres": ("ProtoPostgres", "cylinder"),
-        "smtp": ("ProtoSmtp", "paperplane"),
-        "ssh": ("ProtoSsh", "terminal"),
-        "web": ("ProtoWeb", "globe"),
-        "wifi": ("ProtoWifi", "wifi"),
+        KnownProto(name: "card", title: "ProtoCard", symbol: "creditcard"),
+        KnownProto(name: "license", title: "ProtoLicense", symbol: "checkmark.seal"),
+        KnownProto(name: "db", title: "ProtoDatabase", symbol: "cylinder"),
+        KnownProto(name: "ssh", title: "ProtoSsh", symbol: "terminal"),
+        KnownProto(name: "imap", title: "ProtoImap", symbol: "envelope"),
+        KnownProto(name: "smtp", title: "ProtoSmtp", symbol: "paperplane"),
+        KnownProto(name: "wifi", title: "ProtoWifi", symbol: "wifi"),
+        KnownProto(name: "web", title: "ProtoWeb", symbol: "globe"),
     ]
+
+    /// Kept last, nearest the thumb, with any other protos before them.
+    private static let bottomProtos: Set = ["wifi", "web"]
 
     /// Without a proto, a sec entry starts from a password field, as `sec add` does.
     private func addPassword(proto: String? = nil) {

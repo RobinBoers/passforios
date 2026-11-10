@@ -274,10 +274,10 @@
 "SendEmail" = "Invia e-mail";
 "Call" = "Chiama";
 "ProtoCard" = "Carta di credito";
-"ProtoImap" = "Posta in arrivo (IMAP)";
+"ProtoImap" = "Posta in arrivo";
 "ProtoLicense" = "Licenza software";
-"ProtoPostgres" = "PostgreSQL";
-"ProtoSmtp" = "Posta in uscita (SMTP)";
+"ProtoSmtp" = "Posta in uscita";
 "ProtoSsh" = "Chiave SSH";
 "ProtoWeb" = "Sito web";
 "ProtoWifi" = "Wi-Fi";
+"ProtoDatabase" = "Database";

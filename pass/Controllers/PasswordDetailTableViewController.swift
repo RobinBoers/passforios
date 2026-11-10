@@ -52,6 +52,8 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(UINib(nibName: "LabelTableViewCell", bundle: nil), forCellReuseIdentifier: "labelCell")
         tableView.register(UINib(nibName: "PasswordDetailTitleTableViewCell", bundle: nil), forCellReuseIdentifier: "passwordDetailTitleTableViewCell")
 
@@ -261,7 +263,7 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         // other fields
         let fields = password.additionalFields
         if !fields.isEmpty {
-            section = TableSection(type: .addition, header: "Fields".localize())
+            section = TableSection(type: .addition)
             section.item = fields.map { LabelTableViewCellData(title: $0.key, content: $0.value, isSecret: $0.isSecret) }
             tableData.append(section)
         }

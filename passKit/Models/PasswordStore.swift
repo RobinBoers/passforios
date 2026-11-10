@@ -15,13 +15,6 @@ import UIKit
 
 public class PasswordStore {
     public static let shared = PasswordStore()
-    private static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
-        dateFormatter.timeStyle = .short
-        return dateFormatter
-    }()
-
     public var storeURL: URL
 
     public var gitRepository: GitRepository?
@@ -74,10 +67,7 @@ public class PasswordStore {
         guard let date = lastSyncedTime else {
             return "SyncAgain?".localize()
         }
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return date.formatted(date: .abbreviated, time: .shortened)
     }
 
     public var numberOfCommits: Int? {
@@ -199,7 +189,7 @@ public class PasswordStore {
         if Date().timeIntervalSince(lastCommitDate) <= 60 {
             return "JustNow".localize()
         }
-        return Self.dateFormatter.string(from: lastCommitDate)
+        return lastCommitDate.formatted(date: .abbreviated, time: .shortened)
     }
 
     private func deleteDirectoryTree(at url: URL) throws {

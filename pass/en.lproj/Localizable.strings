@@ -251,7 +251,7 @@
 "CopyAndOpen"                   = "Copy Password & Open Link";
 "GetNextPasswordOfNonHotp."     = "Get next password of a non-HOTP entry.";
 "CannotFindValidUrl"            = "Cannot find a valid URL";
-"LastUpdated"                   = "Last Updated: %@";
+"LastUpdated"                   = "Last updated %@";
 
 // Password editor
 "DeletePassword"                    = "Delete Password";

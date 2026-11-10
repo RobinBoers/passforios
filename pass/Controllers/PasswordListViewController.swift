@@ -317,24 +317,28 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         let plain = UIAction(title: "Password".localize(), image: UIImage(systemName: "key")) { [unowned self] _ in
             addPassword()
         }
-        let templates = protos.keys.sorted().map { name in
-            UIAction(title: name, image: UIImage(systemName: Self.protoSymbols[name] ?? "doc.text")) { [unowned self] _ in
+        let templates = protos.keys.map { name in
+            let known = Self.knownProtos[name]
+            let title = known?.0.localize() ?? name.prefix(1).uppercased() + name.dropFirst()
+            return UIAction(title: title, image: UIImage(systemName: known?.1 ?? "doc.text")) { [unowned self] _ in
                 addPassword(proto: Defaults.protos[name])
             }
         }
+        .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         addButton.primaryAction = nil
         addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: templates)])
     }
 
-    private static let protoSymbols = [
-        "card": "creditcard",
-        "imap": "envelope",
-        "license": "checkmark.seal",
-        "postgres": "cylinder",
-        "smtp": "envelope",
-        "ssh": "terminal",
-        "web": "globe",
-        "wifi": "wifi",
+    /// Names and symbols for the protos `sec` users are likely to have; others show their name.
+    private static let knownProtos = [
+        "card": ("ProtoCard", "creditcard"),
+        "imap": ("ProtoImap", "envelope"),
+        "license": ("ProtoLicense", "checkmark.seal"),
+        "postgres": ("ProtoPostgres", "cylinder"),
+        "smtp": ("ProtoSmtp", "paperplane"),
+        "ssh": ("ProtoSsh", "terminal"),
+        "web": ("ProtoWeb", "globe"),
+        "wifi": ("ProtoWifi", "wifi"),
     ]
 
     /// Without a proto, a sec entry starts from a password field, as `sec add` does.

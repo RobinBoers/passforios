@@ -273,3 +273,11 @@
 "Hide" = "Nascondi";
 "SendEmail" = "Invia e-mail";
 "Call" = "Chiama";
+"ProtoCard" = "Carta di credito";
+"ProtoImap" = "Posta in arrivo (IMAP)";
+"ProtoLicense" = "Licenza software";
+"ProtoPostgres" = "PostgreSQL";
+"ProtoSmtp" = "Posta in uscita (SMTP)";
+"ProtoSsh" = "Chiave SSH";
+"ProtoWeb" = "Sito web";
+"ProtoWifi" = "Wi-Fi";

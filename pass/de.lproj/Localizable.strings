@@ -277,3 +277,11 @@
 "Hide" = "Ausblenden";
 "SendEmail" = "E-Mail senden";
 "Call" = "Anrufen";
+"ProtoCard" = "Kreditkarte";
+"ProtoImap" = "Eingehende E-Mail (IMAP)";
+"ProtoLicense" = "Softwarelizenz";
+"ProtoPostgres" = "PostgreSQL";
+"ProtoSmtp" = "Ausgehende E-Mail (SMTP)";
+"ProtoSsh" = "SSH-Schlüssel";
+"ProtoWeb" = "Website";
+"ProtoWifi" = "WLAN";

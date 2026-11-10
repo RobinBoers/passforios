@@ -278,3 +278,11 @@
 "Hide" = "Hide";
 "SendEmail" = "Send Email";
 "Call" = "Call";
+"ProtoCard" = "Credit Card";
+"ProtoImap" = "Incoming mail (IMAP)";
+"ProtoLicense" = "Software License";
+"ProtoPostgres" = "PostgreSQL";
+"ProtoSmtp" = "Outgoing mail (SMTP)";
+"ProtoSsh" = "SSH Key";
+"ProtoWeb" = "Website";
+"ProtoWifi" = "WiFi";

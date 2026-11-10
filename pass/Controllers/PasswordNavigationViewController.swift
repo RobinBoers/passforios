@@ -72,17 +72,17 @@ class PasswordNavigationViewController: UIViewController {
         return recognizer
     }()
 
+    /// The table is the screen's view, as in a table view controller: UIKit only coordinates the large title,
+    /// pulling to refresh and rotation with a scroll view that is the view itself.
+    override func loadView() {
+        super.loadView()
+        tableView.removeFromSuperview()
+        tableView.translatesAutoresizingMaskIntoConstraints = true
+        view = tableView
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // The storyboard gives the table neither constraints nor autoresizing to follow the screen with.
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-        setContentScrollView(tableView, for: .top)
         searchBar.delegate = self
         configureTableView(in: parentPasswordEntity)
         configureNotification()

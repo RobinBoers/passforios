@@ -64,8 +64,10 @@ class FieldTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func set(field: Field) {
+    /// Only some store formats can mark a field as secret.
+    func set(field: Field, allowsSecret: Bool = true) {
         self.field = field
+        secretButton.isHidden = !allowsSecret
         keyTextField.text = field.key
         valueTextField.text = field.value
     }

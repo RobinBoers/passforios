@@ -17,6 +17,7 @@ struct Passport: Equatable {
     static let version = "1"
 
     let url: URL
+    let format: StoreFormat
     let username: String?
     let branch: String
     let name: String?
@@ -27,7 +28,7 @@ struct Passport: Equatable {
     let recipientKeys: [String]
 
     init(parsing text: String) throws {
-        let entry = try Entry(parsing: text)
+        let entry = try Entry(parsing: text, format: .sec)
         guard entry.value(of: "passport") == Self.version else {
             throw ParseError.unsupportedVersion
         }
@@ -48,6 +49,7 @@ struct Passport: Equatable {
         }
 
         self.url = url
+        self.format = value(of: "format").flatMap(StoreFormat.init(rawValue:)) ?? .sec
         self.username = value(of: "user")
         self.branch = branch
         self.name = value(of: "name")

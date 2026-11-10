@@ -151,6 +151,7 @@ private extension Passport {
             Defaults.gitAuthenticationMethod = .password
         }
 
+        Defaults.storeFormat = format
         Defaults.gitSignatureName = name
         Defaults.gitSignatureEmail = email
     }

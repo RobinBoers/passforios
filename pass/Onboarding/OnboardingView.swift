@@ -90,7 +90,7 @@ private struct WelcomeStep: View {
             VStack(alignment: .leading, spacing: 24) {
                 Feature(symbol: "arrow.triangle.2.circlepath", title: "FeatureSync", message: "FeatureSync.")
                 Feature(symbol: "person.badge.key", title: "AutoFill", message: "FeatureAutoFill.")
-                Feature(symbol: "lock", title: "FeatureEncrypted", message: "FeatureEncrypted.")
+                Feature(symbol: AppLock.symbolName, title: LocalizedStringKey("LockedWith(%@)".localize(AppLock.methodName)), message: "FeatureLock.")
             }
         } buttons: {
             Button("SetUpFromComputer", action: model.setUpFromComputer)

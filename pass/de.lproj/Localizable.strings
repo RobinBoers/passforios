@@ -380,10 +380,10 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "Authentication"          = "Authentifizierung";
 
 // Onboarding
+"LockedWith(%@)" = "Mit %@ gesperrt";
+"FeatureLock." = "Deine Passwörter öffnen und füllen sich nur für dich aus.";
 "FeatureSync." = "Holt und pusht dasselbe Repository wie dein Computer.";
 "FeatureAutoFill." = "Setzt Passwörter und Einmalcodes in Safari und anderen Apps ein.";
-"FeatureEncrypted." = "Einträge werden nur auf diesem iPhone entschlüsselt.";
-"FeatureEncrypted" = "Mit GPG verschlüsselt";
 "SetUp" = "Einrichten";
 "FeatureSync"           = "Mit Git synchronisiert";
 "SetUpManually"         = "Manuell einrichten";
@@ -400,3 +400,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "Git" = "Git";
 "RememberPassphrases" = "Passphrasen merken";
 "RememberPassphrase" = "Passphrase merken";
+"Format" = "Format";
+"FormatSec." = "Ein Kopf aus key: value-Zeilen, Geheimnisse mit ! markiert, dann Notizen nach einer Leerzeile.";
+"FormatPass." = "Das Passwort in der ersten Zeile, dann key: value-Zeilen und Notizen.";

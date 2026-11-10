@@ -33,6 +33,7 @@ public enum GitAuthenticationMethod: String, DefaultsSerializable {
 
 extension SearchBarScope: DefaultsSerializable {}
 extension PasswordGenerator: DefaultsSerializable {}
+extension StoreFormat: DefaultsSerializable {}
 
 public extension DefaultsKeys {
     var pgpKeySource: DefaultsKey<KeySource?> { DefaultsKey("pgpKeySource") }
@@ -44,6 +45,7 @@ public extension DefaultsKeys {
     var pgpPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("pgpPrivateKeyArmor") }
     var gitSSHPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("gitSSHPrivateKeyArmor") }
     var isAppLockOn: DefaultsKey<Bool> { DefaultsKey("isAppLockOn", defaultValue: false) }
+    var storeFormat: DefaultsKey<StoreFormat> { DefaultsKey("storeFormat", defaultValue: .sec) }
     var isOnboarded: DefaultsKey<Bool> { DefaultsKey("isOnboarded", defaultValue: false) }
 
     var gitURL: DefaultsKey<URL> { DefaultsKey("gitURL", defaultValue: URL(string: "https://")!) }

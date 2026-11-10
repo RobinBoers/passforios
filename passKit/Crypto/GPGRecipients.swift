@@ -7,12 +7,18 @@ import ObjectivePGP
 
 /// Resolves the recipients a `.gpg-id` names to public keys, the way `gpg --recipient` does.
 public enum GPGRecipients {
-    /// The recipients in the `.gpg-id` at the root of the store; `sec` reads no other.
-    public static func read(from storeURL: URL) -> [String] {
-        guard let text = try? String(contentsOf: storeURL.appendingPathComponent(".gpg-id"), encoding: .utf8) else {
-            return []
+    /// The recipients in the `.gpg-id` nearest to an entry, as `pass` looks them up. `sec` only reads the one
+    /// at the root, which is also the nearest when there are no others.
+    public static func read(for entryURL: URL, in storeURL: URL) -> [String] {
+        let store = storeURL.standardizedFileURL.path
+        var directory = entryURL.standardizedFileURL.deletingLastPathComponent()
+        while directory.path.hasPrefix(store) {
+            if let text = try? String(contentsOf: directory.appendingPathComponent(".gpg-id"), encoding: .utf8) {
+                return text.splitByNewline().map(\.trimmed).filter { !$0.isEmpty }
+            }
+            directory.deleteLastPathComponent()
         }
-        return text.splitByNewline().map(\.trimmed).filter { !$0.isEmpty }
+        return []
     }
 
     /// The fingerprint of the key each recipient names, in order.

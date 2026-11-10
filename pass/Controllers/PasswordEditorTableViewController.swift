@@ -175,7 +175,7 @@ class PasswordEditorTableViewController: UITableViewController {
         switch fieldsRow(at: indexPath.row) {
         case let .field(index):
             let cell = tableView.dequeueReusableCell(withIdentifier: "fieldCell", for: indexPath) as! FieldTableViewCell
-            cell.set(field: fields[index])
+            cell.set(field: fields[index], allowsSecret: Defaults.storeFormat == .sec)
             cell.onChange = { [weak self, weak cell] field in
                 guard let self, let cell, let row = tableView.indexPath(for: cell)?.row else {
                     return

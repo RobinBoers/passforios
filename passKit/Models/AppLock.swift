@@ -23,11 +23,15 @@ public enum AppLock {
         }
     }
 
-    /// Face ID, Touch ID or Passcode, whichever the device unlocks with.
-    public static var methodName: String {
+    private static var biometryType: LABiometryType {
         let context = LAContext()
         _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
-        switch context.biometryType {
+        return context.biometryType
+    }
+
+    /// Face ID, Touch ID or Passcode, whichever the device unlocks with.
+    public static var methodName: String {
+        switch biometryType {
         case .faceID:
             return "Face ID"
         case .touchID:
@@ -36,6 +40,19 @@ public enum AppLock {
             return "Optic ID"
         default:
             return "Passcode".localize()
+        }
+    }
+
+    public static var symbolName: String {
+        switch biometryType {
+        case .faceID:
+            return "faceid"
+        case .touchID:
+            return "touchid"
+        case .opticID:
+            return "opticid"
+        default:
+            return "lock"
         }
     }
 

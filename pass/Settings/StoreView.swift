@@ -14,6 +14,7 @@ struct StoreView: View {
     @State private var branch = Defaults.gitBranchName
     @State private var username = Defaults.gitUsername
     @State private var authentication = Defaults.gitAuthenticationMethod
+    @State private var format = Defaults.storeFormat
 
     var body: some View {
         Form {
@@ -21,6 +22,7 @@ struct StoreView: View {
                 infoSection
             }
             remoteSection
+            formatSection
             signatureSection
         }
         .navigationTitle("Store")
@@ -69,6 +71,24 @@ struct StoreView: View {
             Text("Remote")
         } footer: {
             Text("GitURLFormats.")
+        }
+    }
+
+    private var formatSection: some View {
+        SwiftUI.Section {
+            Picker("Format", selection: $format) {
+                ForEach(StoreFormat.allCases, id: \.self) { format in
+                    Text(verbatim: format.rawValue).tag(format)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: format) { format in
+                Defaults.storeFormat = format
+            }
+        } header: {
+            Text("Format")
+        } footer: {
+            Text(LocalizedStringKey(format == .sec ? "FormatSec." : "FormatPass."))
         }
     }
 

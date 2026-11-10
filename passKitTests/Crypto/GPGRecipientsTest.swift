@@ -44,8 +44,15 @@ final class GPGRecipientsTest: XCTestCase {
         try FileManager.default.createDirectory(at: store, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: store) }
 
-        XCTAssertEqual(GPGRecipients.read(from: store), [])
+        let work = store.appendingPathComponent("work")
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let entry = work.appendingPathComponent("github.com.gpg")
+
+        XCTAssertEqual(GPGRecipients.read(for: entry, in: store), [])
         try "Alice <alice@example.com>\n\n  D862027E \n".write(to: store.appendingPathComponent(".gpg-id"), atomically: true, encoding: .utf8)
-        XCTAssertEqual(GPGRecipients.read(from: store), ["Alice <alice@example.com>", "D862027E"])
+        XCTAssertEqual(GPGRecipients.read(for: entry, in: store), ["Alice <alice@example.com>", "D862027E"])
+        try "Bob\n".write(to: work.appendingPathComponent(".gpg-id"), atomically: true, encoding: .utf8)
+        XCTAssertEqual(GPGRecipients.read(for: entry, in: store), ["Bob"])
+        XCTAssertEqual(GPGRecipients.read(for: store.appendingPathComponent("top.gpg"), in: store), ["Alice <alice@example.com>", "D862027E"])
     }
 }

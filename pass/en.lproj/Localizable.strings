@@ -381,10 +381,10 @@ Finally, copy them to a location accessible by the Files app.";
 "Authentication"          = "Authentication";
 
 // Onboarding
+"LockedWith(%@)" = "Locked with %@";
+"FeatureLock." = "Your passwords open and fill in only for you.";
 "FeatureSync." = "Pulls and pushes the same repository as your computer.";
 "FeatureAutoFill." = "Fills in passwords and one-time codes in Safari and other apps.";
-"FeatureEncrypted." = "Entries are decrypted on this iPhone only.";
-"FeatureEncrypted" = "Encrypted with GPG";
 "SetUp" = "Set Up";
 "FeatureSync"           = "Synced with Git";
 "SetUpManually"         = "Set Up Manually";
@@ -401,3 +401,6 @@ Finally, copy them to a location accessible by the Files app.";
 "Git" = "Git";
 "RememberPassphrases" = "Remember Passphrases";
 "RememberPassphrase" = "Remember Passphrase";
+"Format" = "Format";
+"FormatSec." = "A header of key: value lines, secrets marked with !, then notes after a blank line.";
+"FormatPass." = "The password on the first line, then key: value lines and notes.";

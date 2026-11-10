@@ -102,4 +102,36 @@ final class EntryTest: XCTestCase {
         XCTAssertFalse(Field.isValid(key: "key!"))
         XCTAssertFalse(Field.isValid(key: "body"))
     }
+
+    func testPassFormat() {
+        let plainText = "secret\nuser: me\nurl: https://example.com\notpauth://totp/a?secret=b\nsome notes\nhttps://example.org\n"
+        let entry = try? Entry(parsing: plainText, format: .pass)
+        XCTAssertEqual(entry?.primary, "secret")
+        XCTAssertEqual(entry?.value(of: "user"), "me")
+        XCTAssertEqual(entry?.value(of: "url"), "https://example.com")
+        XCTAssertEqual(entry?.value(of: "otp"), "otpauth://totp/a?secret=b")
+        XCTAssertEqual(entry?.body, "some notes\nhttps://example.org")
+        XCTAssertEqual(entry?.plainText, plainText)
+    }
+
+    func testPassFormatMovesNotesAfterFields() {
+        let entry = try? Entry(parsing: "secret\na note\nuser: me\n", format: .pass)
+        XCTAssertEqual(entry?.plainText, "secret\nuser: me\na note\n")
+    }
+
+    func testPassFormatKeepsSecretMarkersAndKeysInNotes() {
+        let entry = try? Entry(parsing: "secret\nkey!: value\npass: other\nbody: text\n", format: .pass)
+        XCTAssertEqual(entry?.fields.count, 1)
+        XCTAssertEqual(entry?.body, "key!: value\npass: other\nbody: text")
+    }
+
+    func testPassFormatPasswordOnly() {
+        XCTAssertEqual(try? Entry(parsing: "secret\n", format: .pass).plainText, "secret\n")
+        XCTAssertEqual(try? Entry(parsing: "", format: .pass).primary, "")
+    }
+
+    func testPassFormatIgnoresProto() {
+        let entry = try? Entry(parsing: "secret\nproto: ssh\nkey material\n", format: .pass)
+        XCTAssertEqual(entry?.primary, "secret")
+    }
 }

@@ -376,10 +376,10 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Authentication"          = "Autenticazione";
 
 // Onboarding
+"LockedWith(%@)" = "Bloccato con %@";
+"FeatureLock." = "Le tue password si aprono e si inseriscono solo per te.";
 "FeatureSync." = "Scarica e invia lo stesso repository del tuo computer.";
 "FeatureAutoFill." = "Inserisce password e codici monouso in Safari e in altre app.";
-"FeatureEncrypted." = "Le voci vengono decifrate solo su questo iPhone.";
-"FeatureEncrypted" = "Cifrato con GPG";
 "SetUp" = "Configura";
 "FeatureSync"           = "Sincronizzato con Git";
 "SetUpManually"         = "Configura manualmente";
@@ -396,3 +396,6 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "Git" = "Git";
 "RememberPassphrases" = "Ricorda passphrase";
 "RememberPassphrase" = "Ricorda passphrase";
+"Format" = "Formato";
+"FormatSec." = "Un'intestazione di righe key: value, segreti marcati con !, poi note dopo una riga vuota.";
+"FormatPass." = "La password nella prima riga, poi righe key: value e note.";

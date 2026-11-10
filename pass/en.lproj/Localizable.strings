@@ -274,3 +274,4 @@
 "RememberSshPassphrase?" = "Remember SSH Passphrase?";
 "RememberGitSecret." = "Syncing won't ask for it again.";
 "Remember" = "Remember";
+"Unlock" = "Unlock";

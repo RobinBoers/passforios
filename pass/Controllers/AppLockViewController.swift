@@ -16,34 +16,50 @@ final class AppLockViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
-        blur.frame = view.bounds
-        blur.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blur)
+        view.backgroundColor = .secondarySystemBackground
 
-        let image = UIImageView(image: UIImage(systemName: "lock.fill"))
-        image.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .largeTitle, scale: .large)
-        image.tintColor = .secondaryLabel
+        let iconSize: CGFloat = 100
+        let icon = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        icon.layer.cornerRadius = iconSize * 0.225
+        icon.layer.cornerCurve = .continuous
+        icon.clipsToBounds = true
+        icon.translatesAutoresizingMaskIntoConstraints = false
+
+        let lock = UIImageView(image: UIImage(systemName: "lock.fill"))
+        lock.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: iconSize * 0.42)
+        lock.tintColor = .systemGray
+        lock.translatesAutoresizingMaskIntoConstraints = false
+
+        // The lock hangs off the icon's corner, like on the system's locked apps.
+        let image = UIView()
+        image.addSubview(icon)
+        image.addSubview(lock)
+        image.isAccessibilityElement = false
+        NSLayoutConstraint.activate([
+            icon.widthAnchor.constraint(equalToConstant: iconSize),
+            icon.heightAnchor.constraint(equalToConstant: iconSize),
+            icon.topAnchor.constraint(equalTo: image.topAnchor),
+            icon.bottomAnchor.constraint(equalTo: image.bottomAnchor),
+            icon.leadingAnchor.constraint(equalTo: image.leadingAnchor),
+            icon.trailingAnchor.constraint(equalTo: image.trailingAnchor),
+            lock.centerXAnchor.constraint(equalTo: icon.trailingAnchor),
+            lock.centerYAnchor.constraint(equalTo: icon.bottomAnchor, constant: -iconSize * 0.05),
+        ])
 
         let title = UILabel()
         let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? ""
         title.text = "IsLocked(%@)".localize(appName)
-        title.font = .preferredFont(forTextStyle: .title2, compatibleWith: UITraitCollection(legibilityWeight: .bold))
+        title.font = .preferredFont(forTextStyle: .title1, compatibleWith: UITraitCollection(legibilityWeight: .bold))
         title.adjustsFontForContentSizeCategory = true
         title.numberOfLines = 0
         title.textAlignment = .center
 
-        var configuration: UIButton.Configuration
-        if #available(iOS 26.0, *) {
-            configuration = .prominentGlass()
-        } else {
-            configuration = .borderedProminent()
-            configuration.cornerStyle = .capsule
-        }
-        configuration.title = "UseMethod(%@)".localize(AppLock.methodName)
-        configuration.image = UIImage(systemName: AppLock.symbolName)
-        configuration.imagePadding = 8
+        var configuration = UIButton.Configuration.gray()
+        configuration.title = "Unlock".localize()
+        configuration.cornerStyle = .capsule
         configuration.buttonSize = .large
+        configuration.contentInsets.leading = 24
+        configuration.contentInsets.trailing = 24
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
             authenticate()
         })
@@ -51,8 +67,8 @@ final class AppLockViewController: UIViewController {
         let stack = UIStackView(arrangedSubviews: [image, title, button])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 12
-        stack.setCustomSpacing(32, after: title)
+        stack.spacing = 32
+        stack.setCustomSpacing(40, after: image)
         stack.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stack)
         NSLayoutConstraint.activate([

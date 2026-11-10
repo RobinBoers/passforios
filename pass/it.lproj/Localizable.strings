@@ -269,3 +269,4 @@
 "RememberSshPassphrase?" = "Ricordare la passphrase SSH?";
 "RememberGitSecret." = "La sincronizzazione non la chiederà più.";
 "Remember" = "Ricorda";
+"Unlock" = "Sblocca";

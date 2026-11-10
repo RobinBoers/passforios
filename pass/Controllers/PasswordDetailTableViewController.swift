@@ -6,14 +6,12 @@
 //  Copyright © 2017 Bob Sun. All rights reserved.
 //
 
-import FavIcon
 import Gopenpgp
 import passAutoFillExtension
 import passKit
 import UIKit
-import YubiKit
 
-class PasswordDetailTableViewController: UITableViewController, UIGestureRecognizerDelegate, UIEditMenuInteractionDelegate, AlertPresenting {
+class PasswordDetailTableViewController: UITableViewController, UIGestureRecognizerDelegate, UIEditMenuInteractionDelegate {
     var passwordEntity: PasswordEntity? {
         didSet {
             passwordPath = passwordEntity?.path
@@ -21,7 +19,6 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
     }
 
     var password: Password?
-    private var passwordImage: UIImage?
     private var oneTimePasswordIndexPath: IndexPath?
     private var shouldPopCurrentView = false
     private let passwordStore = PasswordStore.shared
@@ -49,8 +46,6 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         case name, main, addition, misc
     }
 
-    private var passwordYubiKeyDecryptor = PasswordYubiKeyDecryptor()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "LabelTableViewCell", bundle: nil), forCellReuseIdentifier: "labelCell")
@@ -69,10 +64,6 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         navigationItem.rightBarButtonItem = editUIBarButtonItem
         navigationItem.largeTitleDisplayMode = .never
 
-        if let imageData = passwordEntity?.image {
-            let image = UIImage(data: imageData as Data)
-            passwordImage = image
-        }
         decryptThenShowPassword()
         setupOneTimePasswordAutoRefresh()
 
@@ -101,11 +92,7 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
     }
 
     private func decryptThenShowPassword() {
-        if Defaults.isYubiKeyEnabled, YubiKitDeviceCapabilities.supportsISO7816NFCTags {
-            decryptThenShowPasswordYubiKey()
-        } else {
-            decryptThenShowPasswordLocalKey()
-        }
+        decryptThenShowPasswordLocalKey()
     }
 
     private func decryptThenShowPasswordLocalKey(keyID: String? = nil) {
@@ -154,13 +141,6 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
             self?.setTableData()
             self?.tableView.reloadData()
             self?.editUIBarButtonItem.isEnabled = true
-            if !Defaults.isHidePasswordImagesOn {
-                if let urlString = self?.password?.urlString {
-                    if self?.passwordEntity?.image == nil {
-                        self?.updatePasswordImage(urlString: urlString)
-                    }
-                }
-            }
         }
     }
 
@@ -311,36 +291,6 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         }
     }
 
-    private func updatePasswordImage(urlString: String) {
-        var newURLString = urlString
-        if urlString.lowercased().hasPrefix("http://") {
-            // try to replace http url to https url
-            newURLString = urlString.replacingOccurrences(
-                of: "http://",
-                with: "https://",
-                options: .caseInsensitive,
-                range: urlString.range(of: "http://")
-            )
-        } else if urlString.lowercased().hasPrefix("https://") {
-            // do nothing here
-        } else {
-            // if a url does not start with http or https, try to add https
-            newURLString = "https://\(urlString)"
-        }
-
-        try? FavIcon.downloadPreferred(newURLString) { [weak self] result in
-            if case let .success(image) = result {
-                let indexPath = IndexPath(row: 0, section: 0)
-                self?.passwordImage = image
-                self?.tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-                let imageData = image.jpegData(compressionQuality: 1)
-                if let entity = self?.passwordEntity {
-                    entity.image = imageData
-                }
-            }
-        }
-    }
-
     @objc
     private func tapMenu(recognizer: UITapGestureRecognizer) {
         guard recognizer.state == .ended else {
@@ -435,17 +385,10 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         switch tableData[sectionIndex].type {
         case .name:
             let cell = tableView.dequeueReusableCell(withIdentifier: "passwordDetailTitleTableViewCell", for: indexPath) as! PasswordDetailTitleTableViewCell
-            if !Defaults.isHidePasswordImagesOn {
-                cell.labelCellConstraint.isActive = false
-                cell.labelImageConstraint.isActive = true
-                cell.passwordImageImageView.image = passwordImage ?? #imageLiteral(resourceName: "PasswordImagePlaceHolder")
-                cell.passwordImageImageView.isHidden = false
-            } else {
-                cell.passwordImageImageView.image = nil
-                cell.passwordImageImageView.isHidden = true
-                cell.labelImageConstraint.isActive = false
-                cell.labelCellConstraint.isActive = true
-            }
+            cell.passwordImageImageView.image = nil
+            cell.passwordImageImageView.isHidden = true
+            cell.labelImageConstraint.isActive = false
+            cell.labelCellConstraint.isActive = true
             let passwordName = passwordEntity!.name
             if passwordEntity!.isSynced == false {
                 cell.nameLabel.text = "\(passwordName) ↻"
@@ -504,63 +447,6 @@ extension PasswordDetailTableViewController {
                     self.navigationController?.popToRootViewController(animated: true)
                 } else {
                     self.decryptThenShowPassword()
-                }
-            }
-        }
-    }
-
-    private func requestYubiKeyPIN(completion: @escaping (String) -> Void) {
-        let alert = UIAlertController(title: "YubiKey PIN", message: "Verify YubiKey OpenPGP PIN.", preferredStyle: .alert)
-        alert.addAction(
-            UIAlertAction.cancel { _ in
-                self.navigationController!.popViewController(animated: true)
-            }
-        )
-        alert.addAction(
-            UIAlertAction.ok { _ in
-                let pin = alert.textFields?.first?.text ?? ""
-                completion(pin)
-            }
-        )
-        alert.addTextField { textField in
-            textField.isSecureTextEntry = true
-        }
-        present(alert, animated: true)
-    }
-
-    private func handleError(error: AppError) {
-        DispatchQueue.main.async {
-            self.presentFailureAlert(message: error.localizedDescription) { _ in
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
-    }
-
-    private func decryptThenShowPasswordYubiKey() {
-        guard let passwordEntity else {
-            handleError(error: AppError.other(message: "PasswordDoesNotExist"))
-            return
-        }
-        let encryptedDataPath = passwordEntity.fileURL(in: PasswordStore.shared.storeURL)
-
-        guard let encryptedData = try? Data(contentsOf: encryptedDataPath) else {
-            handleError(error: AppError.other(message: "PasswordDoesNotExist"))
-            return
-        }
-        requestYubiKeyPIN { [self] pin in
-            Task {
-                do {
-                    let decryptedData = try await passwordYubiKeyDecryptor.yubiKeyDecrypt(encryptedData: encryptedData, pin: pin)
-                    guard let decryptedDataString = String(data: decryptedData, encoding: .utf8) else {
-                        throw AppError.yubiKey(.decipher(message: "Failed to convert plaintext to string."))
-                    }
-                    password = Password(name: passwordEntity.name, path: passwordEntity.path, plainText: decryptedDataString)
-                    self.password = password
-                    self.showPassword()
-                } catch let error as AppError {
-                    handleError(error: error)
-                } catch {
-                    handleError(error: AppError.yubiKey(.other(message: error.localizedDescription)))
                 }
             }
         }

@@ -63,6 +63,7 @@ disabled_rules:
 
 attributes:
   always_on_same_line: []
+  attributes_with_arguments_always_on_line_above: false
 closure_body_length:
   warning: 40
   error: 60

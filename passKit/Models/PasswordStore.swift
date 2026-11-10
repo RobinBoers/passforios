@@ -371,7 +371,6 @@ public class PasswordStore {
         Defaults.removeAll()
 
         // Delete cache explicitly.
-        PasscodeLock.shared.delete()
         PGPAgent.shared.uninitKeys()
     }
 
@@ -402,8 +401,7 @@ public class PasswordStore {
         let url = passwordEntity.fileURL(in: storeURL)
         let encryptedData = try Data(contentsOf: url)
         let data: Data? = try {
-            if Defaults.isEnableGPGIDOn {
-                let keyID = keyID ?? findGPGID(from: url)
+            if let keyID {
                 return try PGPAgent.shared.decrypt(encryptedData: encryptedData, keyID: keyID, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
             }
             return try PGPAgent.shared.decrypt(encryptedData: encryptedData, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
@@ -419,16 +417,11 @@ public class PasswordStore {
         guard let passwordEntity = fetchPasswordEntity(with: path) else {
             throw AppError.decryption
         }
-        if Defaults.isEnableGPGIDOn {
-            return try decrypt(passwordEntity: passwordEntity, keyID: keyID, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
-        }
-        return try decrypt(passwordEntity: passwordEntity, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
+        return try decrypt(passwordEntity: passwordEntity, keyID: keyID, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
     }
 
     public func encrypt(password: Password, keyID: String? = nil) throws -> Data {
-        let encryptedDataPath = password.fileURL(in: storeURL)
-        let keyID = keyID ?? findGPGID(from: encryptedDataPath)
-        if Defaults.isEnableGPGIDOn {
+        if let keyID {
             return try PGPAgent.shared.encrypt(plainData: password.plainData, keyID: keyID)
         }
         return try PGPAgent.shared.encrypt(plainData: password.plainData)
@@ -473,15 +466,4 @@ extension PasswordStore {
         }
         return try gitRepository.commit(signature: gitSignatureForNow, message: message)
     }
-}
-
-func findGPGID(from url: URL) -> String {
-    var path = url
-    while !FileManager.default.fileExists(atPath: path.appendingPathComponent(".gpg-id").path),
-          path.path != "file:///" {
-        path = path.deletingLastPathComponent()
-    }
-    path = path.appendingPathComponent(".gpg-id")
-
-    return (try? String(contentsOf: path))?.trimmed ?? ""
 }

@@ -7,8 +7,8 @@
 */
 
 // General
-"PassForIos"    = "Pass for iOS";
-"PasswordStore" = "Password Store";
+"PassForIos"    = "Passwords";
+"PasswordStore" = "Passwörter";
 "Passphrase"    = "Passwort";
 "Password"      = "Passwort";
 "Passwords"     = "Passwörter";
@@ -86,15 +86,15 @@
 "SpecifySchema."                        = "Bitte spezifiziere das Protokoll zur Kommunikation mit dem Git-Server in der URL (HTTPS or SSH).";
 "Overwrite?"                            = "Überschreiben?";
 "Overwrite"                             = "Überschreiben";
-"OperationWillOverwriteData."           = "Diese Operation wird alle bereits existierenden Daten im Password-Repository überschreiben. Daten auf dem Server bleiben unberührt.";
+"OperationWillOverwriteData."           = "Dies überschreibt den Store auf diesem Gerät. Daten auf dem Server bleiben unberührt.";
 "DownloadFromUrl"                       = "Von URL downloaden";
 "AsciiArmorEncryptedKey"                = "Key im ASCII-Format";
 "ITunesFileSharing"                     = "Datenaustausch über iTunes";
 "Import"                                = "Importieren";
 "Tips"                                  = "Tipps";
 "FillInGitAccountPassword."             = "Bitte gib das Passwort deines Git-Accounts ein.";
-"NoPasswordStore."                      = "Es gibt im Moment keinen Passwort Store.";
-"SyncingPasswordStore"                  = "Password Store wird synchronisiert";
+"NoPasswordStore."                      = "Es gibt noch keinen Store.";
+"SyncingPasswordStore"                  = "Store wird synchronisiert";
 "PullingFromRemoteRepository"           = "Update lokales Repository";
 "PushingToRemoteRepository"             = "Update Remote-Repository";
 "SpecifyBranchName."                    = "Der Name des zu verwendenden Branches muss angegeben werden.";
@@ -108,7 +108,7 @@
 "SshCopyPrivateKeyToPass."  = "Kopiere den privaten Schlüssel im ASCII-Format verschlüsselt mit dem Namen \"ssh_key\" über iTunes zu Pass. Danach kann der Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 
 // Set up from computer
-"NoPasswordStore"        = "Kein Passwort Store";
+"NoPasswordStore"        = "Kein Store";
 "SetUpFromComputer"      = "Vom Computer einrichten";
 "SetUpFromComputer."     = "Führe passport auf deinem Computer aus und scanne den angezeigten Code.";
 "ScanPassport."          = "Richte die Kamera auf den Code von passport.";
@@ -171,8 +171,8 @@
 "FailedToClearQuickTypeSuggestions" = "Zurücksetzen der QuickType-Vorschläge fehlgeschlagen: %@";
 
 // Erase password store
-"ErasePasswordStoreData?"   = "Daten im Password Store löschen?";
-"ErasePasswordStoreData"    = "Daten im Password Store löschen";
+"ErasePasswordStoreData?"   = "Daten im Store löschen?";
+"ErasePasswordStoreData"    = "Daten im Store löschen";
 "EraseExplanation."         = "Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten auf einem entfernten Server sind nicht betroffen.";
 
 // Discard local changes
@@ -183,17 +183,17 @@
 // Forget passcode
 "ForgotYourPasscode?"       = "Passcode vergessen?";
 "ResetPass"                 = "Pass zurücksetzen";
-"ResetPassExplanation."     = "Die App kann nur vollständig zurückgesetzt werden. Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten im Password Store auf einem entfernten Server bleiben unberührt.";
+"ResetPassExplanation."     = "Die App kann nur vollständig zurückgesetzt werden. Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten im Store auf einem entfernten Server bleiben unberührt.";
 
 // Time related
 "Unknown"   = "Unbekannt";
 "JustNow"   = "Gerade eben";
 
 // Commit messages
-"AddPassword."     = "Add password for %@ to store using Pass for iOS.";
-"RemovePassword."  = "Remove %@ from store using Pass for iOS.";
-"EditPassword."    = "Edit password for %@ using Pass for iOS.";
-"RenamePassword."  = "Rename %@ to %@ using Pass for iOS.";
+"AddPassword."     = "Add %@.";
+"RemovePassword."  = "Remove %@ from store.";
+"EditPassword."    = "Edit %@.";
+"RenamePassword."  = "Rename %@ to %@.";
 
 // Menu buttons
 "Ok"        = "OK";
@@ -246,7 +246,7 @@
 // Password view
 "Name"                          = "Name";
 "Notice"                        = "Beachte";
-"PreviousChangesDiscarded."     = "Alle vorherigen lokalen Änderungen wurden verworfen. Dein aktueller Password Store wird angezeigt.";
+"PreviousChangesDiscarded."     = "Alle vorherigen lokalen Änderungen wurden verworfen. Dein aktueller Store wird angezeigt.";
 "CannotShowPassword"            = "Passwort kann nicht angezeigt werden";
 "PasswordDoesNotExist"          = "Das Passwort existiert nicht.";
 "OneTimePassword"               = "Einmalkennwort";
@@ -347,3 +347,34 @@ können der öffentliche und der private Unterschlüssel im \"ASCII-Armor\"- For
   $ gpg --show-keys subkey
 
 wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizierungen exportiert wurde. Schließlich können die beiden Schlüssel an einem Ort gespeichert werden, der für die Dateien-App zugänglich ist.";
+
+// Settings
+"About"                   = "Über";
+"AutoFill"                = "Automatisch ausfüllen";
+"BasedOnPassForIos."      = "Basiert auf Pass for iOS von Mingshen Sun und Mitwirkenden.";
+"Branch"                  = "Branch";
+"ClearSavedSuggestions"   = "Gespeicherte Vorschläge löschen";
+"Clone"                   = "Klonen";
+"CloneAgain"              = "Erneut klonen";
+"Email"                   = "E-Mail";
+"GitSignature"            = "Git-Signatur";
+"GitURL"                  = "Git-URL";
+"GitURLFormats."          = "https://host/repo.git, ssh://user@host:port/repo.git oder user@host:repo.git";
+"Keys"                    = "Schlüssel";
+"LockWith(%@)"            = "Mit %@ sperren";
+"Multiple"                = "Mehrere";
+"PasteKey"                = "Schlüssel einfügen";
+"PastePgpKeyExplanation." = "Füge den ASCII-armored privaten Schlüssel ein. Er enthält auch den öffentlichen Schlüssel.";
+"PasteSshKeyExplanation." = "Füge den privaten Schlüssel ein, beginnend mit -----BEGIN.";
+"PGPKey"                  = "PGP-Schlüssel";
+"Remote"                  = "Remote";
+"Security"                = "Sicherheit";
+"Set"                     = "Gesetzt";
+"SSHKey"                  = "SSH-Schlüssel";
+"Store"                   = "Store";
+"TurnOnAppLock"           = "Sperre aktivieren";
+"Unlock"                  = "Entsperren";
+"UnlockPass"              = "Deine Passwörter entsperren";
+"Username"                = "Benutzername";
+"Version"                 = "Version";
+"Authentication"          = "Authentifizierung";

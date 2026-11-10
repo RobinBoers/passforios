@@ -37,7 +37,9 @@ final class PassportScannerController: QRScannerController, QRScannerControllerD
         }
     }
 
-    func handleScannedOutput(line _: String) {
+    func handleScannedOutput(line _: String) {}
+
+    override func didClose() {
         if let passport {
             onScan?(passport)
         }

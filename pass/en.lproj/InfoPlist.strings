@@ -7,4 +7,4 @@
  */
 
 "NSCameraUsageDescription" = "We need to access your camera for scanning QR codes.";
-"NSFaceIDUsageDescription" = "Enable access to Face ID to unlock Pass.";
+"NSFaceIDUsageDescription" = "Face ID unlocks your passwords.";

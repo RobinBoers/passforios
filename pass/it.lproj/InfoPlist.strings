@@ -7,4 +7,4 @@
  */
 
 "NSCameraUsageDescription" = "L'accesso alla fotocamera è richiesto per scansionare codici QR.";
-"NSFaceIDUsageDescription" = "Attiva l'accesso al Face ID per sbloccare Pass.";
+"NSFaceIDUsageDescription" = "Face ID sblocca le tue password.";

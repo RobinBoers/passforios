@@ -7,4 +7,4 @@
  */
 
 "NSCameraUsageDescription" = "Für das Scannen von QR-Codes wird die Erlaubnis zur Nutzung der Kamera benötigt.";
-"NSFaceIDUsageDescription" = "Erlaube Face ID, um Pass zu entsperren.";
+"NSFaceIDUsageDescription" = "Face ID entsperrt deine Passwörter.";

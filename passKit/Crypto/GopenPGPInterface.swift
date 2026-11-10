@@ -130,14 +130,6 @@ struct GopenPGPInterface: PGPInterface {
         }
 
         let encryptedData = try keyRing.encrypt(CryptoNewPlainMessage(plainData.mutable as Data), privateKey: nil)
-        if Defaults.encryptInArmored {
-            var error: NSError?
-            let armor = encryptedData.getArmored(&error)
-            guard error == nil else {
-                throw error!
-            }
-            return armor.data(using: .ascii)!
-        }
         return encryptedData.getBinary()!
     }
 
@@ -151,8 +143,7 @@ struct GopenPGPInterface: PGPInterface {
 }
 
 public func createPGPMessage(from encryptedData: Data) -> CryptoPGPMessage? {
-    // Important note:
-    // Even if Defaults.encryptInArmored is true now, it could be different during the encryption.
+    // Entries written by other tools may be armored.
     var error: NSError?
     let message = CryptoNewPGPMessageFromArmored(String(data: encryptedData, encoding: .ascii), &error)
     if error == nil {

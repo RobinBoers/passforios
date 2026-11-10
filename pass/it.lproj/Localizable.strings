@@ -7,8 +7,8 @@
 */
 
 // General
-"PassForIos"    = "Pass per iOS";
-"PasswordStore" = "Password Store";
+"PassForIos"    = "Passwords";
+"PasswordStore" = "Password";
 "Passphrase"    = "Password";
 "Password"      = "Password";
 "Passwords"     = "Password";
@@ -85,15 +85,15 @@
 "SpecifySchema."                        = "Specificare lo schema del'URL del repository Git (HTTPS o SSH).";
 "Overwrite?"                            = "Sovrascrivere?";
 "Overwrite"                             = "Sovrascrivi";
-"OperationWillOverwriteData."           = "Gli attuali dati di Password Store saranno sovrascritti. I dati del server remoto non subiranno modifiche.";
+"OperationWillOverwriteData."           = "I dati dello store su questo dispositivo saranno sovrascritti. I dati del server remoto non subiranno modifiche.";
 "DownloadFromUrl"                       = "Scarica da URL";
 "AsciiArmorEncryptedKey"                = "Chiave con armatura ASCII";
 "ITunesFileSharing"                     = "Condivisione file iTunes";
 "Import"                                = "Importa";
 "Tips"                                  = "Consigli";
 "FillInGitAccountPassword."             = "Inserire la password dell'account Git.";
-"NoPasswordStore."                      = "Attualmente non c'è alcun dato di Password Store.";
-"SyncingPasswordStore"                  = "Sincronizzazione Password Store";
+"NoPasswordStore."                      = "Non c'è ancora alcuno store.";
+"SyncingPasswordStore"                  = "Sincronizzazione store";
 "PullingFromRemoteRepository"           = "Esecuzione del pull dal repository remoto";
 "PushingToRemoteRepository"             = "Esecuzione del push al repository remoto";
 "SpecifyBranchName."                    = "Specificare il nome del branch da usare.";
@@ -107,7 +107,7 @@
 "SshCopyPrivateKeyToPass."  = "Copiare la chiave privata con armatura ASCII in Pass con il nome \"ssh_key\" (senza virgolette) con iTunes. Poi tornare qui e selezionare \"Condivisione file iTunes\" per completare.";
 
 // Set up from computer
-"NoPasswordStore"        = "Nessun Password Store";
+"NoPasswordStore"        = "Nessuno store";
 "SetUpFromComputer"      = "Configura dal computer";
 "SetUpFromComputer."     = "Esegui passport sul tuo computer, poi scansiona il codice mostrato.";
 "ScanPassport."          = "Inquadra il codice mostrato da passport.";
@@ -167,8 +167,8 @@
 "InvalidNameOrEmail"    = "Nome o email non validi";
 
 // Erase password store
-"ErasePasswordStoreData?"   = "Eliminare i dati di Password Store?";
-"ErasePasswordStoreData"    = "Elimina i dati di Password Store";
+"ErasePasswordStoreData?"   = "Eliminare i dati dello store?";
+"ErasePasswordStoreData"    = "Elimina i dati dello store";
 "EraseExplanation."         = "Verranno eliminati tutti i dati e le impostazioni locali. I dati nel server remoto non saranno modificati.";
 
 // Discard local changes
@@ -179,17 +179,17 @@
 // Forget passcode
 "ForgotYourPasscode?"       = "Codice dimenticato?";
 "ResetPass"                 = "Reimposta Pass";
-"ResetPassExplanation."     = "L'unica cosa che si può fare è reimpostare l'app. Verranno eliminati tutti i dati e le impostazioni locali. I dati di Password Store nel server remoto non saranno modificati.";
+"ResetPassExplanation."     = "L'unica cosa che si può fare è reimpostare l'app. Verranno eliminati tutti i dati e le impostazioni locali. I dati dello store nel server remoto non saranno modificati.";
 
 // Time related
 "Unknown"   = "Sconosciuto";
 "JustNow"   = "Adesso";
 
 // Commit messages
-"AddPassword."     = "Aggiunta password per %@ con Pass per iOS.";
-"RemovePassword."  = "Rimossa password per %@ con Pass per iOS.";
-"EditPassword."    = "Modificata password per %@ con Pass per iOS.";
-"RenamePassword."  = "Rinominato %@ a %@ con Pass per iOS.";
+"AddPassword."     = "Add %@.";
+"RemovePassword."  = "Remove %@ from store.";
+"EditPassword."    = "Edit %@.";
+"RenamePassword."  = "Rename %@ to %@.";
 
 // Menu buttons
 "Ok"        = "OK";
@@ -343,3 +343,34 @@ per ottenere la sottochiave pubblica e quella privata di criptazione in questo f
   $ gpg --show-keys subkey
 
 Infine, copiarla in una posizione a cui File abbia accesso.";
+
+// Settings
+"About"                   = "Informazioni";
+"AutoFill"                = "Riempimento automatico";
+"BasedOnPassForIos."      = "Basata su Pass for iOS di Mingshen Sun e collaboratori.";
+"Branch"                  = "Branch";
+"ClearSavedSuggestions"   = "Cancella suggerimenti salvati";
+"Clone"                   = "Clona";
+"CloneAgain"              = "Clona di nuovo";
+"Email"                   = "Email";
+"GitSignature"            = "Firma Git";
+"GitURL"                  = "URL Git";
+"GitURLFormats."          = "https://host/repo.git, ssh://user@host:port/repo.git o user@host:repo.git";
+"Keys"                    = "Chiavi";
+"LockWith(%@)"            = "Blocca con %@";
+"Multiple"                = "Multiple";
+"PasteKey"                = "Incolla chiave";
+"PastePgpKeyExplanation." = "Incolla la chiave privata ASCII-armored. Contiene anche la chiave pubblica.";
+"PasteSshKeyExplanation." = "Incolla la chiave privata, che inizia con -----BEGIN.";
+"PGPKey"                  = "Chiave PGP";
+"Remote"                  = "Remoto";
+"Security"                = "Sicurezza";
+"Set"                     = "Impostata";
+"SSHKey"                  = "Chiave SSH";
+"Store"                   = "Store";
+"TurnOnAppLock"           = "Attiva il blocco";
+"Unlock"                  = "Sblocca";
+"UnlockPass"              = "Sblocca le tue password";
+"Username"                = "Nome utente";
+"Version"                 = "Versione";
+"Authentication"          = "Autenticazione";

@@ -32,11 +32,7 @@ struct ObjectivePGPInterface: PGPInterface {
 
     func encrypt(plainData: Data, keyID _: String?) throws -> Data {
         try catchingObjectiveCException(orThrow: .encryption) {
-            let encryptedData = try ObjectivePGP.encrypt(plainData, addSignature: false, using: keyring.keys, passphraseForKey: nil)
-            if Defaults.encryptInArmored {
-                return Armor.armored(encryptedData, as: .message).data(using: .ascii)!
-            }
-            return encryptedData
+            try ObjectivePGP.encrypt(plainData, addSignature: false, using: keyring.keys, passphraseForKey: nil)
         }
     }
 

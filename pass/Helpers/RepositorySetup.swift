@@ -103,7 +103,10 @@ extension PasswordAlertPresenter where Self: UIViewController {
                 self.setUp(from: passport, completion: completion)
             }
         }
-        navigationController?.pushViewController(scanner, animated: true)
+        scanner.navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak scanner] _ in
+            scanner?.dismiss(animated: true)
+        })
+        topmostPresentedViewController.present(UINavigationController(rootViewController: scanner), animated: true)
     }
 
     private func confirmOverwrite(then action: @escaping () -> Void) {

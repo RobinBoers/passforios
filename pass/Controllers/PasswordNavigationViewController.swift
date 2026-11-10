@@ -377,7 +377,7 @@ extension PasswordNavigationViewController {
 
     override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
         if identifier == "showPasswordDetail" {
-            guard Defaults.isYubiKeyEnabled || PGPAgent.shared.isPrepared else {
+            guard PGPAgent.shared.isPrepared else {
                 Utils.alert(title: "CannotShowPassword".localize(), message: "PgpKeyNotSet.".localize(), controller: self)
                 return false
             }

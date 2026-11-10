@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pass</string>
+	<string>Passwords</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,7 +28,7 @@
 		<string>com.apple.authentication-services-credential-provider-ui</string>
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Enable access to Face ID to unlock Pass.</string>
+	<string>Face ID unlocks your passwords.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

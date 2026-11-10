@@ -128,9 +128,20 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
         delegate?.handleScannedOutput(line: scanned)
         DispatchQueue.main.async {
             Feedback.success()
-            self.navigationController?.popViewController(animated: true)
+            self.close()
         }
     }
+
+    private func close() {
+        guard let navigationController, navigationController.viewControllers.first !== self else {
+            dismiss(animated: true, completion: didClose)
+            return
+        }
+        navigationController.popViewController(animated: true)
+        didClose()
+    }
+
+    func didClose() {}
 
     private func addScannerOutput() {
         let label = UILabel()

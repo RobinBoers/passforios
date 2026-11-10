@@ -10,10 +10,6 @@ import AuthenticationServices
 import passKit
 
 class CredentialProviderViewController: ASCredentialProviderViewController {
-    private lazy var passcodelock: PasscodeExtensionDisplay = { [unowned self] in
-        PasscodeExtensionDisplay(extensionContext: extensionContext)
-    }()
-
     private lazy var passwordsViewController: PasswordsViewController = (children.first as! UINavigationController).viewControllers.first as! PasswordsViewController
 
     private lazy var credentialProvider: CredentialProvider = { [unowned self] in
@@ -35,10 +31,7 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     }
 
     override func prepareCredentialList(for serviceIdentifiers: [ASCredentialServiceIdentifier]) {
-        passcodelock.presentPasscodeLockIfNeeded(self) {
-            self.view.isHidden = true
-        } after: { [unowned self] in
-            view.isHidden = false
+        unlock { [unowned self] in
             credentialProvider.identifier = serviceIdentifiers.first
             let url = serviceIdentifiers.first
                 .map(\.identifier)
@@ -55,7 +48,7 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
             extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.credentialIdentityNotFound.rawValue))
             return
         }
-        if !PasscodeLock.shared.hasPasscode, Defaults.isRememberPGPPassphraseOn, !Defaults.isYubiKeyEnabled {
+        if !AppLock.isEnabled, Defaults.isRememberPGPPassphraseOn {
             credentialProvider.credentialsWithoutUserInteraction(for: credentialIdentity)
         } else {
             extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.userInteractionRequired.rawValue))
@@ -68,10 +61,27 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
             prepareCredentialList(for: [credentialIdentity.serviceIdentifier])
             return
         }
-        passcodelock.presentPasscodeLockIfNeeded(self) {
-            self.view.isHidden = true
-        } after: { [unowned self] in
+        unlock { [unowned self] in
             credentialProvider.credentials(for: credentialIdentity)
+        }
+    }
+
+    private func unlock(then action: @escaping () -> Void) {
+        guard AppLock.isEnabled else {
+            action()
+            return
+        }
+        view.isHidden = true
+        AppLock.authenticate(reason: "UnlockPass".localize()) { [weak self] success in
+            guard let self else {
+                return
+            }
+            guard success else {
+                extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.userCanceled.rawValue))
+                return
+            }
+            view.isHidden = false
+            action()
         }
     }
 

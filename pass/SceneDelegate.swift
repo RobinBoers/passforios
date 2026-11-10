@@ -13,13 +13,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    lazy var passcodeLockPresenter = PasscodeLockPresenter(mainWindow: window)
+    private var appLockPresenter: AppLockPresenter?
 
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard scene is UIWindowScene else {
+        guard let windowScene = scene as? UIWindowScene else {
             return
         }
-        passcodeLockPresenter.present(windowLevel: window?.windowLevel.rawValue)
+        if let tabBarController = window?.rootViewController as? UITabBarController {
+            let settings = SettingsViewController()
+            settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
+            tabBarController.viewControllers = (tabBarController.viewControllers ?? []) + [settings]
+        }
+        appLockPresenter = AppLockPresenter(windowScene: windowScene)
+        appLockPresenter?.lockIfEnabled()
         if connectionOptions.shortcutItem?.type == Globals.bundleIdentifier + ".search" {
             perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         }
@@ -70,11 +76,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         PersistenceController.shared.save()
     }
 
-    func sceneWillEnterForeground(_: UIScene) {
-        passcodeLockPresenter.present(windowLevel: window?.windowLevel.rawValue)
+    func sceneDidEnterBackground(_: UIScene) {
+        appLockPresenter?.lockIfEnabled()
     }
 
     func sceneDidBecomeActive(_: UIScene) {
+        appLockPresenter?.authenticate()
         window?.viewWithTag(ViewTag.appicon.rawValue)?.removeFromSuperview()
         window?.viewWithTag(ViewTag.blur.rawValue)?.removeFromSuperview()
     }

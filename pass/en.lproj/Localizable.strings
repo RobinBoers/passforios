@@ -7,8 +7,8 @@
 */
 
 // General
-"PassForIos"    = "Pass for iOS";
-"PasswordStore" = "Password Store";
+"PassForIos"    = "Passwords";
+"PasswordStore" = "Passwords";
 "Passphrase"    = "Passphrase";
 "Password"      = "Password";
 "Passwords"     = "Passwords";
@@ -87,15 +87,15 @@
 "SpecifySchema."                        = "Please specify the scheme of the Git repository URL (HTTPS or SSH).";
 "Overwrite?"                            = "Overwrite?";
 "Overwrite"                             = "Overwrite";
-"OperationWillOverwriteData."           = "This operation will overwrite your current password store data (repository). Data on your remote server will not be affected.";
+"OperationWillOverwriteData."           = "This will overwrite the store on this device. Data on your remote server will not be affected.";
 "DownloadFromUrl"                       = "Download from URL";
 "AsciiArmorEncryptedKey"                = "ASCII-Armor Key";
 "ITunesFileSharing"                     = "iTunes File Sharing";
 "Import"                                = "Import";
 "Tips"                                  = "Tips";
 "FillInGitAccountPassword."             = "Please fill in the password of your Git account.";
-"NoPasswordStore."                      = "There is no password store right now.";
-"SyncingPasswordStore"                  = "Syncing Password Store";
+"NoPasswordStore."                      = "There is no store yet.";
+"SyncingPasswordStore"                  = "Syncing Store";
 "PullingFromRemoteRepository"           = "Pulling from Remote Repository";
 "PushingToRemoteRepository"             = "Pushing to Remote Repository";
 "SpecifyBranchName."                    = "Please specify the name of the branch to be used.";
@@ -109,7 +109,7 @@
 "SshCopyPrivateKeyToPass."  = "Copy your ASCII-armored private key to Pass with the name \"ssh_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
 
 // Set up from computer
-"NoPasswordStore"        = "No Password Store";
+"NoPasswordStore"        = "No Store";
 "SetUpFromComputer"      = "Set Up from Computer";
 "SetUpFromComputer."     = "Run passport on your computer, then scan the code it shows.";
 "ScanPassport."          = "Point the camera at the code shown by passport.";
@@ -172,9 +172,9 @@
 "FailedToClearQuickTypeSuggestions" = "Failed to clear QuickType suggestions: %@";
 
 // Erase password store
-"ErasePasswordStoreData?"   = "Erase password store data?";
-"ErasePasswordStoreData"    = "Erase Password Store Data";
-"EraseExplanation."         = "This will delete all local data and settings. Password store data on your remote server will not be affected.";
+"ErasePasswordStoreData?"   = "Erase store data?";
+"ErasePasswordStoreData"    = "Erase Store Data";
+"EraseExplanation."         = "This will delete all local data and settings. Store data on your remote server will not be affected.";
 
 // Discard local changes
 "DiscardAllLocalChanges?"   = "Discard all local changes?";
@@ -184,17 +184,17 @@
 // Forget passcode
 "ForgotYourPasscode?"       = "Forgot your passcode?";
 "ResetPass"                 = "Reset Pass";
-"ResetPassExplanation."     = "The only thing you can do is to reset the app. This will delete all local data and settings. Password store data on your remote server will not be affected.";
+"ResetPassExplanation."     = "The only thing you can do is to reset the app. This will delete all local data and settings. Store data on your remote server will not be affected.";
 
 // Time related
 "Unknown"   = "Unknown";
 "JustNow"   = "Just now";
 
 // Commit messages
-"AddPassword."     = "Add password for %@ to store using Pass for iOS.";
-"RemovePassword."  = "Remove %@ from store using Pass for iOS.";
-"EditPassword."    = "Edit password for %@ using Pass for iOS.";
-"RenamePassword."  = "Rename %@ to %@ using Pass for iOS.";
+"AddPassword."     = "Add %@.";
+"RemovePassword."  = "Remove %@ from store.";
+"EditPassword."    = "Edit %@.";
+"RenamePassword."  = "Rename %@ to %@.";
 
 // Menu buttons
 "Ok"        = "OK";
@@ -247,7 +247,7 @@
 // Password view
 "Name"                          = "Name";
 "Notice"                        = "Notice";
-"PreviousChangesDiscarded."     = "All previous local changes have been discarded. Your current Password Store will be shown.";
+"PreviousChangesDiscarded."     = "All previous local changes have been discarded. Your current store will be shown.";
 "CannotShowPassword"            = "Cannot show password";
 "PasswordDoesNotExist"          = "The password does not exist.";
 "OneTimePassword"               = "One-Time Password";
@@ -348,3 +348,34 @@ to get the public and the encryption private subkeys in this specific format. Us
   $ gpg --show-keys subkey
 
 Finally, copy them to a location accessible by the Files app.";
+
+// Settings
+"About"                   = "About";
+"AutoFill"                = "AutoFill";
+"BasedOnPassForIos."      = "Based on Pass for iOS by Mingshen Sun and contributors.";
+"Branch"                  = "Branch";
+"ClearSavedSuggestions"   = "Clear Saved Suggestions";
+"Clone"                   = "Clone";
+"CloneAgain"              = "Clone Again";
+"Email"                   = "Email";
+"GitSignature"            = "Git Signature";
+"GitURL"                  = "Git URL";
+"GitURLFormats."          = "https://host/repo.git, ssh://user@host:port/repo.git or user@host:repo.git";
+"Keys"                    = "Keys";
+"LockWith(%@)"            = "Lock with %@";
+"Multiple"                = "Multiple";
+"PasteKey"                = "Paste Key";
+"PastePgpKeyExplanation." = "Paste the ASCII-armored private key. It also holds the public key.";
+"PasteSshKeyExplanation." = "Paste the private key, starting with -----BEGIN.";
+"PGPKey"                  = "PGP Key";
+"Remote"                  = "Remote";
+"Security"                = "Security";
+"Set"                     = "Set";
+"SSHKey"                  = "SSH Key";
+"Store"                   = "Store";
+"TurnOnAppLock"           = "Turn on the lock";
+"Unlock"                  = "Unlock";
+"UnlockPass"              = "Unlock your passwords";
+"Username"                = "Username";
+"Version"                 = "Version";
+"Authentication"          = "Authentication";

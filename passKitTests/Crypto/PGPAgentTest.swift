@@ -31,10 +31,8 @@ final class PGPAgentTest: XCTestCase {
         super.tearDown()
     }
 
-    private func basicEncryptDecrypt(using pgpAgent: PGPAgent, keyID: String, encryptKeyID: String? = nil, requestPassphrase: @escaping (String) -> String = requestPGPKeyPassphrase, encryptInArmored: Bool = true, decryptFromArmored: Bool = true) throws -> Data? {
-        passKit.Defaults.encryptInArmored = encryptInArmored
+    private func basicEncryptDecrypt(using pgpAgent: PGPAgent, keyID: String, encryptKeyID: String? = nil, requestPassphrase: @escaping (String) -> String = requestPGPKeyPassphrase) throws -> Data? {
         let encryptedData = try pgpAgent.encrypt(plainData: testData, keyID: keyID)
-        passKit.Defaults.encryptInArmored = decryptFromArmored
         return try pgpAgent.decrypt(encryptedData: encryptedData, keyID: encryptKeyID ?? keyID, requestPGPKeyPassphrase: requestPassphrase)
     }
 
@@ -47,15 +45,8 @@ final class PGPAgentTest: XCTestCase {
             try importKeys(testKeyInfo.publicKeys, testKeyInfo.privateKeys)
             XCTAssert(pgpAgent.isPrepared)
             try pgpAgent.initKeys()
-            try [
-                (true, true),
-                (true, false),
-                (false, true),
-                (false, false),
-            ].forEach { encryptInArmored, decryptFromArmored in
-                for id in testKeyInfo.fingerprints {
-                    XCTAssertEqual(try basicEncryptDecrypt(using: pgpAgent, keyID: id, encryptInArmored: encryptInArmored, decryptFromArmored: decryptFromArmored), testData)
-                }
+            for id in testKeyInfo.fingerprints {
+                XCTAssertEqual(try basicEncryptDecrypt(using: pgpAgent, keyID: id), testData)
             }
         }
     }
@@ -76,14 +67,7 @@ final class PGPAgentTest: XCTestCase {
             XCTAssert(pgpAgent.isPrepared)
             try pgpAgent.initKeys()
             XCTAssert(try pgpAgent.getKeyID().first!.lowercased().hasSuffix(testKeyInfo.fingerprint))
-            try [
-                (true, true),
-                (true, false),
-                (false, true),
-                (false, false),
-            ].forEach { encryptInArmored, decryptFromArmored in
-                XCTAssertEqual(try basicEncryptDecrypt(using: pgpAgent, keyID: testKeyInfo.fingerprint, encryptInArmored: encryptInArmored, decryptFromArmored: decryptFromArmored), testData)
-            }
+            XCTAssertEqual(try basicEncryptDecrypt(using: pgpAgent, keyID: testKeyInfo.fingerprint), testData)
         }
     }
 

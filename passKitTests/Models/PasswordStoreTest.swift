@@ -72,12 +72,12 @@ final class PasswordStoreTest: XCTestCase {
         try cloneRepository(.withGPGID)
         try importSinglePGPKey()
         Defaults.gitSignatureName = "Test User"
-        PasscodeLock.shared.save(passcode: "1234")
+        AppLock.isEnabled = true
 
         XCTAssertGreaterThan(passwordStore.numberOfPasswords, 0)
         XCTAssertTrue(AppKeychain.shared.contains(key: PGPKey.PUBLIC.getKeychainKey()))
         XCTAssertEqual(Defaults.gitSignatureName, "Test User")
-        XCTAssertTrue(PasscodeLock.shared.hasPasscode)
+        XCTAssertTrue(AppLock.isEnabled)
         XCTAssertTrue(PGPAgent.shared.isInitialized)
 
         expectation(forNotification: .passwordStoreUpdated, object: nil)
@@ -87,7 +87,7 @@ final class PasswordStoreTest: XCTestCase {
         XCTAssertEqual(passwordStore.numberOfPasswords, 0)
         XCTAssertFalse(AppKeychain.shared.contains(key: PGPKey.PUBLIC.getKeychainKey()))
         XCTAssertFalse(Defaults.hasKey(\.gitSignatureName))
-        XCTAssertFalse(PasscodeLock.shared.hasPasscode)
+        XCTAssertFalse(AppLock.isEnabled)
         XCTAssertFalse(PGPAgent.shared.isInitialized)
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -310,34 +310,6 @@ final class PasswordStoreTest: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
-    // MARK: - .gpg-id support
-
-    func testCloneAndDecryptMultiKeys() throws {
-        try cloneRepository(.withGPGID)
-        try importMultiplePGPKeys()
-
-        Defaults.isEnableGPGIDOn = true
-
-        [
-            ("work/github.com", "4712286271220DB299883EA7062E678DA1024DAE"),
-            ("personal/github.com", "787EAE1A5FA3E749AA34CC6AA0645EBED862027E"),
-        ].forEach { path, id in
-            let keyID = findGPGID(from: localRepoURL.appendingPathComponent(path))
-            XCTAssertEqual(keyID, id)
-        }
-
-        let personal = try decrypt(path: "personal/github.com.gpg")
-        XCTAssertEqual(personal.plainText, "passwordforpersonal\n")
-
-        let work = try decrypt(path: "work/github.com.gpg")
-        XCTAssertEqual(work.plainText, "passwordforwork\n")
-
-        let testPassword = Password(name: "test", path: "test.gpg", plainText: "testpassword")
-        let testPasswordEntity = try passwordStore.add(password: testPassword)!
-        let testPasswordPlain = try passwordStore.decrypt(passwordEntity: testPasswordEntity, requestPGPKeyPassphrase: requestPGPKeyPassphrase)
-        XCTAssertEqual(testPasswordPlain.plainText, "testpassword")
-    }
-
     // MARK: - Helpers
 
     private enum RemoteRepo {
@@ -381,13 +353,6 @@ final class PasswordStoreTest: XCTestCase {
         let keychain = AppKeychain.shared
         try KeyFileManager(keyType: PGPKey.PUBLIC, keyPath: "", keyHandler: keychain.add).importKey(from: RSA4096.publicKey)
         try KeyFileManager(keyType: PGPKey.PRIVATE, keyPath: "", keyHandler: keychain.add).importKey(from: RSA4096.privateKey)
-        try PGPAgent.shared.initKeys()
-    }
-
-    private func importMultiplePGPKeys() throws {
-        let keychain = AppKeychain.shared
-        try KeyFileManager(keyType: PGPKey.PUBLIC, keyPath: "", keyHandler: keychain.add).importKey(from: RSA2048_RSA4096.publicKeys)
-        try KeyFileManager(keyType: PGPKey.PRIVATE, keyPath: "", keyHandler: keychain.add).importKey(from: RSA2048_RSA4096.privateKeys)
         try PGPAgent.shared.initKeys()
     }
 

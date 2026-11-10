@@ -38,13 +38,12 @@ public extension DefaultsKeys {
     var pgpKeySource: DefaultsKey<KeySource?> { DefaultsKey("pgpKeySource") }
     var pgpPublicKeyURL: DefaultsKey<URL?> { DefaultsKey("pgpPublicKeyURL") }
     var pgpPrivateKeyURL: DefaultsKey<URL?> { DefaultsKey("pgpPrivateKeyURL") }
-    var isYubiKeyEnabled: DefaultsKey<Bool> { DefaultsKey("isYubiKeyEnabled", defaultValue: false) }
 
     // Keep them for legacy reasons.
     var pgpPublicKeyArmor: DefaultsKey<String?> { DefaultsKey("pgpPublicKeyArmor") }
     var pgpPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("pgpPrivateKeyArmor") }
     var gitSSHPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("gitSSHPrivateKeyArmor") }
-    var passcodeKey: DefaultsKey<String?> { DefaultsKey("passcodeKey") }
+    var isAppLockOn: DefaultsKey<Bool> { DefaultsKey("isAppLockOn", defaultValue: false) }
 
     var gitURL: DefaultsKey<URL> { DefaultsKey("gitURL", defaultValue: URL(string: "https://")!) }
     var gitAuthenticationMethod: DefaultsKey<GitAuthenticationMethod> { DefaultsKey("gitAuthenticationMethod", defaultValue: GitAuthenticationMethod.password) }
@@ -59,13 +58,9 @@ public extension DefaultsKeys {
 
     var isRememberPGPPassphraseOn: DefaultsKey<Bool> { DefaultsKey("isRememberPGPPassphraseOn", defaultValue: false) }
     var isRememberGitCredentialPassphraseOn: DefaultsKey<Bool> { DefaultsKey("isRememberGitCredentialPassphraseOn", defaultValue: false) }
-    var isEnableGPGIDOn: DefaultsKey<Bool> { DefaultsKey("isEnableGPGIDOn", defaultValue: false) }
     var isShowFolderOn: DefaultsKey<Bool> { DefaultsKey("isShowFolderOn", defaultValue: true) }
-    var isHidePasswordImagesOn: DefaultsKey<Bool> { DefaultsKey("isHidePasswordImagesOn", defaultValue: false) }
     var searchDefault: DefaultsKey<SearchBarScope?> { DefaultsKey("searchDefault", defaultValue: .all) }
     var passwordGenerator: DefaultsKey<PasswordGenerator> { DefaultsKey("appleStylePasswordGenerator", defaultValue: PasswordGenerator()) }
-
-    var encryptInArmored: DefaultsKey<Bool> { DefaultsKey("encryptInArmored", defaultValue: false) }
 
     var autoCopyOTP: DefaultsKey<Bool> { DefaultsKey("autoCopyOTP", defaultValue: false) }
 

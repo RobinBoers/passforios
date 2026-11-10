@@ -36,7 +36,7 @@
 "C2w-dd-roS.text" = "URL des privaten Schlüssels";
 
 /* Class = "UINavigationItem"; title = "Password Store"; ObjectID = "Cio-ZG-zCS"; */
-"Cio-ZG-zCS.title" = "Password Store";
+"Cio-ZG-zCS.title" = "Passwörter";
 
 /* Class = "UITableViewSection"; headerTitle = "SECURITY"; ObjectID = "Cx7-e4-wCO"; */
 "Cx7-e4-wCO.headerTitle" = "SICHERHEIT";

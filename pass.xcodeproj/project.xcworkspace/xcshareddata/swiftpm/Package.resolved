@@ -11,15 +11,6 @@
       }
     },
     {
-      "identity" : "favicon",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/leonbreedt/FavIcon",
-      "state" : {
-        "revision" : "5bf16aad3ea543891eaef7e8da2aa2f6bb29e6e4",
-        "version" : "3.1.0"
-      }
-    },
-    {
       "identity" : "keychainaccess",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
@@ -88,15 +79,6 @@
       "state" : {
         "revision" : "f66bcd04088582c8fbb5cb8554d577e303bae396",
         "version" : "5.3.0"
-      }
-    },
-    {
-      "identity" : "yubikit-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Yubico/yubikit-ios.git",
-      "state" : {
-        "revision" : "2c4206263763743a2f1ca3309b87432588be637f",
-        "version" : "4.7.0"
       }
     }
   ],

@@ -21,21 +21,10 @@
 			</array>
 		</dict>
 	</dict>
-	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
-	<array>
-		<string>A000000527471117</string>
-		<string>A0000006472F0001</string>
-		<string>A0000005272101</string>
-		<string>A000000308</string>
-		<string>D27600012401</string>
-		<string>A000000527200101</string>
-	</array>
-	<key>NFCReaderUsageDescription</key>
-	<string>The application needs access to NFC reading to communicate with your YubiKey.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>Passwords</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -66,7 +55,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We need to access your camera for scanning QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Enable access to Face ID to unlock Pass.</string>
+	<string>Face ID unlocks your passwords.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>SyncRepositoryIntent</string>

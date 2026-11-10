@@ -411,3 +411,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "SyncedJustNow" = "Sincronizzato ora";
 "CloningStore" = "Clonazione store…";
 "KeepEditing" = "Continua a modificare";
+"SyncFailed" = "Sincronizzazione non riuscita";

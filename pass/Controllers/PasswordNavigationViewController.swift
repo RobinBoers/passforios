@@ -33,6 +33,7 @@ class PasswordNavigationViewController: UIViewController {
     /// The store changed while refreshing; rebuilding the list then moves it, so that waits until the end.
     private var needsReset = false
     private var isSyncFinished = false
+    private var syncStatusGeneration = 0
     var searchText: String?
 
     lazy var passwordManager = PasswordManager(viewController: self)
@@ -142,7 +143,7 @@ class PasswordNavigationViewController: UIViewController {
         tableView.delegate = self
         tableView.layoutIfNeeded()
         // Changing the refresh control while it shows moves the list, so it is only set up when idle.
-        if !refreshControl.isRefreshing {
+        if #unavailable(iOS 26.0), !refreshControl.isRefreshing {
             showLastSynced()
         }
         if tableView.refreshControl !== refreshControl {
@@ -275,6 +276,7 @@ class PasswordNavigationViewController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(actOnSearchNotification), name: .passwordSearch, object: nil)
         // A Siri shortcut can change the state of the app in the background. Hence, reload when opening the app.
         notificationCenter.addObserver(self, selector: #selector(actOnPossiblePasswordStoreUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(syncAutomatically), name: UIApplication.didBecomeActiveNotification, object: nil)
         // Sync with remote done.
         notificationCenter.addObserver(self, selector: #selector(actOnPasswordStoreSyncSucceeded), name: .passwordStoreSyncSucceeded, object: nil)
     }
@@ -371,6 +373,35 @@ class PasswordNavigationViewController: UIViewController {
         }
     }
 
+    /// Pulls when the app opens, unless there are local changes to push, which is left to the user.
+    @objc
+    private func syncAutomatically() {
+        let store = PasswordStore.shared
+        let isRecent = store.lastSyncedTime.map { Date().timeIntervalSince($0) < 60 } ?? false
+        guard isRootViewController(), store.repositoryExists(), store.numberOfLocalCommits == 0, !isRecent,
+              !refreshControl.isRefreshing, presentedViewController == nil else {
+            return
+        }
+        syncRepository(interactive: false) { [weak self] status in
+            self?.showSyncStatus(status)
+        } completion: { [weak self] success in
+            guard let self else {
+                return
+            }
+            if success {
+                showLastSynced()
+            } else {
+                showSyncStatus("SyncFailed".localize())
+                hideSyncStatus()
+            }
+            if needsReset, !refreshControl.isRefreshing {
+                needsReset = false
+                resetViews()
+            }
+        }
+    }
+
+    /// Shown only for a while after syncing, after which the title stands alone again.
     private func showLastSynced() {
         guard PasswordStore.shared.repositoryExists() else {
             showSyncStatus(nil)
@@ -378,6 +409,25 @@ class PasswordNavigationViewController: UIViewController {
         }
         let isRecent = PasswordStore.shared.lastSyncedTime.map { Date().timeIntervalSince($0) < 60 } ?? false
         showSyncStatus(isRecent ? "SyncedJustNow".localize() : "LastSynced(%@)".localize(PasswordStore.shared.lastSyncedTimeString))
+        hideSyncStatus()
+    }
+
+    /// Only the subtitle goes; the refresh control keeps its text, out of sight until pulled.
+    private func hideSyncStatus() {
+        guard #available(iOS 26.0, *) else {
+            return
+        }
+        syncStatusGeneration += 1
+        let generation = syncStatusGeneration
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) { [weak self] in
+            guard let self, generation == syncStatusGeneration, !refreshControl.isRefreshing else {
+                return
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.showSyncStatus(nil)
+                self.navigationController?.navigationBar.layoutIfNeeded()
+            }
+        }
     }
 
     /// Under the title, as Mail shows it, where the system has subtitles; on the refresh control otherwise.

@@ -127,7 +127,8 @@ extension PasswordAlertPresenter where Self: UIViewController {
 
     /// Pulls, then pushes any local commits. Progress goes to `status` when given, for showing it inline,
     /// and to a progress sheet otherwise. `completion` runs either way, telling whether the sync succeeded.
-    func syncRepository(status: ((String) -> Void)? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
+    /// A sync that is not interactive asks for nothing and reports failure only through `completion`.
+    func syncRepository(interactive: Bool = true, status: ((String) -> Void)? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
         let report: (Float, String) -> Void = { progress, message in
             DispatchQueue.main.async {
                 if let status {
@@ -147,14 +148,19 @@ extension PasswordAlertPresenter where Self: UIViewController {
             userName: Defaults.gitUsername,
             keyStore: AppKeychain.shared
         )
+        // Without asking, only a key that has no passphrase can do without a remembered one.
+        let passwordProvider: GitCredential.PasswordProvider = interactive ? present : { _, _ in
+            let key: String? = AppKeychain.shared.get(for: SSHKey.PRIVATE.getKeychainKey())
+            return Defaults.gitAuthenticationMethod == .key && key.map(SSHKey.isEncrypted) == false ? "" : nil
+        }
         DispatchQueue.global(qos: .userInitiated).async {
             do {
-                let pullOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
+                let pullOptions = gitCredential.getCredentialOptions(passwordProvider: passwordProvider)
                 try PasswordStore.shared.pullRepository(options: pullOptions) { git_transfer_progress, _ in
                     report(Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), "PullingFromRemoteRepository".localize())
                 }
                 if PasswordStore.shared.numberOfLocalCommits > 0 {
-                    let pushOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
+                    let pushOptions = gitCredential.getCredentialOptions(passwordProvider: passwordProvider)
                     try PasswordStore.shared.pushRepository(options: pushOptions) { current, total, _, _ in
                         report(Float(current) / Float(total), "PushingToRemoteRepository".localize())
                     }
@@ -167,24 +173,33 @@ extension PasswordAlertPresenter where Self: UIViewController {
                     }
                 }
             } catch let error as NSError {
+                guard interactive else {
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                    return
+                }
                 gitCredential.delete()
                 DispatchQueue.main.async {
-                    var message = error.localizedDescription
-                    if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
-                        message = message | "UnderlyingError".localize(underlyingError.localizedDescription)
-                        if underlyingError.localizedDescription.contains("WrongPassphrase".localize()) {
-                            message = message | "RecoverySuggestion.".localize()
-                        }
-                    }
-                    if let mergeConflictFiles = error.userInfo[GTPullMergeConflictedFiles] as? NSArray {
-                        let mergeConflictFilesString = mergeConflictFiles.componentsJoined(by: ", ")
-                        message = message | "MergeConflictError".localize(mergeConflictFilesString)
-                    }
                     completion(false)
-                    Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
+                    Utils.alert(title: "Error".localize(), message: Self.syncErrorMessage(error), controller: self, completion: nil)
                 }
             }
         }
+    }
+
+    private static func syncErrorMessage(_ error: NSError) -> String {
+        var message = error.localizedDescription
+        if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? NSError {
+            message = message | "UnderlyingError".localize(underlyingError.localizedDescription)
+            if underlyingError.localizedDescription.contains("WrongPassphrase".localize()) {
+                message = message | "RecoverySuggestion.".localize()
+            }
+        }
+        if let mergeConflictFiles = error.userInfo[GTPullMergeConflictedFiles] as? NSArray {
+            message = message | "MergeConflictError".localize(mergeConflictFiles.componentsJoined(by: ", "))
+        }
+        return message
     }
 
     /// Scans the code shown by `passport` on a computer, confirming first when it would replace a store.

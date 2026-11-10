@@ -34,6 +34,8 @@ class PasswordNavigationViewController: UIViewController {
     private var needsReset = false
     private var isSyncFinished = false
     private var syncStatusGeneration = 0
+    /// Where the list rests at its top, from before a pull, as UIKit can settle a refresh elsewhere.
+    private var restingTopOffset: CGFloat?
     var searchText: String?
 
     lazy var passwordManager = PasswordManager(viewController: self)
@@ -362,6 +364,9 @@ class PasswordNavigationViewController: UIViewController {
         }
         isSyncFinished = false
         refreshControl.endRefreshing()
+        if let restingTopOffset {
+            tableView.setContentOffset(CGPoint(x: 0, y: restingTopOffset), animated: true)
+        }
         // Changing the subtitle relays out the navigation bar, which moves the list while the refresh control
         // still animates away, so that waits.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -447,6 +452,14 @@ class PasswordNavigationViewController: UIViewController {
 }
 
 extension PasswordNavigationViewController: UITableViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard !refreshControl.isRefreshing else {
+            return
+        }
+        let top = -scrollView.adjustedContentInset.top
+        restingTopOffset = scrollView.contentOffset.y <= top + 1 ? top : nil
+    }
+
     func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {
         endRefreshingIfReleased()
     }

@@ -32,6 +32,7 @@ class PasswordNavigationViewController: UIViewController {
     var viewingUnsyncedPasswords = false
     /// The store changed while refreshing; rebuilding the list then moves it, so that waits until the end.
     private var needsReset = false
+    private var isSyncFinished = false
     var searchText: String?
 
     lazy var passwordManager = PasswordManager(viewController: self)
@@ -338,7 +339,6 @@ class PasswordNavigationViewController: UIViewController {
 
     @objc
     func handleRefreshControl() {
-        let topOffset = -tableView.adjustedContentInset.top
         guard PasswordStore.shared.repositoryExists() else {
             refreshControl.endRefreshing()
             Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
@@ -347,21 +347,22 @@ class PasswordNavigationViewController: UIViewController {
         syncRepository { [weak self] status in
             self?.showSyncStatus(status)
         } completion: { [weak self] _ in
-            guard let self else {
-                return
-            }
-            refreshControl.endRefreshing()
-            showLastSynced()
-            if needsReset {
-                needsReset = false
-                resetViews()
-            }
-            // Ending while the list still bounces back from the pull can leave it below the title.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                if !self.tableView.isDragging, self.tableView.contentOffset.y > topOffset {
-                    self.tableView.setContentOffset(CGPoint(x: 0, y: topOffset), animated: true)
-                }
-            }
+            self?.isSyncFinished = true
+            self?.endRefreshingIfReleased()
+        }
+    }
+
+    /// Like Mail, the refresh only ends once the list is let go; ending it mid-pull makes the list jump.
+    private func endRefreshingIfReleased() {
+        guard isSyncFinished, !tableView.isDragging else {
+            return
+        }
+        isSyncFinished = false
+        refreshControl.endRefreshing()
+        showLastSynced()
+        if needsReset {
+            needsReset = false
+            resetViews()
         }
     }
 
@@ -380,7 +381,7 @@ class PasswordNavigationViewController: UIViewController {
             navigationItem.subtitle = isRootViewController() ? status : nil
             navigationItem.largeAttributedSubtitle = isRootViewController() ? status.map {
                 var subtitle = AttributedString($0)
-                subtitle.uiKit.font = .preferredFont(forTextStyle: .body)
+                subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
                 subtitle.uiKit.foregroundColor = .secondaryLabel
                 return subtitle
             } : nil
@@ -391,6 +392,10 @@ class PasswordNavigationViewController: UIViewController {
 }
 
 extension PasswordNavigationViewController: UITableViewDelegate {
+    func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {
+        endRefreshingIfReleased()
+    }
+
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         guard let dataSource else {

@@ -168,7 +168,7 @@ final class OnboardingModel: ObservableObject {
 
     /// One-time codes are shown in a notification after AutoFill fills in a password.
     func allowOneTimeCodeNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { _, _ in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge]) { _, _ in
             DispatchQueue.main.async {
                 self.afterOneTimeCodes()
             }

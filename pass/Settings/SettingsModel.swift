@@ -32,7 +32,7 @@ final class SettingsModel: ObservableObject {
     private var observers = [NSObjectProtocol]()
 
     init() {
-        for name in [Notification.Name.passwordStoreUpdated, .passwordStoreErased] {
+        for name in [Notification.Name.passwordStoreUpdated, .passwordStoreErased, .passwordStoreSyncSucceeded] {
             observers.append(NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
                 MainActor.assumeIsolated {
                     self?.refresh()

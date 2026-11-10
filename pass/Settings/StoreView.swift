@@ -109,7 +109,20 @@ struct StoreView: View {
     /// Syncs the store as it is, or clones again once the remote is changed.
     @ViewBuilder private var remoteAction: some View {
         if model.hasStore, !isRemoteChanged {
-            Button("Sync", action: model.sync)
+            Button(action: model.sync) {
+                HStack {
+                    Text("Sync")
+                    Spacer()
+                    if model.storeInfo.localCommits > 0 {
+                        Text(model.storeInfo.localCommits, format: .number)
+                            .font(.callout)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 7)
+                            .frame(minWidth: 24, minHeight: 24)
+                            .background(.red, in: Capsule())
+                    }
+                }
+            }
         } else {
             Button("Clone") {
                 if model.hasStore {

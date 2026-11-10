@@ -8,6 +8,8 @@
 
 /// A store entry in the format of `sec`: a header of `key: value` lines, where `key!:` marks a secret,
 /// optionally followed by a blank line and a free-form body.
+import SwiftyUserDefaults
+
 /// How a store lays out its entries.
 public enum StoreFormat: String, CaseIterable {
     /// The password on the first line, then `key: value` lines and notes in any order.

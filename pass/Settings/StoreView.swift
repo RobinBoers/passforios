@@ -79,7 +79,7 @@ struct StoreView: View {
             Text("Remote")
         } footer: {
             if model.hasStore {
-                Text("LastSynced(%@)".localize(model.storeInfo.lastSynced?.formatted(date: .abbreviated, time: .shortened) ?? "SyncAgain?".localize()))
+                Text("LastSynced(%@)".localize(model.storeInfo.lastSynced?.formatted(date: .abbreviated, time: .shortened) ?? "NeverSynced".localize()))
             }
         }
         .alert("GitURLFormats", isPresented: $isShowingURLFormats) {
@@ -116,7 +116,7 @@ struct StoreView: View {
         if model.hasStore, !isRemoteChanged {
             Button(action: model.sync) {
                 HStack {
-                    Text("Sync")
+                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
                     Spacer()
                     if model.storeInfo.localCommits > 0 {
                         Text(model.storeInfo.localCommits, format: .number)

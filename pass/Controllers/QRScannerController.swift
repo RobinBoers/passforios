@@ -238,7 +238,7 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
 
     private func presentCameraSettings() {
         let alertController = UIAlertController(
-            title: "Error".localize(),
+            title: "NoCameraAccess".localize(),
             message: "CameraAccessDenied.".localize() | "WarningToggleCameraPermissionsResetsApp.".localize(),
             preferredStyle: .alert
         )

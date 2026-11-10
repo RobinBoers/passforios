@@ -13,9 +13,7 @@
 "Password"      = "Passwort";
 "Passwords"     = "Passwörter";
 "Passcode"      = "Passcode";
-"Apple"         = "Apple";
 "Settings"      = "Einstellungen";
-"Contributors"  = "Mitwirkende";
 
 // OTP related
 "TimeBased"                 = "Zeitbasiert";
@@ -31,10 +29,7 @@
 // General (error) messages
 "Error"                                             = "Fehler";
 "CannotSave"                                        = "Speichern nicht möglich";
-"UnresolvedError"                                   = "Unbehandelter Fehler %@";
-"MigrationError"                                    = "Fehler bei der Migration: %@";
 "UnderlyingError"                                   = "Zugrundeliegender Fehler: %@";
-"ErrorSaving"                                       = "Fehler beim Speichern: %@";
 "CannotCopyPassword"                                = "Passwort kann nicht kopiert werden";
 "CannotAddPassword"                                 = "Passwort kann nicht hinzugefügt werden";
 "WrongPassphrase"                                   = "Falsches Passwort";
@@ -44,22 +39,9 @@
 "NoProperPassRepo."                                 = "Das Repository enthält keine .gpg-id Datei. Es muss erst noch mit 'pass init' korrekt initialisiert werden, bevor es in die App geladen werden kann.";
 
 // Settings
-"RememberPgpKeyPassphrase"          = "GPG-Schlüssel-Passwort merken";
-"RememberGitCredentialPassphrase"   = "Git-Server-Passwort merken";
-"EnableGPGID"                       = "Berücksichtige .gpg-id Dateien (Beta)";
 "ShowFolders"                       = "Ordner anzeigen";
-"HidePasswordImages"                = "Favicons verstecken";
-"HidePasswordImagesExplanation."    = "Favicons werden basierend auf der assoziierten URL geladen und in Passworteinträgen angezeigt. Aktiviere diese Option, um das Laden dieser Bilder zu unterbinden und sie nicht anzuzeigen.";
-"RandomString"                      = "Zufällige Zeichenkette";
-"ApplesKeychainStyle"               = "Apples Keychain-Style";
 
 // Git
-"FailedToFetchPasswords"                = "Abrufen von Passwörtern fehlgeschlagen";
-"FailedToFetchPasswordEntities"         = "Abrufen von Passwörtern fehlgeschlagen: %@";
-"FailedToInsertPasswordEntity"          = "Einfügen von Passwörtern fehlgeschlagen: %@";
-"FailedToDeletePasswordEntity"          = "Entfernen des Passworts fehlgeschlagen: %@";
-"FailedToSavePasswordEntity"            = "Speichern des Passworts fehlgeschlagen: %@";
-"FailureToSaveContext"                  = "Fehler beim Speichern des Kontexts: %@";
 "RepositoryRemoteBranchNotFoundError."  = "Der Remote-Branch %@ existiert nicht.";
 "RepositoryBranchNotFoundError."        = "Der lokale Branch %@ existiert nicht.";
 "KeyImportError."                       = "Schlüssel kann nicht importiert werden.";
@@ -73,38 +55,21 @@
 "DecryptionError."                      = "Passwort kann nicht entschlüsselt werden.";
 "EncodingError."                        = "Schlüssel ist nicht in ASCII kodiert.";
 "UnknownError."                         = "Ein unbekannter Fehler ist aufgetreten.";
-"PrepareRepository"                     = "Repository vorbereiten";
 "CheckingOutBranch"                     = "%@ wird ausgecheckt …";
-"WantToSaveGitCredential?"              = "Möchtest du das Passwort für den Git-Server speichern?";
 
 // Repository
 "RepositoryNotSetError."                = "Es wurde noch kein Git-Repository hinzugefügt.";
-"SetGitRepositoryUrl"                   = "Bitte gib zuerst die URL des Repositorys ein.";
-"CannotFindUsername."                   = "Der Nutzername kann nicht in der URL des Repositorys gefunden werden. Beispiel: ssh://git@server/path/to/repo.git.";
-"CheckEnteredUsername."                 = "Bitte vergleiche den eingegebenen Nutzernamen und den in der URL des Repositorys. Sie sollten übereinstimmen.";
-"UseEitherHttpsOrHttp."                 = "Bitte nutze entweder HTTPS (empfohlen) oder HTTP.";
-"SpecifySchema."                        = "Bitte spezifiziere das Protokoll zur Kommunikation mit dem Git-Server in der URL (HTTPS or SSH).";
 "Overwrite?"                            = "Überschreiben?";
 "Overwrite"                             = "Überschreiben";
 "OperationWillOverwriteData."           = "Dies überschreibt den Store auf diesem Gerät. Daten auf dem Server bleiben unberührt.";
-"DownloadFromUrl"                       = "Von URL downloaden";
-"AsciiArmorEncryptedKey"                = "Key im ASCII-Format";
-"ITunesFileSharing"                     = "Datenaustausch über iTunes";
 "Import"                                = "Importieren";
-"Tips"                                  = "Tipps";
 "FillInGitAccountPassword."             = "Bitte gib das Passwort deines Git-Accounts ein.";
-"NoPasswordStore."                      = "Es gibt noch keinen Store.";
 "SyncingPasswordStore"                  = "Wird synchronisiert …";
 "PullingFromRemoteRepository"           = "Änderungen werden geholt …";
 "PushingToRemoteRepository"             = "Änderungen werden gesendet …";
-"SpecifyBranchName."                    = "Der Name des zu verwendenden Branches muss angegeben werden.";
 
 // SSH
 "FillInSshKeyPassphrase."   = "Bitte gib das Passwort des SSH-Schlüssels ein.";
-"CannotSelectSshKey"        = "SSH-Schlüssel kann nicht selektiert werden";
-"PleaseSetupSshKeyFirst."   = "Bitte richte erst den SSH-Schlüssel ein.";
-"SetPrivateKeyUrl."         = "Bitte gibt erst die URL des privaten Schlüssels ein.";
-"SshCopyPrivateKeyToPass."  = "Kopiere den privaten Schlüssel im ASCII-Format verschlüsselt mit dem Namen \"ssh_key\" über iTunes zu Pass. Danach kann der Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 
 // Set up from computer
 "NoPasswordStore"        = "Kein Store";
@@ -116,54 +81,23 @@
 "ImportingKeys"          = "Schlüssel werden importiert …";
 
 // QR code scanning
-"LookingForStartingFrame."                  = "Suche nach dem Anfang.";
-"TooManyQrCodes"                            = "Zu viele QR-Codes";
-"ScanPrivateKeyQrCodes"                     = "QR-Code des privaten Schlüssels scannen";
-"CannotSaveSshKey"                          = "SSH-Schlüssel kann nicht gespeichert werden";
-"ScanPublicKey."                            = "Bitte scanne den öffentlichen Schlüssel.";
-"ScanPrivateKey."                           = "Bitte scanne den privaten Schlüssel.";
-"ScanPrivateKeyQrCodes"                     = "QR-Code für privaten Schlüssel scannen";
-"ScanPublicKeyQrCodes"                      = "QR-Code für öffentlichen Schlüssel scannen";
-"SetPrivateKey."                            = "Bitte richte zuerst den privaten Schlüssel ein.";
-"SetPublicKey."                             = "Bitte richte zuerst den öffentlichen Schlüssel ein..";
 "NoQrCodeDetected."                         = "Richte die Kamera auf einen QR-Code.";
 "NoStringValue"                             = "Kein Zeichenkette gefunden";
 "CameraAccessDenied."                       = "Zugriff auf die Kamera verweigert.";
 "WarningToggleCameraPermissionsResetsApp."  = "Warnung: Änderung der Befugnisse der Kamera führt zum Zurücksetzen der App! Bitte speichere deine Daten vorher.";
 
 // PGP
-"Decrypting"                        = "Entschlüssele";
 "PgpKeyNotSet."                     = "GPG-Schlüssel ist nicht eingerichtet. Bitte gib ihn zuerst ein.";
 "FillInPgpPassphrase."              = "Bitte gib das Passwort deines privaten GPG-Schlüssels ein.";
-"WantToSavePassphrase?"             = "Möchtest du das Passwort für spätere Entschlüsselungen speichern?";
-"CannotSavePgpKey"                  = "GPG-Schlüssel kann nicht gespeichert werden";
-"SetPgpKeyUrlsFirst."               = "Bitte gib zuerst die URLs der GPG-Schlüssel ein.";
-"FetchingPgpKey"                    = "GPG-Schlüssel wird geladen";
-"RememberToRemoveKey"               = "Vergiss das Löschen der Schlüssel nicht";
-"RememberToRemoveKeyFromServer."    = "Vergiss nicht, die Schlüssel wieder vom Server zu entfernen.";
-"PgpCopyPublicAndPrivateKeyToPass." = "Kopiere den öffentlichen und den privaten Schlüssel im ASCII-Format verschlüsselt mit den Namen \"gpg_key.pub\" bzw. \"gpg_key\" über iTunes zu Pass. Danach können die Schlüssel über \"Datenaustausch über iTunes\" importiert werden.";
 "KeyExpiredOrIncompatibleError."    = "Der öffentliche GPG-Schlüssel ist eventuell abgelaufen oder inkompatibel mit dem privaten Schlüssel.";
 "WrongPassphraseError."             = "Das Passwort für den privaten GPG-Schlüssel ist falsch.";
 "PgpPublicKeyNotFoundError."        = "Öffentlicher GPG-Schlüssel (%@) kann nicht gefunden werden.";
 "PgpPrivateKeyNotFoundError."       = "Privater GPG-Schlüssel (%@) kann nicht gefunden werden.";
-"CannotImportFile"                  = "Fehler beim Importieren";
-"LoadFromFiles"                     = "Aus Datei laden";
-"FileCannotBeImported."             = "Beim Importieren der Datei '%@' trat ein Fehler auf. Stelle bitte sicher, dass ihr Speicherort lesbar ist.";
-"RememberToRemoveKeyFromLocation."  = "Vergiss nicht, die Schlüsseldateien wieder von ihrem externen Speicherort zu entfernen.";
-"KeyFileNotSet."                    = "Es wurde nicht für beide Schlüsseltypen eine Datei angegeben.";
-"HttpNotSecure"                     = "HTTP ist nicht sicher";
-"ReallyUseHttp?"                    = "Das HTTP-Protokoll ist nicht sicher. Soll es wirklich verwendet werden, um den privaten Schlüssel zu übertragen?";
 
 // App passcode
-"RemovePasscode"        = "Passcode entfernen";
-"ChangePasscode"        = "Passcode ändern";
-"SetPasscode"           = "Passcode hinzufügen";
-"PasswordConfirmation"  = "Passcode bestätigen";
-"FillInAppPasscode."    = "Gib einen Passcode für Pass ein (mindestens 4 Zeichen).";
 
 // Git signature
 "NotSet"                = "Nicht spezifiziert";
-"InvalidNameOrEmail"    = "Ungültiger Name oder E-Mail-Adresse";
 
 // Clear suggestions
 "FailedToClearQuickTypeSuggestions" = "Zurücksetzen der QuickType-Vorschläge fehlgeschlagen: %@";
@@ -175,9 +109,6 @@
 "DiscardExplanation."       = "Möchtest du wirklich alle Änderungen an den lokalen Daten für immer verwerfen? Diese Aktion kann nicht rückgängig gemacht werden.";
 
 // Forget passcode
-"ForgotYourPasscode?"       = "Passcode vergessen?";
-"ResetPass"                 = "Pass zurücksetzen";
-"ResetPassExplanation."     = "Die App kann nur vollständig zurückgesetzt werden. Diese Aktion löscht alle lokalen Daten und Einstellungen. Daten im Store auf einem entfernten Server bleiben unberührt.";
 
 // Time related
 "Unknown"   = "Unbekannt";
@@ -198,42 +129,24 @@
 "No"        = "Nein";
 "TryAgain"  = "Nochmal versuchen";
 "Delete"    = "Löschen";
-"Back"      = "Zurück";
 "Current"   = "Momentan";
 "All"       = "Alle";
-"On"        = "An";
-"Off"       = "Aus";
-"Save"      = "Speichern";
 "Remove"    = "Löschen";
 
 // Lock screen
-"EnterPasscode"         = "Passcode für Pass eingeben";
 "Passcode"              = "Passcode";
-"TouchId"               = "Touch ID";
-"FaceId"                = "Face ID";
-"AuthenticationNeeded." = "Zum Öffnen von Pass wird eine Authentifizierung benötigt.";
 
 // About repository
-"AboutRepository"       = "Über das Repository";
 "ValueNotAvailable"     = "Nicht verfügbar";
 "Size"                  = "Größe";
 "Commits"               = "Commits";
 "CommitLogs"            = "Commit Logs";
-"SyncAgain?"            = "Oops! Erneut synchronisieren?";
 
 // About app
-"Website"               = "Webseite";
-"Help"                  = "Hilfe";
-"ContactDeveloper"      = "Entwickler kontaktieren";
-"OpenSourceComponents"  = "Open-Source-Komponenten";
-"SpecialThanks"         = "Besonderer Dank";
 "Acknowledgements"      = "Anerkennungen";
 "ValueNotAvailable"     = "Nicht verfügbar";
 
 // External applications
-"CannotOpenMail"    = "Mail-App kann nicht geöffnet werden";
-"CopiedEmail"       = "E-Mail-Adresse %@ kopiert";
-"HttpNotSupported." = "Verbindungen über HTTP werden nicht unterstützt.";
 
 // Password view
 "Name"                          = "Name";
@@ -243,8 +156,6 @@
 "PasswordDoesNotExist"          = "Das Passwort existiert nicht.";
 "OneTimePassword"               = "Einmalkennwort";
 "ShowRaw"                       = "Zeige Original";
-"Reveal"                        = "Anzeigen";
-"Conceal"                       = "Verstecken";
 "NextPassword"                  = "Nächstes Passwort";
 "GetNextPasswordOfNonHotp."     = "Zeige das nächste Passwort eines Nicht-HOTP-Eintrags.";
 "CannotFindValidUrl"            = "Gültige URL kann nicht gefunden werden";
@@ -252,7 +163,6 @@
 
 // Password editor
 "DeletePassword"                    = "Passwort löschen";
-"Fields"                            = "Felder";
 "Notes"                             = "Notizen";
 "Key"                               = "Schlüssel";
 "Value"                             = "Wert";
@@ -260,7 +170,6 @@
 "Secret"                            = "Geheim";
 "NotSecret"                         = "Nicht geheim";
 "InvalidField."                     = "Das Feld \"%@\" ist ungültig. Schlüssel dürfen nur Buchstaben, Ziffern, \"_\", \".\" und \"-\" enthalten, Werte dürfen nicht mehrzeilig sein, und \"body\" sowie ein zweites \"pass\" sind nicht erlaubt.";
-"Length"                            = "Länge";
 "DeletePassword?"                   = "Passwort löschen?";
 "ValidTokenUrl"                     = "Gültiges URL-Token";
 "InvalidTokenUrl"                   = "Ungültiges URL-Token";
@@ -268,73 +177,13 @@
 "RemovePrefix."                     = "Bitte entferne den Prefix \"/\" vom Namen des Passwortes.";
 "PasswordNameInvalid."              = "Der Name des Passwortes ist ungültig.";
 "CannotParseFilename."              = "Der Name der Datei kann nicht gelesen werden. Bitte vereinfache den Namen des Passwortes.";
-"WannaUseIt?"                       = "Möchtest du es als Passwort verwenden?";
-"SeemsLikeYouHaveCopiedSomething."  = "Scheint so, als hast du etwas kopiert.";
-"FirstStringIs:"                    = "Die erste Zeichenkette ist:";
 
 // Multiline strings
-"SshAsciiArmorCopyExplanation." = "Das Format \"ASCII-Armor\" ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
 
-  $ cat ~/.ssh/id_rsa
 
-gibt den Schlüssel in diesem speziellen Format aus. Die Zwischenablage wird nach 45 Sekunden zurückgesetzt.";
 
-"SshAsciiArmorServerExplanation." = "Das Format \"ASCII-Armor\" ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
 
-  $ cat ~/.ssh/id_rsa
 
-gibt den Schlüssel in diesem speziellen Format aus. Kopiere ihn so zu einem Key-Server.";
-
-"SshAsciiArmorFileExplanation." = "Das Format \"ASCII-Armor\" ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
-
-  $ cat ~/.ssh/id_rsa
-
-gibt den Schlüssel in diesem speziellen Format aus. Kopiere ihn so zu einem Speicherort, der für die Dateien-App zugänglich ist.";
-
-"GpgAsciiArmorCopyExplanation." = "GnuPG unterstützt die Kommandozeilenoption \"-a\", welche die Schlüssel im Format \"ASCII-Armor\" ausgibt. Es ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-zeigt alle bekannten Schlüssel an. Die Liste kann verwendet werden, um den Fingerabdruck des untergeordneten Schlüssels (E) zu identifizieren. Er wird zur Verschlüsselung verwendet. Mit den Befehlen
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-können der öffentliche und der private Unterschlüssel im \"ASCII-Armor\"- Format exportiert werden. Verwende dabei den Fingerabdruck des Unterschlüssels (E) und nicht den des Hauptschlüssels: Das angehängte \"!\" beschränkt den Export auf genau diesen Schlüssel. Mit dem Fingerabdruck des Hauptschlüssels wird deshalb überhaupt kein Unterschlüssel zur Verschlüsselung exportiert und die App lehnt das Ergebnis als abgelaufen oder inkompatibel ab. Mit
-
-  $ gpg --show-keys subkey
-
-wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizierungen exportiert wurde. Die Zwischenablage wird nach 45 Sekunden zurückgesetzt.";
-
-"GpgAsciiArmorServerExplanation." = "GnuPG unterstützt die Kommandozeilenoption \"-a\", welche die Schlüssel im Format \"ASCII-Armor\" ausgibt. Es ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-zeigt alle bekannten Schlüssel an. Die Liste kann verwendet werden, um den Fingerabdruck des untergeordneten Schlüssels (E) zu identifizieren. Er wird zur Verschlüsselung verwendet. Mit den Befehlen
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-können der öffentliche und der private Unterschlüssel im \"ASCII-Armor\"- Format exportiert werden. Verwende dabei den Fingerabdruck des Unterschlüssels (E) und nicht den des Hauptschlüssels: Das angehängte \"!\" beschränkt den Export auf genau diesen Schlüssel. Mit dem Fingerabdruck des Hauptschlüssels wird deshalb überhaupt kein Unterschlüssel zur Verschlüsselung exportiert und die App lehnt das Ergebnis als abgelaufen oder inkompatibel ab. Mit
-
-  $ gpg --show-keys subkey
-
-wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizierungen exportiert wurde. Schließlich können die beiden Schlüssel auf einen (lokalen) HTTP(S)-Server kopiert werden.";
-
-"GpgAsciiArmorFileExplanation." = "GnuPG unterstützt die Kommandozeilenoption \"-a\", welche die Schlüssel im Format \"ASCII-Armor\" ausgibt. Es ist anders als das Binärformat eine einfache Zeichenkette. Der Befehl
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-zeigt alle bekannten Schlüssel an. Die Liste kann verwendet werden, um den Fingerabdruck des untergeordneten Schlüssels (E) zu identifizieren. Er wird zur Verschlüsselung verwendet. Mit den Befehlen
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-können der öffentliche und der private Unterschlüssel im \"ASCII-Armor\"- Format exportiert werden. Verwende dabei den Fingerabdruck des Unterschlüssels (E) und nicht den des Hauptschlüssels: Das angehängte \"!\" beschränkt den Export auf genau diesen Schlüssel. Mit dem Fingerabdruck des Hauptschlüssels wird deshalb überhaupt kein Unterschlüssel zur Verschlüsselung exportiert und die App lehnt das Ergebnis als abgelaufen oder inkompatibel ab. Mit
-
-  $ gpg --show-keys subkey
-
-wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizierungen exportiert wurde. Schließlich können die beiden Schlüssel an einem Ort gespeichert werden, der für die Dateien-App zugänglich ist.";
 
 // Settings
 "About"                   = "Über";
@@ -348,7 +197,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "GitURLFormats."          = "https://host/repo.git\nssh://user@host:port/repo.git\nuser@host:repo.git";
 "Keys"                    = "Schlüssel";
 "LockWith(%@)"            = "Mit %@ sperren";
-"Multiple"                = "Mehrere";
 "PasteKey"                = "Schlüssel einfügen";
 "PastePgpKeyExplanation." = "Füge den ASCII-armored privaten Schlüssel ein. Er enthält auch den öffentlichen Schlüssel.";
 "PasteSshKeyExplanation." = "Füge den privaten Schlüssel ein, beginnend mit -----BEGIN.";
@@ -375,7 +223,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "PgpPassphrase"         = "GPG-Passphrase";
 "PgpPassphraseMessage." = "Gib die Passphrase deines GPG-Schlüssels ein. Sie wird an einem deiner Passwörter geprüft.";
 "Continue"              = "Weiter";
-"Skip"                  = "Überspringen";
 "AutoFillMessage."      = "Passwörter in Safari und anderen Apps über die Tastatur einsetzen.";
 "AutoFillIsOn"          = "Automatisch ausfüllen ist aktiv";
 "TurnOnAutoFill"        = "Automatisch ausfüllen aktivieren";
@@ -419,5 +266,10 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "CouldNotClone" = "Klonen fehlgeschlagen";
 "OpenWebsite" = "Website öffnen";
 "IsLocked(%@)" = "%@ ist gesperrt";
-"Use(%@)" = "%@ verwenden";
 "CouldNotLoadHistory" = "Verlauf konnte nicht geladen werden";
+"NeverSynced" = "Nie";
+"NoCameraAccess" = "Kein Zugriff auf die Kamera";
+"RememberGitPassword?" = "Git-Passwort merken?";
+"RememberSshPassphrase?" = "SSH-Passphrase merken?";
+"RememberGitSecret." = "Beim Synchronisieren wird nicht erneut danach gefragt.";
+"Remember" = "Merken";

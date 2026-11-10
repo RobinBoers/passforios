@@ -13,59 +13,41 @@
 "Password"      = "Password";
 "Passwords"     = "Passwords";
 "Passcode"      = "Passcode";
-"Apple"         = "Apple";
 "Settings"      = "Settings";
-"Contributors"  = "Contributors";
 
 // OTP related
 "TimeBased"                 = "time-based";
 "HmacBased"                 = "HMAC-based";
 "None"                      = "None";
 "ExpiresIn"                 = "(expires in %ds)";
-"OTPForPassword"            = "One-time password for %@";
-"OTPHasBeenCopied"          = "... has been copied to the pasteboard";
-"CopyToPasteboard"          = "Copy to pasteboard";
-"AutoCopyOTP"               = "Automatically Copy OTPs";
-"AutoCopyOTPExplanation."   = "After username and password have been auto-filled into a form by Pass, a notification is shown with the current one-time password which can be copied to the pasteboard. Enabling this option automatically copies the current one-time password.";
+"OTPForPassword"            = "Verification code for %@";
+"OTPHasBeenCopied"          = "Copied to the clipboard.";
+"CopyToPasteboard"          = "Copy";
+"AutoCopyOTP"               = "Copy Verification Codes";
+"AutoCopyOTPExplanation."   = "After AutoFill fills in a password, a notification shows its verification code. With this on, the code is copied right away.";
 
 // General (error) messages
 "Error"                                             = "Error";
-"CannotSave"                                        = "Cannot Save";
-"UnresolvedError"                                   = "Unresolved error %@";
-"MigrationError"                                    = "Migration error: %@";
-"UnderlyingError"                                   = "Underlying Error: %@";
-"MergeConflictError"                                = "Conflict files: %@";
-"ErrorSaving"                                       = "Error saving: %@";
-"CannotCopyPassword"                                = "Cannot copy password";
-"CannotAddPassword"                                 = "Cannot add password";
+"CannotSave"                                        = "Can't Save";
+"UnderlyingError"                                   = "Underlying error: %@";
+"MergeConflictError"                                = "Conflicting files: %@";
+"CannotCopyPassword"                                = "Can't Copy Password";
+"CannotAddPassword"                                 = "Can't Add Password";
 "WrongPassphrase"                                   = "Wrong passphrase";
-"MakeSurePgpAndGitProperlySet."                     = "Please make sure GPG key and Git server are properly set.";
-"RecoverySuggestion."                               = "Recovery suggestion: Wrong credential password/passphrase has been removed, please try again.";
-"NSURLFileAllocatedSizeKeyShouldAlwaysReturnValue." = "Huh? NSURLFileAllocatedSizeKey should always return a value.";
-"NoProperPassRepo."                                 = "The repository does not contain a .gpg-id file. Please set it up properly by performing 'pass init'. Then try again to load it into the app.";
+"MakeSurePgpAndGitProperlySet."                     = "Set up a GPG key and a Git remote first.";
+"RecoverySuggestion."                               = "The saved password or passphrase was removed. Try again to enter it.";
+"NSURLFileAllocatedSizeKeyShouldAlwaysReturnValue." = "The size of the store can't be determined.";
+"NoProperPassRepo."                                 = "The repository has no .gpg-id file, so it isn't a password store. Set it up on your computer first, then try again.";
 
 // Settings
-"RememberPgpKeyPassphrase"          = "Remember GPG Key Passphrase";
-"RememberGitCredentialPassphrase"   = "Remember Git Credential Passphrase";
-"EnableGPGID"                       = "Enable .gpg-id (Beta)";
 "ShowFolders"                       = "Show Folders";
-"HidePasswordImages"                = "Hide Password Images";
-"HidePasswordImagesExplanation."    = "Associated favicon images are loaded and shown based upon the URL associated with an entry. Enable this option to hide these images and prevent them from being loaded.";
-"RandomString"                      = "Random String";
-"ApplesKeychainStyle"               = "Apple's Keychain Style";
 
 // Git
-"FailedToFetchPasswords"                = "Failed to fetch passwords";
-"FailedToFetchPasswordEntities"         = "Failed to fetch password entities: %@";
-"FailedToInsertPasswordEntity"          = "Failed to insert password entity: %@";
-"FailedToDeletePasswordEntity"          = "Failed to delete password entity: %@";
-"FailedToSavePasswordEntity"            = "Failed to save password entity: %@";
-"FailureToSaveContext"                  = "Failure to save context: %@";
 "RepositoryRemoteBranchNotFoundError."  = "Cannot find remote branch %@.";
 "RepositoryBranchNotFoundError."        = "Branch %@ not found in repository.";
 "KeyImportError."                       = "Cannot import the key.";
 "FileNotFoundError."                    = "File '%@' cannot be read.";
-"PasswordDuplicatedError."              = "Cannot add the password; password is duplicated.";
+"PasswordDuplicatedError."              = "A password with this name already exists.";
 "CannotDeleteNonEmptyDirectoryError."   = "Delete passwords from the directory before deleting the directory itself.";
 "GitResetError."                        = "Cannot identify the latest synced commit.";
 "GitCreateSignatureError."              = "Cannot create a valid author/committer signature.";
@@ -74,38 +56,21 @@
 "DecryptionError."                      = "Cannot decrypt password.";
 "EncodingError."                        = "Key is not ASCII encoded.";
 "UnknownError."                         = "Unknown error.";
-"PrepareRepository"                     = "Prepare Repository";
 "CheckingOutBranch"                     = "Checking Out %@…";
-"WantToSaveGitCredential?"              = "Do you want to save the Git credential password/passphrase?";
 
 // Repository
 "RepositoryNotSetError."                = "Git repository is not set.";
-"SetGitRepositoryUrl"                   = "Please set the Git repository URL.";
-"CannotFindUsername."                   = "Cannot find the username in the Git repository URL. Example URL: ssh://git@server/path/to/repo.git.";
-"CheckEnteredUsername."                 = "Please check the entered username and the username in the Git repository URL. They should match.";
-"UseEitherHttpsOrHttp."                 = "Please use either HTTPS (recommended) or HTTP.";
-"SpecifySchema."                        = "Please specify the scheme of the Git repository URL (HTTPS or SSH).";
 "Overwrite?"                            = "Overwrite?";
 "Overwrite"                             = "Overwrite";
 "OperationWillOverwriteData."           = "This will overwrite the store on this device. Data on your remote server will not be affected.";
-"DownloadFromUrl"                       = "Download from URL";
-"AsciiArmorEncryptedKey"                = "ASCII-Armor Key";
-"ITunesFileSharing"                     = "iTunes File Sharing";
 "Import"                                = "Import";
-"Tips"                                  = "Tips";
-"FillInGitAccountPassword."             = "Please fill in the password of your Git account.";
-"NoPasswordStore."                      = "There is no store yet.";
+"FillInGitAccountPassword."             = "Enter the password of your Git account.";
 "SyncingPasswordStore"                  = "Syncing…";
 "PullingFromRemoteRepository"           = "Pulling Changes…";
 "PushingToRemoteRepository"             = "Pushing Changes…";
-"SpecifyBranchName."                    = "Please specify the name of the branch to be used.";
 
 // SSH
-"FillInSshKeyPassphrase."   = "Please fill in the passphrase of your SSH key.";
-"CannotSelectSshKey"        = "Cannot Select SSH Key";
-"PleaseSetupSshKeyFirst."   = "Please setup SSH key first.";
-"SetPrivateKeyUrl."         = "Please set a valid private key URL first.";
-"SshCopyPrivateKeyToPass."  = "Copy your ASCII-armored private key to Pass with the name \"ssh_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
+"FillInSshKeyPassphrase."   = "Enter the passphrase of your SSH key.";
 
 // Set up from computer
 "NoPasswordStore"        = "No Store";
@@ -117,54 +82,23 @@
 "ImportingKeys"          = "Importing Keys…";
 
 // QR code scanning
-"LookingForStartingFrame."                  = "Looking for the starting frame.";
-"TooManyQrCodes"                            = "Too many QR codes";
-"ScanPrivateKeyQrCodes"                     = "Scan Private Key QR Codes";
-"CannotSaveSshKey"                          = "Cannot Save SSH Key";
-"ScanPublicKey."                            = "Please scan public key.";
-"ScanPrivateKey."                           = "Please scan private key.";
-"ScanPrivateKeyQrCodes"                     = "Scan Private Key QR codes";
-"ScanPublicKeyQrCodes"                      = "Scan Public Key QR codes";
-"SetPrivateKey."                            = "Please set the private key first.";
-"SetPublicKey."                             = "Please set the public key first.";
 "NoQrCodeDetected."                         = "Point the camera at a QR code.";
-"NoStringValue"                             = "No string value";
-"CameraAccessDenied."                       = "Camera access denied.";
-"WarningToggleCameraPermissionsResetsApp."  = "WARNING: Toggle the camera permission resets the app! Save your changes.";
+"NoStringValue"                             = "This code contains no text.";
+"CameraAccessDenied."                       = "Scanning codes needs the camera. You can allow it in Settings.";
+"WarningToggleCameraPermissionsResetsApp."  = "Changing camera access restarts the app, so save what you're working on first.";
 
 // PGP
-"Decrypting"                        = "Decrypting";
-"PgpKeyNotSet."                     = "GPG Key is not set. Please set your GPG Key first.";
-"FillInPgpPassphrase."              = "Please fill in the passphrase of your GPG secret key.";
-"WantToSavePassphrase?"             = "Do you want to save the passphrase for later decryption?";
-"CannotSavePgpKey"                  = "Cannot Save GPG Key";
-"SetPgpKeyUrlsFirst."               = "Please set valid GPG key URLs first.";
-"FetchingPgpKey"                    = "Fetching GPG Key";
-"RememberToRemoveKey"               = "Remember to Remove the Keys";
-"RememberToRemoveKeyFromServer."    = "Remember to remove the keys from the server.";
-"PgpCopyPublicAndPrivateKeyToPass." = "Copy your ASCII-armored public and private keys to Pass with names \"gpg_key.pub\" and \"gpg_key\" (without quotes) via iTunes. Then come back and click \"iTunes File Sharing\" to finish.";
+"PgpKeyNotSet."                     = "Add a GPG key in Settings first.";
+"FillInPgpPassphrase."              = "Enter the passphrase of your GPG key.";
 "KeyExpiredOrIncompatibleError."    = "GPG public key may be expired or incompatible with the private key.";
 "WrongPassphraseError."             = "Passphrase of your GPG secret key is wrong.";
 "PgpPublicKeyNotFoundError."        = "GPG public key (%@) not found.";
 "PgpPrivateKeyNotFoundError."       = "GPG private key (%@) not found.";
-"CannotImportFile"                  = "Cannot Import File";
-"LoadFromFiles"                     = "Load From File";
-"FileCannotBeImported."             = "An error occurred importing the file '%@'. Please make sure its location is readable.";
-"RememberToRemoveKeyFromLocation."  = "Remember to remove the key files from their external locations.";
-"KeyFileNotSet."                    = "At least for one key type there is no file specified.";
-"HttpNotSecure"                     = "HTTP Is Not Secure";
-"ReallyUseHttp?"                    = "The HTTP protocol is not secure. Do you really want to use it to transfer the private key file?";
 
 // App passcode
-"RemovePasscode"        = "Remove Passcode";
-"ChangePasscode"        = "Change Passcode";
-"SetPasscode"           = "Set Passcode";
-"PasswordConfirmation"  = "Password Confirmation";
-"FillInAppPasscode."    = "Fill in your passcode for Pass (at least 4 characters).";
 
 // Git signature
 "NotSet"                = "Not Set";
-"InvalidNameOrEmail"    = "Invalid name or e-mail";
 
 // Clear suggestions
 "FailedToClearQuickTypeSuggestions" = "Failed to clear QuickType suggestions: %@";
@@ -173,12 +107,9 @@
 "EraseExplanation."         = "This will delete all local data and settings. Store data on your remote server will not be affected.";
 
 // Discard local changes
-"DiscardExplanation."       = "Do you want to permanently discard all changes to the local copy of your password data? You cannot undo this action.";
+"DiscardExplanation."       = "Changes that aren't synced yet are lost. This can't be undone.";
 
 // Forget passcode
-"ForgotYourPasscode?"       = "Forgot your passcode?";
-"ResetPass"                 = "Reset Pass";
-"ResetPassExplanation."     = "The only thing you can do is to reset the app. This will delete all local data and settings. Store data on your remote server will not be affected.";
 
 // Time related
 "Unknown"   = "Unknown";
@@ -199,61 +130,40 @@
 "No"        = "No";
 "TryAgain"  = "Try Again";
 "Delete"    = "Delete";
-"Back"      = "Back";
 "Current"   = "Current";
 "All"       = "All";
-"On"        = "On";
-"Off"       = "Off";
-"Save"      = "Save";
 "Remove"    = "Remove";
 
 // Lock screen
-"EnterPasscode"         = "Enter passcode for Pass";
 "Passcode"              = "Passcode";
-"TouchId"               = "Touch ID";
-"FaceId"                = "Face ID";
-"AuthenticationNeeded." = "Authentication is needed to access Pass.";
 
 // About repository
-"AboutRepository"       = "About Repository";
-"ValueNotAvailable"     = "Value not available";
+"ValueNotAvailable"     = "Unknown";
 "Size"                  = "Size";
 "Commits"               = "Commits";
-"CommitLogs"            = "Commit Logs";
-"SyncAgain?"            = "Oops! Sync again?";
+"CommitLogs"            = "History";
 
 // About app
-"Website"               = "Website";
-"Help"                  = "Help";
-"ContactDeveloper"      = "Contact Developer";
-"OpenSourceComponents"  = "Open Source Components";
-"SpecialThanks"         = "Special Thanks";
 "Acknowledgements"      = "Acknowledgements";
-"ValueNotAvailable"     = "Value not available";
+"ValueNotAvailable"     = "Unknown";
 
 // External applications
-"CannotOpenMail"    = "Cannot open Mail app";
-"CopiedEmail"       = "Copied email %@";
-"HttpNotSupported." = "HTTP connection is not supported.";
 
 // Password view
 "Name"                          = "Name";
 "Notice"                        = "Notice";
 "PreviousChangesDiscarded."     = "All previous local changes have been discarded. Your current store will be shown.";
-"CannotShowPassword"            = "Cannot show password";
+"CannotShowPassword"            = "Can't Show Password";
 "PasswordDoesNotExist"          = "The password does not exist.";
-"OneTimePassword"               = "One-Time Password";
+"OneTimePassword"               = "Verification Code";
 "ShowRaw"                       = "Show Raw";
-"Reveal"                        = "Reveal";
-"Conceal"                       = "Conceal";
-"NextPassword"                  = "Next Password";
-"GetNextPasswordOfNonHotp."     = "Get next password of a non-HOTP entry.";
-"CannotFindValidUrl"            = "Cannot find a valid URL";
+"NextPassword"                  = "Next Code";
+"GetNextPasswordOfNonHotp."     = "This entry has no counter-based code.";
+"CannotFindValidUrl"            = "This isn't a valid web address.";
 "LastUpdated"                   = "Last Updated %@";
 
 // Password editor
 "DeletePassword"                    = "Delete Password";
-"Fields"                            = "Fields";
 "Notes"                             = "Notes";
 "Key"                               = "Key";
 "Value"                             = "Value";
@@ -261,81 +171,20 @@
 "Secret"                            = "Secret";
 "NotSecret"                         = "Not Secret";
 "InvalidField."                     = "The field \"%@\" is invalid. Keys may only contain letters, digits, \"_\", \".\" and \"-\", values cannot span multiple lines, and \"body\" and a second \"pass\" are not allowed.";
-"Length"                            = "Length";
 "DeletePassword?"                   = "Delete Password?";
-"ValidTokenUrl"                     = "Valid token URL";
-"InvalidTokenUrl"                   = "Invalid token URL";
-"FillInName."                       = "Please fill in the name.";
-"RemovePrefix."                     = "Please remove the prefix \"/\" from your password name.";
-"PasswordNameInvalid."              = "Password name is invalid.";
-"CannotParseFilename."              = "Cannot parse the filename. Please check and simplify the password name.";
-"WannaUseIt?"                       = "Wanna use it?";
-"SeemsLikeYouHaveCopiedSomething."  = "It seems like you have copied something.";
-"FirstStringIs:"                    = "The first string is:";
+"ValidTokenUrl"                     = "Verification code found";
+"InvalidTokenUrl"                   = "This isn't a verification code";
+"FillInName."                       = "Enter a name.";
+"RemovePrefix."                     = "Names can't start with \"/\".";
+"PasswordNameInvalid."              = "This name can't be used.";
+"CannotParseFilename."              = "This name can't be used as a file name. Try a simpler one.";
 
 // Multiline strings
-"SshAsciiArmorCopyExplanation." = "The ASCII-armored key format is similar to unencoded documents rather than the binary format. Use
 
-  $ cat ~/.ssh/id_rsa
 
-to get the key in this specific format. The clipboard will be cleared 45s after pasting.";
 
-"SshAsciiArmorServerExplanation." = "The ASCII-armored key format is similar to unencoded documents rather than the binary format. Use
 
-  $ cat ~/.ssh/id_rsa
 
-to get the key in this specific format. Subsequently, copy it to your secured key server.";
-
-"SshAsciiArmorFileExplanation." = "The ASCII-armored key format is similar to unencoded documents rather than the binary format. Use
-
-  $ cat ~/.ssh/id_rsa
-
-to get the key in this specific format. Subsequently, copy it to a location accessible by the Files app.";
-
-"GpgAsciiArmorCopyExplanation." = "GnuPG supports the command-line option \"-a\" that causes output to be generated in an ASCII-armored format similar to unencoded documents rather than the binary format. Use
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-to identify the fingerprint of your encryption (E) subkey, then use
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-to get the public and the encryption private subkeys in this specific format. Use the fingerprint of the (E) subkey, not the one of your primary key: the trailing \"!\" restricts the export to exactly that key, so pairing it with the primary key's fingerprint exports no encryption subkey at all and the app rejects the result as expired or incompatible. Check that no authentication subkey is accidentally exported:
-
-  $ gpg --show-keys subkey
-
-The clipboard will be cleared 45s after pasting.";
-
-"GpgAsciiArmorServerExplanation." = "GnuPG supports the command-line option \"-a\" that causes output to be generated in an ASCII-armored format similar to unencoded documents rather than the binary format. Use
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-to identify the fingerprint of your encryption (E) subkey, then use
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-to get the public and the encryption private subkeys in this specific format. Use the fingerprint of the (E) subkey, not the one of your primary key: the trailing \"!\" restricts the export to exactly that key, so pairing it with the primary key's fingerprint exports no encryption subkey at all and the app rejects the result as expired or incompatible. Check that no authentication subkey is accidentally exported:
-
-  $ gpg --show-keys subkey
-
-Finally, copy them to your (local) HTTP(S) server.";
-
-"GpgAsciiArmorFileExplanation." = "GnuPG supports the command-line option \"-a\" that causes output to be generated in an ASCII-armored format similar to unencoded documents rather than the binary format. Use
-
-  $ gpg --list-keys --with-subkey-fingerprints
-
-to identify the fingerprint of your encryption (E) subkey, then use
-
-  $ gpg --export -a SUBKEY_FINGERPRINT! > subkey.pub
-  $ gpg --export-secret-subkeys -a SUBKEY_FINGERPRINT! > subkey
-
-to get the public and the encryption private subkeys in this specific format. Use the fingerprint of the (E) subkey, not the one of your primary key: the trailing \"!\" restricts the export to exactly that key, so pairing it with the primary key's fingerprint exports no encryption subkey at all and the app rejects the result as expired or incompatible. Check that no authentication subkey is accidentally exported:
-
-  $ gpg --show-keys subkey
-
-Finally, copy them to a location accessible by the Files app.";
 
 // Settings
 "About"                   = "About";
@@ -344,12 +193,11 @@ Finally, copy them to a location accessible by the Files app.";
 "ClearSavedSuggestions"   = "Clear Saved Suggestions";
 "Clone"                   = "Clone";
 "Email"                   = "Email";
-"GitSignature"            = "Signature";
+"GitSignature"            = "Commit Author";
 "GitURL"                  = "Git URL";
 "GitURLFormats."          = "https://host/repo.git\nssh://user@host:port/repo.git\nuser@host:repo.git";
 "Keys"                    = "Keys";
-"LockWith(%@)"            = "Lock with %@";
-"Multiple"                = "Multiple";
+"LockWith(%@)"            = "Require %@";
 "PasteKey"                = "Paste Key";
 "PastePgpKeyExplanation." = "Paste the ASCII-armored private key. It also holds the public key.";
 "PasteSshKeyExplanation." = "Paste the private key, starting with -----BEGIN.";
@@ -359,7 +207,7 @@ Finally, copy them to a location accessible by the Files app.";
 "Set"                     = "Set";
 "SSHKey"                  = "SSH Key";
 "Store"                   = "Store";
-"TurnOnAppLock"           = "Turn on the lock";
+"TurnOnAppLock"           = "Lock your passwords";
 "UnlockPass"              = "Unlock your passwords";
 "Username"                = "Username";
 "Version"                 = "Version";
@@ -369,19 +217,18 @@ Finally, copy them to a location accessible by the Files app.";
 "LockedWith(%@)" = "Locked with %@";
 "FeatureLock." = "Your passwords open and fill in only for you.";
 "FeatureSync." = "Pulls and pushes the same repository as your computer.";
-"FeatureAutoFill." = "Fills in passwords and one-time codes in Safari and other apps.";
+"FeatureAutoFill." = "Fills in passwords and verification codes in Safari and other apps.";
 "SetUp" = "Set Up";
 "FeatureSync"           = "Synced with Git";
 "SetUpManually"         = "Set Up Manually";
 "PgpPassphrase"         = "GPG Passphrase";
 "PgpPassphraseMessage." = "Enter the passphrase of your GPG key. It is checked against one of your passwords.";
 "Continue"              = "Continue";
-"Skip"                  = "Skip";
 "AutoFillMessage."      = "Fill in passwords from the keyboard in Safari and other apps.";
 "AutoFillIsOn"          = "AutoFill is on";
 "TurnOnAutoFill"        = "Turn On AutoFill";
-"ShowOneTimeCodes"      = "Show One-Time Codes";
-"ShowOneTimeCodes."     = "After filling in a password, a notification shows its one-time code to copy.";
+"ShowOneTimeCodes"      = "Show Verification Codes";
+"ShowOneTimeCodes."     = "After filling in a password, a notification shows its verification code to copy.";
 "RememberPassphrase" = "Remember Passphrase";
 "Format" = "Format";
 "FormatSec." = "A header of key: value lines, secrets marked with !, then notes after a blank line.";
@@ -390,15 +237,15 @@ Finally, copy them to a location accessible by the Files app.";
 "RememberSshPassphrase" = "Remember SSH Passphrase";
 "RememberGitPassword" = "Remember Git Password";
 "DiscardChanges" = "Discard Changes";
-"DiscardChanges?" = "Discard changes?";
+"DiscardChanges?" = "Discard Changes?";
 "EraseStore" = "Erase Store";
-"EraseStore?" = "Erase store?";
+"EraseStore?" = "Erase Store?";
 "Sync" = "Sync";
 "LastSynced(%@)" = "Last Synced %@";
 "GitURLFormats" = "URL Formats";
 "RemoveKey" = "Remove Key";
-"RemoveGpgKey?" = "Remove GPG key?";
-"RemoveSshKey?" = "Remove SSH key?";
+"RemoveGpgKey?" = "Remove GPG Key?";
+"RemoveSshKey?" = "Remove SSH Key?";
 "SshPassphrase" = "SSH Passphrase";
 "SshPassphraseMessage." = "Enter the passphrase of your SSH key to clone the store.";
 "GitPassword" = "Git Password";
@@ -420,5 +267,10 @@ Finally, copy them to a location accessible by the Files app.";
 "CouldNotClone" = "Couldn't Clone Store";
 "OpenWebsite" = "Open Website";
 "IsLocked(%@)" = "%@ Is Locked";
-"Use(%@)" = "Use %@";
 "CouldNotLoadHistory" = "Couldn't Load History";
+"NeverSynced" = "Never";
+"NoCameraAccess" = "No Access to Camera";
+"RememberGitPassword?" = "Remember Git Password?";
+"RememberSshPassphrase?" = "Remember SSH Passphrase?";
+"RememberGitSecret." = "Syncing won't ask for it again.";
+"Remember" = "Remember";

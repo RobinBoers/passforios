@@ -6,6 +6,8 @@
 //  Copyright © 2021 Bob Sun. All rights reserved.
 //
 
+import UniformTypeIdentifiers
+
 public class NotificationCenterDispatcher: NSObject, UNUserNotificationCenterDelegate {
     public static let shared = NotificationCenterDispatcher()
 
@@ -31,7 +33,7 @@ public class NotificationCenterDispatcher: NSObject, UNUserNotificationCenterDel
             content.title = "OTPForPassword".localize(password.name)
             if Defaults.autoCopyOTP {
                 content.body = "OTPHasBeenCopied".localize()
-                UIPasteboard.general.string = otp
+                UIPasteboard.general.setItems([[UTType.utf8PlainText.identifier: otp]], options: [.localOnly: true, .expirationDate: Date(timeIntervalSinceNow: 45)])
             } else {
                 content.body = otp
                 content.categoryIdentifier = Globals.otpNotificationCategory

@@ -107,9 +107,10 @@ extension PasswordAlertPresenter where Self: UIViewController {
     }
 
     private func askToRememberGitCredential(completion: @escaping () -> Void) {
-        let alert = UIAlertController(title: "Done".localize(), message: "WantToSaveGitCredential?".localize(), preferredStyle: .alert)
+        let title = Defaults.gitAuthenticationMethod == .key ? "RememberSshPassphrase?" : "RememberGitPassword?"
+        let alert = UIAlertController(title: title.localize(), message: "RememberGitSecret.".localize(), preferredStyle: .alert)
         alert.addAction(
-            UIAlertAction(title: "No".localize(), style: .default) { _ in
+            UIAlertAction(title: "NotNow".localize(), style: .default) { _ in
                 Defaults.isRememberGitCredentialPassphraseOn = false
                 PasswordStore.shared.gitPassword = nil
                 PasswordStore.shared.gitSSHPrivateKeyPassphrase = nil
@@ -117,7 +118,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
             }
         )
         alert.addAction(
-            UIAlertAction(title: "Yes".localize(), style: .default) { _ in
+            UIAlertAction(title: "Remember".localize(), style: .default) { _ in
                 Defaults.isRememberGitCredentialPassphraseOn = true
                 completion()
             }

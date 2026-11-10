@@ -40,7 +40,7 @@ final class AppLockViewController: UIViewController {
             configuration = .borderedProminent()
             configuration.cornerStyle = .capsule
         }
-        configuration.title = "Use(%@)".localize(AppLock.methodName)
+        configuration.title = "UseMethod(%@)".localize(AppLock.methodName)
         configuration.image = UIImage(systemName: AppLock.symbolName)
         configuration.imagePadding = 8
         configuration.buttonSize = .large

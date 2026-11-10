@@ -12,7 +12,7 @@ extension UIViewController {
         let tabBarController = (view.window?.rootViewController ?? self) as? UITabBarController
         let onboarding = OnboardingViewController { showingSettings in
             if showingSettings, let tabBarController {
-                tabBarController.selectedViewController = tabBarController.viewControllers?.first { $0 is SettingsViewController }
+                tabBarController.selectedIndex = (tabBarController.viewControllers?.count ?? 1) - 1
             }
         }
         topmostPresentedViewController.present(onboarding, animated: animated)

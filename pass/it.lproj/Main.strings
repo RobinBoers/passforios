@@ -75,7 +75,7 @@
 "K2K-Bx-g7Z.text" = "Elimina tutti i dati di Password Store";
 
 /* Class = "UINavigationItem"; title = "Add Password"; ObjectID = "KOg-Gn-Buk"; */
-"KOg-Gn-Buk.title" = "Aggiungi password";
+"KOg-Gn-Buk.title" = "Nuova password";
 
 /* Class = "UILabel"; text = "Select file ..."; ObjectID = "Ka2-8Z-fwx"; */
 "Ka2-8Z-fwx.text" = "Scegli file ...";

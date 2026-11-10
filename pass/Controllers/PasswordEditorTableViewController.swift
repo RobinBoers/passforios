@@ -23,9 +23,24 @@ class PasswordEditorTableViewController: UITableViewController {
 
     /// The folder the entry is in, shown in front of its name but not part of what is typed.
     var folder = ""
-    var name = ""
-    private var fields: [Field] = []
-    private var body = ""
+    var name = "" {
+        didSet {
+            updateSaveButton()
+        }
+    }
+
+    private var fields: [Field] = [] {
+        didSet {
+            updateSaveButton()
+        }
+    }
+
+    private var body = "" {
+        didSet {
+            updateSaveButton()
+        }
+    }
+
     /// Entries can carry free-form text, like the key in an SSH entry; new ones are made of fields only.
     private var hasBody = false
     /// The entry as it was, to tell whether there is anything to lose when the sheet is swiped away.
@@ -58,9 +73,12 @@ class PasswordEditorTableViewController: UITableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "default")
         tableView.keyboardDismissMode = .interactive
         tableView.sectionFooterHeight = UITableView.automaticDimension
-        tableView.dragInteractionEnabled = true
-        tableView.dragDelegate = self
-        tableView.dropDelegate = self
+        // Always editing, like a contact card: fields delete and move by their controls, and the add rows insert.
+        tableView.allowsSelectionDuringEditing = true
+        setEditing(true, animated: false)
+        if #available(iOS 26.0, *) {
+            navigationItem.rightBarButtonItem?.style = .prominent
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [unowned self] _ in
             if hasChanges {
                 confirmDiscard()
@@ -88,6 +106,7 @@ class PasswordEditorTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         if original == nil {
             original = (namePath, entry.plainText)
+            updateSaveButton()
         }
         navigationController?.presentationController?.delegate = self
     }
@@ -129,11 +148,11 @@ class PasswordEditorTableViewController: UITableViewController {
         case .actions:
             switch actions[indexPath.row] {
             case .addText:
-                return actionCell(for: indexPath, title: "AddText".localize(), image: "text.alignleft")
+                return actionCell(for: indexPath, title: "AddText".localize())
             case .addPassword:
-                return actionCell(for: indexPath, title: "AddPasswordField".localize(), image: "key")
+                return actionCell(for: indexPath, title: "AddPasswordField".localize())
             case .scanQRCode:
-                return actionCell(for: indexPath, title: "ScanQRCode".localize(), image: "qrcode.viewfinder")
+                return actionCell(for: indexPath, title: "ScanQRCode".localize())
             }
         case .body:
             let cell = tableView.dequeueReusableCell(withIdentifier: "textViewCell", for: indexPath) as! TextViewTableViewCell
@@ -152,12 +171,10 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
-    private func actionCell(for indexPath: IndexPath, title: String, image: String) -> UITableViewCell {
+    private func actionCell(for indexPath: IndexPath, title: String) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "default", for: indexPath)
         var content = cell.defaultContentConfiguration()
         content.text = title
-        content.textProperties.color = .tintColor
-        content.image = UIImage(systemName: image)
         cell.contentConfiguration = content
         return cell
     }
@@ -165,11 +182,26 @@ class PasswordEditorTableViewController: UITableViewController {
     // MARK: - Table view delegate
 
     override func tableView(_: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        sections[indexPath.section] == .fields
+        [.fields, .actions].contains(sections[indexPath.section])
+    }
+
+    override func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        switch sections[indexPath.section] {
+        case .fields:
+            return .delete
+        case .actions:
+            return .insert
+        default:
+            return .none
+        }
+    }
+
+    override func tableView(_: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        [.fields, .actions].contains(sections[indexPath.section])
     }
 
     override func tableView(_: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        tableView(tableView, canEditRowAt: indexPath)
+        sections[indexPath.section] == .fields
     }
 
     override func tableView(_: UITableView, moveRowAt source: IndexPath, to destination: IndexPath) {
@@ -186,6 +218,7 @@ class PasswordEditorTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else {
+            perform(actions[indexPath.row])
             return
         }
         let actionsBefore = actions
@@ -206,15 +239,7 @@ class PasswordEditorTableViewController: UITableViewController {
 
         switch sections[indexPath.section] {
         case .actions:
-            switch actions[indexPath.row] {
-            case .addText:
-                addField(Field(key: "", value: ""))
-            case .addPassword:
-                let hasPassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
-                addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: Defaults.passwordGenerator.generate(), isSecret: true))
-            case .scanQRCode:
-                scanQRCode()
-            }
+            perform(actions[indexPath.row])
         case .delete:
             let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: .alert)
             alert.addAction(
@@ -227,6 +252,23 @@ class PasswordEditorTableViewController: UITableViewController {
         default:
             break
         }
+    }
+
+    private func perform(_ action: Action) {
+        switch action {
+        case .addText:
+            addField(Field(key: "", value: ""))
+        case .addPassword:
+            let hasPassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
+            addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: Defaults.passwordGenerator.generate(), isSecret: true))
+        case .scanQRCode:
+            scanQRCode()
+        }
+    }
+
+    /// Saving needs a name, and for an entry that exists, something to save.
+    private func updateSaveButton() {
+        navigationItem.rightBarButtonItem?.isEnabled = !name.trimmed.isEmpty && (password == nil || hasChanges)
     }
 
     /// The fields form a group once there is one; without any, an empty group would leave a gap.
@@ -353,26 +395,6 @@ class PasswordEditorTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Reordering
-
-extension PasswordEditorTableViewController: UITableViewDragDelegate, UITableViewDropDelegate {
-    func tableView(_ tableView: UITableView, itemsForBeginning _: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        guard self.tableView(tableView, canMoveRowAt: indexPath) else {
-            return []
-        }
-        return [UIDragItem(itemProvider: NSItemProvider())]
-    }
-
-    func tableView(_: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath _: IndexPath?) -> UITableViewDropProposal {
-        guard session.localDragSession != nil else {
-            return UITableViewDropProposal(operation: .forbidden)
-        }
-        return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
-    }
-
-    func tableView(_: UITableView, performDropWith _: UITableViewDropCoordinator) {}
-}
-
 // MARK: - UIAdaptivePresentationControllerDelegate
 
 extension PasswordEditorTableViewController: UIAdaptivePresentationControllerDelegate {
@@ -444,8 +466,6 @@ private final class NameTableViewCell: UITableViewCell {
         textField.placeholder = "Name".localize()
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
-        textField.textContentType = .emailAddress
-        textField.keyboardType = .emailAddress
         textField.autocapitalizationType = .none
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no

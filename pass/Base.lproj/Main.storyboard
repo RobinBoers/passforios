@@ -21,7 +21,7 @@
                             <outlet property="delegate" destination="FgE-RV-izf" id="DyH-cS-8or"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Add Password" id="KOg-Gn-Buk">
+                    <navigationItem key="navigationItem" title="New Password" id="KOg-Gn-Buk">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="hWX-Dx-Xxi">
                             <connections>
                                 <segue destination="rRf-7l-IGe" kind="unwind" unwindAction="cancelAddPasswordWithSegue:" id="G4F-ci-BmD"/>

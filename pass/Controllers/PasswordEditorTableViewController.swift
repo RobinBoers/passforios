@@ -30,7 +30,7 @@ class PasswordEditorTableViewController: UITableViewController {
     private var hasBody = false
 
     private var sections: [Section] {
-        [.name, .fields, .actions] + (hasBody ? [.body] : []) + (password == nil ? [] : [.delete])
+        [.name] + (fields.isEmpty ? [] : [.fields]) + [.actions] + (hasBody ? [.body] : []) + (password == nil ? [] : [.delete])
     }
 
     /// In the pass format, the password is the first line, so there is room for one only.
@@ -168,10 +168,15 @@ class PasswordEditorTableViewController: UITableViewController {
             return
         }
         let actionsBefore = actions
+        let actionsSectionBefore = sections.firstIndex(of: .actions)
         fields.remove(at: indexPath.row)
         tableView.performBatchUpdates {
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            updateActions(from: actionsBefore)
+            if fields.isEmpty {
+                tableView.deleteSections([indexPath.section], with: .automatic)
+            } else {
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+            updateActions(from: actionsBefore, section: actionsSectionBefore)
         }
     }
 
@@ -203,16 +208,23 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
+    /// The fields form a group once there is one; without any, an empty group would leave a gap.
     private func addField(_ field: Field) {
+        let actionsBefore = actions
+        let actionsSectionBefore = sections.firstIndex(of: .actions)
+        let isFirst = fields.isEmpty
+        fields.append(field)
         guard let section = sections.firstIndex(of: .fields) else {
             return
         }
-        let actionsBefore = actions
-        fields.append(field)
         let indexPath = IndexPath(row: fields.count - 1, section: section)
         tableView.performBatchUpdates {
-            tableView.insertRows(at: [indexPath], with: .automatic)
-            updateActions(from: actionsBefore)
+            if isFirst {
+                tableView.insertSections([section], with: .automatic)
+            } else {
+                tableView.insertRows(at: [indexPath], with: .automatic)
+            }
+            updateActions(from: actionsBefore, section: actionsSectionBefore)
         }
         let cell = tableView.cellForRow(at: indexPath) as? FieldTableViewCell
         if field.key.isEmpty {
@@ -222,15 +234,15 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
-    private func updateActions(from before: [Action]) {
-        guard let section = sections.firstIndex(of: .actions), before != actions else {
+    /// Within a batch update, rows are deleted by where they were and inserted by where they go.
+    private func updateActions(from before: [Action], section sectionBefore: Int?) {
+        guard let sectionBefore, let section = sections.firstIndex(of: .actions), before != actions else {
             return
         }
-        let row = IndexPath(row: 1, section: section)
         if actions.count < before.count {
-            tableView.deleteRows(at: [row], with: .automatic)
+            tableView.deleteRows(at: [IndexPath(row: 1, section: sectionBefore)], with: .automatic)
         } else {
-            tableView.insertRows(at: [row], with: .automatic)
+            tableView.insertRows(at: [IndexPath(row: 1, section: section)], with: .automatic)
         }
     }
 

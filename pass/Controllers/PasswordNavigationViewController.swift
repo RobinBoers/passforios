@@ -338,6 +338,7 @@ class PasswordNavigationViewController: UIViewController {
 
     @objc
     func handleRefreshControl() {
+        let topOffset = -tableView.adjustedContentInset.top
         guard PasswordStore.shared.repositoryExists() else {
             refreshControl.endRefreshing()
             Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
@@ -355,6 +356,12 @@ class PasswordNavigationViewController: UIViewController {
                 needsReset = false
                 resetViews()
             }
+            // Ending while the list still bounces back from the pull can leave it below the title.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                if !self.tableView.isDragging, self.tableView.contentOffset.y > topOffset {
+                    self.tableView.setContentOffset(CGPoint(x: 0, y: topOffset), animated: true)
+                }
+            }
         }
     }
 
@@ -371,6 +378,12 @@ class PasswordNavigationViewController: UIViewController {
     private func showSyncStatus(_ status: String?) {
         if #available(iOS 26.0, *) {
             navigationItem.subtitle = isRootViewController() ? status : nil
+            navigationItem.largeAttributedSubtitle = isRootViewController() ? status.map {
+                var subtitle = AttributedString($0)
+                subtitle.uiKit.font = .preferredFont(forTextStyle: .body)
+                subtitle.uiKit.foregroundColor = .secondaryLabel
+                return subtitle
+            } : nil
         } else {
             refreshControl.attributedTitle = status.map { NSAttributedString(string: $0) }
         }

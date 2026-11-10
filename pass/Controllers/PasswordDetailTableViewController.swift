@@ -7,7 +7,6 @@
 //
 
 import Gopenpgp
-import passAutoFillExtension
 import passKit
 import UIKit
 

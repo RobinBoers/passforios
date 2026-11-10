@@ -218,7 +218,6 @@
 "AboutRepository"       = "About Repository";
 "ValueNotAvailable"     = "Value not available";
 "Size"                  = "Size";
-"LastSynced"            = "Last Synced";
 "Commits"               = "Commits";
 "CommitLogs"            = "Commit Logs";
 "SyncAgain?"            = "Oops! Sync again?";
@@ -415,3 +414,4 @@ Finally, copy them to a location accessible by the Files app.";
 "AddText" = "Add Text";
 "GeneratePassword" = "Generate Password";
 "ScanQRCode" = "Scan QR Code";
+"SyncedJustNow" = "Synced just now";

@@ -217,7 +217,6 @@
 "AboutRepository"       = "Über das Repository";
 "ValueNotAvailable"     = "Nicht verfügbar";
 "Size"                  = "Größe";
-"LastSynced"            = "Zuletzt synchronisiert";
 "Commits"               = "Commits";
 "CommitLogs"            = "Commit Logs";
 "SyncAgain?"            = "Oops! Erneut synchronisieren?";
@@ -414,3 +413,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "AddText" = "Text hinzufügen";
 "GeneratePassword" = "Passwort erzeugen";
 "ScanQRCode" = "QR-Code scannen";
+"SyncedJustNow" = "Gerade synchronisiert";

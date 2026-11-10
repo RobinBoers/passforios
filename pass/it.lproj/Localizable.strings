@@ -213,7 +213,6 @@
 "AboutRepository"       = "Informazioni sul repository";
 "ValueNotAvailable"     = "Valore non disponibile";
 "Size"                  = "Dimensione";
-"LastSynced"            = "Sincronizzato l'ultima volta";
 "Commits"               = "Commit";
 "CommitLogs"            = "Registri dei commit";
 "SyncAgain?"            = "Sincronizzare ancora?";
@@ -410,3 +409,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "AddText" = "Aggiungi testo";
 "GeneratePassword" = "Genera password";
 "ScanQRCode" = "Scansiona codice QR";
+"SyncedJustNow" = "Sincronizzato ora";

@@ -30,6 +30,8 @@ class PasswordNavigationViewController: UIViewController {
     private var parentPath: String?
 
     var viewingUnsyncedPasswords = false
+    /// The store changed while refreshing; rebuilding the list then moves it, so that waits until the end.
+    private var needsReset = false
     var searchText: String?
 
     lazy var passwordManager = PasswordManager(viewController: self)
@@ -321,18 +323,36 @@ class PasswordNavigationViewController: UIViewController {
             return
         }
         syncRepository { [weak self] status in
-            self?.refreshControl.attributedTitle = NSAttributedString(string: status)
+            self?.showSyncStatus(status)
         } completion: { [weak self] _ in
             guard let self else {
                 return
             }
             refreshControl.endRefreshing()
             showLastSynced()
+            if needsReset {
+                needsReset = false
+                resetViews()
+            }
         }
     }
 
     private func showLastSynced() {
-        refreshControl.attributedTitle = NSAttributedString(string: "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)")
+        guard PasswordStore.shared.repositoryExists() else {
+            showSyncStatus(nil)
+            return
+        }
+        let isRecent = PasswordStore.shared.lastSyncedTime.map { Date().timeIntervalSince($0) < 60 } ?? false
+        showSyncStatus(isRecent ? "SyncedJustNow".localize() : "LastSynced(%@)".localize(PasswordStore.shared.lastSyncedTimeString))
+    }
+
+    /// Under the title, as Mail shows it, where the system has subtitles; on the refresh control otherwise.
+    private func showSyncStatus(_ status: String?) {
+        if #available(iOS 26.0, *) {
+            navigationItem.subtitle = isRootViewController() ? status : nil
+        } else {
+            refreshControl.attributedTitle = status.map { NSAttributedString(string: $0) }
+        }
     }
 }
 
@@ -434,7 +454,11 @@ extension PasswordNavigationViewController {
     func actOnReloadTableViewRelatedNotification() {
         DispatchQueue.main.async {
             self.navigationController?.popToRootViewController(animated: true)
-            self.resetViews()
+            if self.refreshControl.isRefreshing {
+                self.needsReset = true
+            } else {
+                self.resetViews()
+            }
         }
     }
 
@@ -451,7 +475,11 @@ extension PasswordNavigationViewController {
                 }
             }
 
-            self.resetViews()
+            if self.refreshControl.isRefreshing {
+                self.needsReset = true
+            } else {
+                self.resetViews()
+            }
         }
     }
 

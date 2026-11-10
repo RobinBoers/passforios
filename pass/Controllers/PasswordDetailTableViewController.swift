@@ -61,6 +61,14 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
         tapGesture.cancelsTouchesInView = false
         tableView.addGestureRecognizer(tapGesture)
         tapGesture.delegate = self
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(doubleTapCopy))
+        doubleTapGesture.numberOfTapsRequired = 2
+        doubleTapGesture.cancelsTouchesInView = false
+        doubleTapGesture.delegate = self
+        tableView.addGestureRecognizer(doubleTapGesture)
+        tapGesture.require(toFail: doubleTapGesture)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressMenu))
+        tableView.addGestureRecognizer(longPressGesture)
         tableView.addInteraction(editMenuInteraction)
 
         tableView.rowHeight = UITableView.automaticDimension
@@ -299,10 +307,35 @@ class PasswordDetailTableViewController: UITableViewController, UIGestureRecogni
             return
         }
         let tapLocation = recognizer.location(in: tableView)
-        guard let indexPath = tableView.indexPathForRow(at: tapLocation), tableView.cellForRow(at: indexPath) is LabelTableViewCell else {
+        guard let indexPath = tableView.indexPathForRow(at: tapLocation), let cell = tableView.cellForRow(at: indexPath) as? LabelTableViewCell else {
             return
         }
-        editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: tapLocation))
+        // Secrets reveal on a tap; their menu is a long press away, like every other row's.
+        if cell.isRevealable {
+            cell.reversePasswordDisplay()
+        } else {
+            editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: tapLocation))
+        }
+    }
+
+    @objc
+    private func doubleTapCopy(recognizer: UITapGestureRecognizer) {
+        guard let indexPath = tableView.indexPathForRow(at: recognizer.location(in: tableView)) else {
+            return
+        }
+        (tableView.cellForRow(at: indexPath) as? LabelTableViewCell)?.copyContent()
+    }
+
+    @objc
+    private func longPressMenu(recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        let location = recognizer.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: location), tableView.cellForRow(at: indexPath) is LabelTableViewCell else {
+            return
+        }
+        editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: location))
     }
 
     func editMenuInteraction(_: UIEditMenuInteraction, menuFor configuration: UIEditMenuConfiguration, suggestedActions _: [UIMenuElement]) -> UIMenu? {

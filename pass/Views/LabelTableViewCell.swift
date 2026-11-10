@@ -28,11 +28,18 @@ class LabelTableViewCell: UITableViewCell {
 
     weak var delegatePasswordTableView: PasswordDetailTableViewController?
 
-    private lazy var revealButton: UIButton = {
+    private lazy var copyButton: UIButton = {
         let button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(reversePasswordDisplay), for: .touchUpInside)
+        button.setImage(UIImage(systemName: "doc.on.doc"), for: .normal)
+        button.accessibilityLabel = "Copy".localize()
+        button.addTarget(self, action: #selector(copyContent), for: .touchUpInside)
         return button
     }()
+
+    /// Secrets show as dots, and tapping them reveals or conceals them.
+    var isRevealable: Bool {
+        type == .secret || type == .HOTP
+    }
 
     private lazy var nextHOTPButton: UIButton = {
         let button = UIButton(type: .system)
@@ -76,11 +83,7 @@ class LabelTableViewCell: UITableViewCell {
         ]
         switch type {
         case .HOTP, .secret:
-            actions.append(
-                UIAction(title: (isReveal ? "Conceal" : "Reveal").localize(), image: UIImage(systemName: isReveal ? "eye.slash" : "eye")) { [weak self] _ in
-                    self?.reversePasswordDisplay()
-                }
-            )
+            break
         case .URL:
             actions.append(
                 UIAction(title: "CopyAndOpen".localize(), image: UIImage(systemName: "safari")) { [weak self] _ in
@@ -121,11 +124,15 @@ class LabelTableViewCell: UITableViewCell {
         }
     }
 
-    @objc
-    private func reversePasswordDisplay() {
+    func reversePasswordDisplay() {
         isReveal.toggle()
         render()
-        updateRevealButton()
+    }
+
+    @objc
+    func copyContent() {
+        SecurePasteboard.shared.copy(textToCopy: cellData?.content)
+        Feedback.success()
     }
 
     @objc
@@ -133,19 +140,13 @@ class LabelTableViewCell: UITableViewCell {
         delegatePasswordTableView?.getNextHOTP()
     }
 
-    private func updateRevealButton() {
-        revealButton.setImage(UIImage(systemName: isReveal ? "eye.slash" : "eye"), for: .normal)
-        revealButton.accessibilityLabel = (isReveal ? "Conceal" : "Reveal").localize()
-    }
-
     private func updateButtons() {
-        updateRevealButton()
         switch type {
         case .secret where cellData?.content.isEmpty == false:
-            revealButton.sizeToFit()
-            accessoryView = revealButton
+            copyButton.sizeToFit()
+            accessoryView = copyButton
         case .HOTP:
-            let stack = UIStackView(arrangedSubviews: [nextHOTPButton, revealButton])
+            let stack = UIStackView(arrangedSubviews: [nextHOTPButton, copyButton])
             stack.spacing = 12
             stack.frame.size = stack.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
             accessoryView = stack

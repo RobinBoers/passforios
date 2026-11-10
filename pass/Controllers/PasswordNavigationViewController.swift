@@ -82,6 +82,7 @@ class PasswordNavigationViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+        setContentScrollView(tableView, for: .top)
         searchBar.delegate = self
         configureTableView(in: parentPasswordEntity)
         configureNotification()
@@ -359,10 +360,14 @@ class PasswordNavigationViewController: UIViewController {
         }
         isSyncFinished = false
         refreshControl.endRefreshing()
-        showLastSynced()
-        if needsReset {
-            needsReset = false
-            resetViews()
+        // Changing the subtitle relays out the navigation bar, which moves the list while the refresh control
+        // still animates away, so that waits.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.showLastSynced()
+            if self.needsReset {
+                self.needsReset = false
+                self.resetViews()
+            }
         }
     }
 

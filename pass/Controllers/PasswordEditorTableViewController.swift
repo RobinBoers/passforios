@@ -28,6 +28,12 @@ class PasswordEditorTableViewController: UITableViewController {
     private var body = ""
     /// Entries can carry free-form text, like the key in an SSH entry; new ones are made of fields only.
     private var hasBody = false
+    /// The entry as it was, to tell whether there is anything to lose when the sheet is swiped away.
+    private var original: (namePath: String, plainText: String)?
+
+    private var hasChanges: Bool {
+        original.map { $0.namePath != namePath || $0.plainText != entry.plainText } ?? false
+    }
 
     private var sections: [Section] {
         [.name] + (fields.isEmpty ? [] : [.fields]) + [.actions] + (hasBody ? [.body] : []) + (password == nil ? [] : [.delete])
@@ -69,6 +75,14 @@ class PasswordEditorTableViewController: UITableViewController {
         fields = password.entry.fields
         body = password.entry.body
         hasBody = !body.isEmpty
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if original == nil {
+            original = (namePath, entry.plainText)
+        }
+        navigationController?.presentationController?.delegate = self
     }
 
     // MARK: - Table view data source
@@ -192,7 +206,7 @@ class PasswordEditorTableViewController: UITableViewController {
                 let hasPassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
                 addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: Defaults.passwordGenerator.generate(), isSecret: true))
             case .scanQRCode:
-                performSegue(withIdentifier: "showQRScannerSegue", sender: self)
+                scanQRCode()
             }
         case .delete:
             let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: .alert)
@@ -257,11 +271,15 @@ class PasswordEditorTableViewController: UITableViewController {
         }
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
-        if segue.identifier == "showQRScannerSegue" {
-            let navigationController = segue.destination as? UINavigationController
-            (navigationController?.topViewController as? QRScannerController ?? segue.destination as? QRScannerController)?.delegate = self
-        }
+    /// In a sheet of its own, so swiping it away leaves the entry being edited.
+    private func scanQRCode() {
+        let scanner = QRScannerController()
+        scanner.delegate = self
+        scanner.title = "ScanQRCode".localize()
+        scanner.navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [weak scanner] _ in
+            scanner?.dismiss(animated: true)
+        })
+        present(UINavigationController(rootViewController: scanner), animated: true)
     }
 
     // MARK: - Validation
@@ -346,6 +364,24 @@ extension PasswordEditorTableViewController: UITableViewDragDelegate, UITableVie
     }
 
     func tableView(_: UITableView, performDropWith _: UITableViewDropCoordinator) {}
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+
+extension PasswordEditorTableViewController: UIAdaptivePresentationControllerDelegate {
+    func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
+        !hasChanges
+    }
+
+    func presentationControllerDidAttemptToDismiss(_: UIPresentationController) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "DiscardChanges".localize(), style: .destructive) { [weak self] _ in
+            self?.navigationController?.dismiss(animated: true)
+        })
+        alert.addAction(UIAlertAction(title: "KeepEditing".localize(), style: .cancel))
+        alert.popoverPresentationController?.sourceItem = navigationItem.leftBarButtonItem
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - QRScannerControllerDelegate

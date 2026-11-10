@@ -19,10 +19,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private var entries = [String: PasswordTableEntry]()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    /// The sync finished while the list was still pulled down; the refresh ends once it is let go.
-    private var isSyncFinished = false
-    /// Kept apart from the refresh control, which is replaced after every refresh.
-    private var refreshTitle: NSAttributedString?
+    private var isSyncing = false
     private var syncStatusGeneration = 0
 
     private lazy var addButton = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
@@ -77,7 +74,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
 
         if isRoot {
-            installRefreshControl()
+            refreshControl = UIRefreshControl()
+            refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         }
 
         let center = NotificationCenter.default
@@ -90,7 +88,6 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             center.addObserver(self, selector: #selector(startSearching), name: .passwordSearch, object: nil)
         }
 
-        showSyncStatus(nil)
         reload(animated: false)
         updateBarButtons()
     }
@@ -262,59 +259,30 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     // MARK: - Syncing
 
     private func sync() {
-        guard let refreshControl, !refreshControl.isRefreshing else {
+        guard !isSyncing, PasswordStore.shared.repositoryExists() else {
             return
         }
-        refreshControl.beginRefreshing()
-        refresh()
+        isSyncing = true
+        syncRepository(status: { [weak self] status in
+            self?.showSyncStatus(status)
+        }, completion: { [weak self] _ in
+            self?.isSyncing = false
+            self?.showLastSynced()
+            self?.updateBarButtons()
+        })
     }
 
     @objc
     private func refresh() {
-        guard PasswordStore.shared.repositoryExists() else {
+        sync()
+    }
+
+    /// The refresh ends as the list is let go, before UIKit holds it open for the spinner: since iOS 27 a list
+    /// held open does not return to its top afterwards. The sync goes on, with its progress in the subtitle.
+    override func scrollViewWillEndDragging(_: UIScrollView, withVelocity _: CGPoint, targetContentOffset _: UnsafeMutablePointer<CGPoint>) {
+        if refreshControl?.isRefreshing == true {
             refreshControl?.endRefreshing()
-            return
         }
-        isSyncFinished = false
-        // The header stays as it is while the refresh control shows: changing the subtitle or the buttons then
-        // relays out the navigation bar mid-animation, which leaves the list scrolled down.
-        syncRepository(status: { _ in }, completion: { [weak self] _ in
-            self?.isSyncFinished = true
-            self?.endRefreshingIfReleased()
-        })
-    }
-
-    /// Like Mail, the refresh only ends once the list is let go.
-    private func endRefreshingIfReleased() {
-        guard isSyncFinished, !tableView.isDragging else {
-            return
-        }
-        isSyncFinished = false
-        refreshControl?.endRefreshing()
-        // Since iOS 27 an ended refresh control keeps its height reserved at the top, so the list bounces back
-        // too far. Detaching it gives that back, the list then returns to the actual top, and as a detached
-        // control never fires again, a new one takes its place.
-        refreshControl = nil
-        tableView.layoutIfNeeded()
-        tableView.setContentOffset(CGPoint(x: 0, y: -tableView.adjustedContentInset.top), animated: true)
-        DispatchQueue.main.async { [weak self] in
-            self?.installRefreshControl()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-            self?.showLastSynced()
-            self?.updateBarButtons()
-        }
-    }
-
-    override func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {
-        endRefreshingIfReleased()
-    }
-
-    private func installRefreshControl() {
-        let control = UIRefreshControl()
-        control.attributedTitle = refreshTitle
-        control.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        refreshControl = control
     }
 
     /// Pulls when the app opens, unless there are local changes to push, which is left to the user.
@@ -322,13 +290,14 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private func syncAutomatically() {
         let store = PasswordStore.shared
         let isRecent = store.lastSyncedTime.map { Date().timeIntervalSince($0) < 60 } ?? false
-        guard store.repositoryExists(), store.numberOfLocalCommits == 0, !isRecent,
-              refreshControl?.isRefreshing == false, presentedViewController == nil else {
+        guard store.repositoryExists(), store.numberOfLocalCommits == 0, !isRecent, !isSyncing, presentedViewController == nil else {
             return
         }
+        isSyncing = true
         syncRepository(interactive: false) { [weak self] status in
             self?.showSyncStatus(status)
         } completion: { [weak self] success in
+            self?.isSyncing = false
             if success {
                 self?.showLastSynced()
             } else {
@@ -344,22 +313,21 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         hideSyncStatus()
     }
 
-    /// The status shows under the title while syncing and for a while after, as Mail shows it. The line stays
-    /// when empty: a header that changes height leaves the list scrolled under it.
+    /// The status shows under the title while syncing and for a while after, as Mail shows it.
     private func showSyncStatus(_ status: String?) {
         guard isRoot else {
             return
         }
         if #available(iOS 26.0, *) {
-            let text = status ?? " "
-            navigationItem.subtitle = text
-            var subtitle = AttributedString(text)
-            subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
-            subtitle.uiKit.foregroundColor = .secondaryLabel
-            navigationItem.largeAttributedSubtitle = subtitle
+            navigationItem.subtitle = status
+            navigationItem.largeAttributedSubtitle = status.map {
+                var subtitle = AttributedString($0)
+                subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
+                subtitle.uiKit.foregroundColor = .secondaryLabel
+                return subtitle
+            }
         } else {
-            refreshTitle = status.map { NSAttributedString(string: $0) }
-            refreshControl?.attributedTitle = refreshTitle
+            refreshControl?.attributedTitle = status.map { NSAttributedString(string: $0) }
         }
     }
 

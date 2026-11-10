@@ -56,11 +56,6 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         super.viewDidLoad()
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        // Estimated heights get corrected as rows appear, which moves the content while a refresh ends and
-        // leaves the large title out of place; without estimates the heights are exact from the start.
-        tableView.estimatedRowHeight = 0
-        tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedSectionFooterHeight = 0
         if !isRoot {
             tableView.removeTopSpace()
         }
@@ -363,12 +358,24 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             return
         }
         if #available(iOS 26.0, *) {
-            navigationItem.subtitle = status
-            navigationItem.largeAttributedSubtitle = status.map {
-                var subtitle = AttributedString($0)
-                subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
-                subtitle.uiKit.foregroundColor = .secondaryLabel
-                return subtitle
+            let apply = { [self] in
+                navigationItem.subtitle = status
+                navigationItem.largeAttributedSubtitle = status.map {
+                    var subtitle = AttributedString($0)
+                    subtitle.uiKit.font = .preferredFont(forTextStyle: .subheadline)
+                    subtitle.uiKit.foregroundColor = .secondaryLabel
+                    return subtitle
+                }
+            }
+            // A subtitle coming or going changes the header's height, so the title and the list glide along.
+            guard (navigationItem.subtitle == nil) != (status == nil), view.window != nil, refreshControl?.isRefreshing != true else {
+                apply()
+                return
+            }
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut, .beginFromCurrentState]) { [self] in
+                apply()
+                navigationController?.navigationBar.layoutIfNeeded()
+                tableView.layoutIfNeeded()
             }
         } else {
             refreshControl?.attributedTitle = status.map { NSAttributedString(string: $0) }

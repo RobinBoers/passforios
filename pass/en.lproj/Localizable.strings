@@ -255,7 +255,6 @@
 
 // Password editor
 "DeletePassword"                    = "Delete Password";
-"AddOneTimePassword"                = "Add One-Time Password";
 "Fields"                            = "Fields";
 "Notes"                             = "Notes";
 "Key"                               = "Key";
@@ -416,3 +415,4 @@ Finally, copy them to a location accessible by the Files app.";
 "AddPasswordField" = "Add Password";
 "AddText" = "Add Text";
 "GeneratePassword" = "Generate Password";
+"ScanQRCode" = "Scan QR Code";

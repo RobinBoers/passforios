@@ -250,7 +250,6 @@
 
 // Password editor
 "DeletePassword"                    = "Elimina password";
-"AddOneTimePassword"                = "Aggiungi one-time password";
 "Fields"                            = "Campi";
 "Notes"                             = "Note";
 "Key"                               = "Chiave";
@@ -411,3 +410,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "AddPasswordField" = "Aggiungi password";
 "AddText" = "Aggiungi testo";
 "GeneratePassword" = "Genera password";
+"ScanQRCode" = "Scansiona codice QR";

@@ -35,7 +35,7 @@ class PasswordEditorTableViewController: UITableViewController {
 
     private var fieldsRows: [FieldsRow] {
         let canAddPassword = Defaults.storeFormat == .sec || !fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
-        return fields.indices.map(FieldsRow.field) + (canAddPassword ? [.addPassword] : []) + [.addOneTimePassword, .addText]
+        return fields.indices.map(FieldsRow.field) + [.addText] + (canAddPassword ? [.addPassword] : []) + [.addOneTimePassword]
     }
 
     var entry: Entry {
@@ -125,7 +125,7 @@ class PasswordEditorTableViewController: UITableViewController {
         case .addPassword:
             return actionCell(for: indexPath, title: "AddPasswordField".localize(), image: "key")
         case .addOneTimePassword:
-            return actionCell(for: indexPath, title: "AddOneTimePassword".localize(), image: "qrcode.viewfinder")
+            return actionCell(for: indexPath, title: "ScanQRCode".localize(), image: "qrcode.viewfinder")
         case .addText:
             return actionCell(for: indexPath, title: "AddText".localize(), image: "text.alignleft")
         }
@@ -229,7 +229,7 @@ class PasswordEditorTableViewController: UITableViewController {
 
     /// In the pass format, the password is the first line, so there is room for one only.
     private func updateAddPasswordRow(rowsBefore: Int, section: Int) {
-        let row = IndexPath(row: fields.count, section: section)
+        let row = IndexPath(row: fields.count + 1, section: section)
         if fieldsRows.count < rowsBefore {
             tableView.deleteRows(at: [row], with: .automatic)
         } else if fieldsRows.count > rowsBefore {

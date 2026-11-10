@@ -254,7 +254,6 @@
 
 // Password editor
 "DeletePassword"                    = "Passwort löschen";
-"AddOneTimePassword"                = "Einmalkennwort hinzufügen";
 "Fields"                            = "Felder";
 "Notes"                             = "Notizen";
 "Key"                               = "Schlüssel";
@@ -415,3 +414,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "AddPasswordField" = "Passwort hinzufügen";
 "AddText" = "Text hinzufügen";
 "GeneratePassword" = "Passwort erzeugen";
+"ScanQRCode" = "QR-Code scannen";

@@ -30,8 +30,10 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done", action: model.close)
+                if model.isPresented {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Done", action: model.close)
+                    }
                 }
             }
         }

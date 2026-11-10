@@ -41,7 +41,6 @@ struct StoreView: View {
             if model.hasStore {
                 LabeledContent("Passwords", value: model.storeInfo.passwords.formatted())
                 LabeledContent("Size", value: model.storeInfo.size.formatted(.byteCount(style: .file)))
-                LabeledContent("Changes", value: model.storeInfo.localCommits.formatted())
                 NavigationLink {
                     CommitLogView()
                 } label: {

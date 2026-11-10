@@ -7,8 +7,14 @@ import passKit
 import SwiftUI
 
 extension UIViewController {
-    /// Shows Settings in a sheet, unless it is already showing.
+    /// Shows Settings: its tab where there is one, else a sheet, unless it is already showing.
     func presentSettings() {
+        if let tabBarController = view.window?.rootViewController as? UITabBarController,
+           let settings = tabBarController.viewControllers?.first(where: { $0 is SettingsViewController }) {
+            tabBarController.dismiss(animated: true)
+            tabBarController.selectedViewController = settings
+            return
+        }
         var controller: UIViewController? = view.window?.rootViewController ?? self
         while let current = controller {
             if current is SettingsViewController {
@@ -37,6 +43,7 @@ final class SettingsViewController: UIHostingController<AnyView>, PasswordAlertP
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        model.isPresented = presentingViewController != nil
         model.refresh()
     }
 

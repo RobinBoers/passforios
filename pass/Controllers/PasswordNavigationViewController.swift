@@ -57,6 +57,12 @@ class PasswordNavigationViewController: UIViewController {
         presentSettings()
     })
 
+    lazy var syncUIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.triangle.2.circlepath"), primaryAction: UIAction { [unowned self] _ in
+        refreshControl.beginRefreshing()
+        tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y - refreshControl.frame.height), animated: true)
+        handleRefreshControl()
+    })
+
     lazy var gestureRecognizer: UILongPressGestureRecognizer = {
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
         recognizer.minimumPressDuration = 0.6
@@ -95,7 +101,7 @@ class PasswordNavigationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         configureNavigationItem()
-        navigationController?.setToolbarHidden(false, animated: animated)
+        navigationController?.setToolbarHidden(toolbarItems == nil, animated: animated)
         configureNavigationBar()
     }
 
@@ -197,14 +203,18 @@ class PasswordNavigationViewController: UIViewController {
         }
 
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.rightBarButtonItem = isRootViewController() ? settingsUIBarButtonItem : nil
         navigationItem.searchController = searchController
-        // The search bar shares the bottom toolbar with the add button where the system allows it.
+        // On iOS 26 there is no tab bar: settings and syncing go at the top, and the search bar shares the
+        // bottom toolbar with the add button. Before, the tab bar holds settings and the badge for changes.
         if #available(iOS 26.0, *) {
+            let localCommits = PasswordStore.shared.numberOfLocalCommits
+            syncUIBarButtonItem.badge = .count(localCommits)
+            navigationItem.rightBarButtonItems = isRootViewController() ? [settingsUIBarButtonItem] + (localCommits > 0 ? [syncUIBarButtonItem] : []) : nil
             navigationItem.preferredSearchBarPlacement = .integrated
             toolbarItems = [navigationItem.searchBarPlacementBarButtonItem, .fixedSpace(0), addPasswordUIBarButtonItem]
         } else {
-            toolbarItems = [.flexibleSpace(), addPasswordUIBarButtonItem]
+            navigationItem.rightBarButtonItem = addPasswordUIBarButtonItem
+            navigationController?.tabBarItem.badgeValue = PasswordStore.shared.numberOfLocalCommits.nonZeroDescription
         }
     }
 
@@ -439,7 +449,9 @@ extension PasswordNavigationViewController {
 
     @objc
     func actOnPasswordStoreSyncSucceeded() {
-        DispatchQueue.main.async {}
+        DispatchQueue.main.async {
+            self.configureNavigationItem()
+        }
     }
 
     func resetViews() {
@@ -505,3 +517,9 @@ extension PasswordNavigationViewController: UISearchBarDelegate {
 }
 
 extension PasswordNavigationViewController: PasswordAlertPresenter {}
+
+private extension Int {
+    var nonZeroDescription: String? {
+        self == 0 ? nil : String(self)
+    }
+}

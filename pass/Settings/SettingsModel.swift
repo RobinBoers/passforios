@@ -25,6 +25,8 @@ final class SettingsModel: ObservableObject {
     @Published var hasSSHKey = false
     @Published var sshKeySummary: String?
     @Published var hasSavedSuggestions = false
+    /// In a sheet rather than a tab, which needs a button to close it.
+    @Published var isPresented = false
     @Published var hasStore = false
 
     private var observers = [NSObjectProtocol]()

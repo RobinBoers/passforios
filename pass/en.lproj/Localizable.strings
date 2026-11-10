@@ -400,7 +400,6 @@ Finally, copy them to a location accessible by the Files app.";
 "DiscardChanges?" = "Discard changes?";
 "EraseStore" = "Erase Store";
 "EraseStore?" = "Erase store?";
-"Changes" = "Changes";
 "Sync" = "Sync";
 "LastSynced(%@)" = "Last synced %@";
 "GitURLFormats" = "URL Formats";

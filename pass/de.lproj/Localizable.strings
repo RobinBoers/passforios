@@ -399,7 +399,6 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "DiscardChanges?" = "Änderungen verwerfen?";
 "EraseStore" = "Store löschen";
 "EraseStore?" = "Store löschen?";
-"Changes" = "Änderungen";
 "Sync" = "Synchronisieren";
 "LastSynced(%@)" = "Zuletzt synchronisiert: %@";
 "GitURLFormats" = "URL-Formate";

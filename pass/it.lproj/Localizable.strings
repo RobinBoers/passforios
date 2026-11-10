@@ -395,7 +395,6 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "DiscardChanges?" = "Scartare le modifiche?";
 "EraseStore" = "Elimina store";
 "EraseStore?" = "Eliminare lo store?";
-"Changes" = "Modifiche";
 "Sync" = "Sincronizza";
 "LastSynced(%@)" = "Ultima sincronizzazione: %@";
 "GitURLFormats" = "Formati URL";

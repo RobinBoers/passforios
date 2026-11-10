@@ -19,6 +19,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else {
             return
         }
+        if #unavailable(iOS 26.0), let passwords = window?.rootViewController {
+            let settings = SettingsViewController()
+            settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
+            passwords.tabBarItem = UITabBarItem(title: "Passwords".localize(), image: UIImage(systemName: "key"), selectedImage: UIImage(systemName: "key.fill"))
+            let tabBarController = UITabBarController()
+            tabBarController.viewControllers = [passwords, settings]
+            window?.rootViewController = tabBarController
+        }
         appLockPresenter = AppLockPresenter(windowScene: windowScene)
         appLockPresenter?.lockIfEnabled()
         presentOnboardingIfNeeded()
@@ -28,12 +36,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func windowScene(_: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        let root = window?.rootViewController
+        let tabBarController = root as? UITabBarController
         guard shortcutItem.type == Globals.bundleIdentifier + ".search",
-              let navigationController = window?.rootViewController as? UINavigationController else {
+              let navigationController = (tabBarController?.viewControllers?.first ?? root) as? UINavigationController else {
             completionHandler(false)
             return
         }
-        navigationController.dismiss(animated: false)
+        root?.dismiss(animated: false)
+        tabBarController?.selectedIndex = 0
         navigationController.popToRootViewController(animated: false)
         perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         completionHandler(true)

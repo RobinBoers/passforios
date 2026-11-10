@@ -259,7 +259,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                     self?.passwordManager.providePasswordPasteboard(with: path)
                 },
                 UIAction(title: "Delete".localize(), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                    self?.confirmDelete(entry.passwordEntity)
+                    self?.confirmDelete(path)
                 },
             ])
         })
@@ -270,17 +270,22 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             return nil
         }
         let delete = UIContextualAction(style: .destructive, title: "Delete".localize()) { [unowned self] _, _, completion in
-            confirmDelete(entry.passwordEntity, completion: completion)
+            confirmDelete(path, completion: completion)
         }
         delete.image = UIImage(systemName: "trash")
         return UISwipeActionsConfiguration(actions: [delete])
     }
 
-    private func confirmDelete(_ passwordEntity: PasswordEntity, completion: @escaping (Bool) -> Void = { _ in }) {
-        let alert = UIAlertController(title: "DeletePassword?".localize(), message: passwordEntity.name, preferredStyle: .alert)
+    /// By path, as the entity shown may have been replaced by a sync since.
+    private func confirmDelete(_ path: String, completion: @escaping (Bool) -> Void = { _ in }) {
+        let alert = UIAlertController(title: "DeletePassword?".localize(), message: entries[path]?.title, preferredStyle: .alert)
         alert.addAction(
             UIAlertAction(title: "Delete".localize(), style: .destructive) { [unowned self] _ in
                 do {
+                    guard let passwordEntity = PasswordStore.shared.fetchPasswordEntity(with: path) else {
+                        completion(false)
+                        return
+                    }
                     try PasswordStore.shared.delete(passwordEntity: passwordEntity)
                     completion(true)
                 } catch {

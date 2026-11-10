@@ -138,8 +138,9 @@ public class PasswordStore {
         }
         try gitRepository.pull(options: options, transferProgressBlock: progressBlock)
         Defaults.lastSyncedTime = Date()
-        setAllSynced()
+        // The context belongs to the main queue, and pulling runs off it.
         DispatchQueue.main.async {
+            self.setAllSynced()
             self.deleteCoreData()
             self.initPasswordEntityCoreData()
             self.didUpdateStore()

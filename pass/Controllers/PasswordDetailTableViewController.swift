@@ -75,6 +75,9 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
         // A Siri shortcut can change the state of the app in the background. Hence, reload when opening the app.
         NotificationCenter.default.addObserver(self, selector: #selector(actOnPossiblePasswordStoreUpdate), name: UIApplication.willEnterForegroundNotification, object: nil)
+
+        // Syncing recreates every entity, so the one shown is looked up again.
+        NotificationCenter.default.addObserver(self, selector: #selector(refetchPasswordEntity), name: .passwordStoreUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -574,6 +577,21 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 }
 
 extension PasswordDetailTableViewController {
+    @objc
+    func refetchPasswordEntity() {
+        guard let passwordPath else {
+            return
+        }
+        passwordEntity = passwordStore.fetchPasswordEntity(with: passwordPath)
+        guard passwordEntity != nil else {
+            navigationController?.popToRootViewController(animated: true)
+            return
+        }
+        if tableData.first?.rows.first?.kind == .header {
+            tableView.reconfigureRows(at: [IndexPath(row: 0, section: 0)])
+        }
+    }
+
     @objc
     func actOnPossiblePasswordStoreUpdate() {
         DispatchQueue.main.async {

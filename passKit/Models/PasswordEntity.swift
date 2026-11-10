@@ -118,8 +118,16 @@ public final class PasswordEntity: NSManagedObject, Identifiable {
         request.resultType = .updatedObjectsCountResultType
         request.predicate = NSPredicate(format: "isSynced = false")
         request.propertiesToUpdate = ["isSynced": true]
-        let result = try? context.execute(request) as? NSBatchUpdateResult
-        return result?.result as? Int ?? 0
+        request.resultType = .updatedObjectIDsResultType
+        let ids = (try? context.execute(request) as? NSBatchUpdateResult)?.result as? [NSManagedObjectID] ?? []
+        mergeBatchChanges([NSUpdatedObjectsKey: ids], into: context)
+        return ids.count
+    }
+
+    /// Batch requests skip the context, which keeps serving the objects as they were; saving changes to one
+    /// that is gone from the store fails.
+    private static func mergeBatchChanges(_ changes: [String: [NSManagedObjectID]], into context: NSManagedObjectContext) {
+        NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes, into: [context])
     }
 
     public static func deleteRecursively(entity: PasswordEntity, in context: NSManagedObjectContext) {
@@ -135,7 +143,9 @@ public final class PasswordEntity: NSManagedObject, Identifiable {
 
     public static func deleteAll(in context: NSManagedObjectContext) {
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: Self.fetchRequest())
-        _ = try? context.execute(deleteRequest)
+        deleteRequest.resultType = .resultTypeObjectIDs
+        let ids = (try? context.execute(deleteRequest) as? NSBatchDeleteResult)?.result as? [NSManagedObjectID] ?? []
+        mergeBatchChanges([NSDeletedObjectsKey: ids], into: context)
     }
 
     public static func exists(password: Password, in context: NSManagedObjectContext) -> Bool {

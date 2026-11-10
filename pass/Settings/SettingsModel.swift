@@ -28,6 +28,8 @@ final class SettingsModel: ObservableObject {
     /// In a sheet rather than a tab, which needs a button to close it.
     @Published var isPresented = false
     @Published var hasStore = false
+    /// What a sync started here is doing, while it runs.
+    @Published var syncStatus: String?
 
     private var observers = [NSObjectProtocol]()
 
@@ -141,7 +143,10 @@ final class SettingsModel: ObservableObject {
     }
 
     func sync() {
-        host?.syncRepository(completion: { [weak self] _ in
+        host?.syncRepository(status: { [weak self] status in
+            self?.syncStatus = status
+        }, completion: { [weak self] _ in
+            self?.syncStatus = nil
             self?.refresh()
         })
     }

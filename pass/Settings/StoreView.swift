@@ -116,9 +116,18 @@ struct StoreView: View {
         if model.hasStore, !isRemoteChanged {
             Button(action: model.sync) {
                 HStack {
-                    Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                    if let status = model.syncStatus {
+                        Label {
+                            Text(status)
+                        } icon: {
+                            ProgressView()
+                        }
+                        .foregroundStyle(.secondary)
+                    } else {
+                        Label("Sync", systemImage: "arrow.triangle.2.circlepath")
+                    }
                     Spacer()
-                    if model.storeInfo.localCommits > 0 {
+                    if model.storeInfo.localCommits > 0, model.syncStatus == nil {
                         Text(model.storeInfo.localCommits, format: .number)
                             .font(.callout)
                             .foregroundStyle(.white)
@@ -128,6 +137,7 @@ struct StoreView: View {
                     }
                 }
             }
+            .disabled(model.syncStatus != nil)
         } else {
             Button("Clone") {
                 if model.hasStore {
@@ -172,8 +182,6 @@ struct StoreView: View {
             Button("EraseStore", role: .destructive) {
                 isConfirmingErase = true
             }
-        } footer: {
-            Text("UnsyncedChanges(%d)".localize(model.storeInfo.localCommits))
         }
         .confirmationDialog("DiscardChanges?", isPresented: $isConfirmingDiscard, titleVisibility: .visible) {
             Button("DiscardChanges", role: .destructive) {

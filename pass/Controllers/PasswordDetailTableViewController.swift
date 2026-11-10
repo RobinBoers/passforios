@@ -345,7 +345,13 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         }
         let changed = [revealed, indexPath].compactMap(\.self)
         revealed = indexPath
-        tableView.reconfigureRows(at: changed)
+        // Reconfiguring waits for the menu to finish animating away; the cells change right away instead.
+        for indexPath in changed {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configure(cell, at: indexPath)
+            }
+        }
+        tableView.performBatchUpdates(nil)
     }
 
     private func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {

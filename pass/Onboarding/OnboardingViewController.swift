@@ -7,12 +7,11 @@ import passKit
 import SwiftUI
 
 extension UIViewController {
-    /// Shows onboarding over the tab bar; setting up manually ends on the Settings tab.
+    /// Shows onboarding; setting up manually ends in Settings.
     func presentOnboarding(animated: Bool = true) {
-        let tabBarController = (view.window?.rootViewController ?? self) as? UITabBarController
-        let onboarding = OnboardingViewController { showingSettings in
-            if showingSettings, let tabBarController {
-                tabBarController.selectedIndex = (tabBarController.viewControllers?.count ?? 1) - 1
+        let onboarding = OnboardingViewController { [weak self] showingSettings in
+            if showingSettings {
+                self?.presentSettings()
             }
         }
         topmostPresentedViewController.present(onboarding, animated: animated)

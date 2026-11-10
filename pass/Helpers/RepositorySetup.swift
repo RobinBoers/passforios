@@ -213,13 +213,27 @@ extension PasswordAlertPresenter where Self: UIViewController {
     }
 }
 
+/// Git also takes `user@host:path` remotes, which Foundation parses without a host or path.
 extension URL {
-    /// The host, also for `user@host:path` remotes, which Foundation parses without one.
-    var gitHost: String {
-        if let host {
-            return host
+    private var scpLike: (host: Substring, path: Substring)? {
+        guard host == nil, let remote = absoluteString.split(separator: "@").last, let colon = remote.firstIndex(of: ":") else {
+            return nil
         }
-        return String(absoluteString.split(separator: "@").last?.split(separator: ":").first ?? Substring(absoluteString))
+        return (remote[..<colon], remote[remote.index(after: colon)...])
+    }
+
+    var gitHost: String {
+        host ?? scpLike.map { String($0.host) } ?? absoluteString
+    }
+
+    /// The repository's path on its host, like `meta/passwords`.
+    var gitPath: String {
+        var path = scpLike.map { String($0.path) } ?? path
+        for prefix in ["/~/", "/", "~/"] where path.hasPrefix(prefix) {
+            path.removeFirst(prefix.count)
+            break
+        }
+        return path.hasSuffix(".git") ? String(path.dropLast(4)) : path
     }
 }
 

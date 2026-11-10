@@ -19,11 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else {
             return
         }
-        if let tabBarController = window?.rootViewController as? UITabBarController {
-            let settings = SettingsViewController()
-            settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
-            tabBarController.viewControllers = (tabBarController.viewControllers ?? []) + [settings]
-        }
         appLockPresenter = AppLockPresenter(windowScene: windowScene)
         appLockPresenter?.lockIfEnabled()
         presentOnboardingIfNeeded()
@@ -34,12 +29,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func windowScene(_: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         guard shortcutItem.type == Globals.bundleIdentifier + ".search",
-              let tabBarController = window?.rootViewController as? UITabBarController else {
+              let navigationController = window?.rootViewController as? UINavigationController else {
             completionHandler(false)
             return
         }
-        tabBarController.selectedIndex = 0
-        (tabBarController.selectedViewController as? UINavigationController)?.popToRootViewController(animated: false)
+        navigationController.dismiss(animated: false)
+        navigationController.popToRootViewController(animated: false)
         perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         completionHandler(true)
     }

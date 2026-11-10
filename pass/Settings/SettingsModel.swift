@@ -128,6 +128,10 @@ final class SettingsModel: ObservableObject {
 
     // MARK: - Actions
 
+    func close() {
+        host?.close()
+    }
+
     func setUpFromComputer() {
         host?.presentOnboarding()
     }
@@ -138,8 +142,8 @@ final class SettingsModel: ObservableObject {
         })
     }
 
-    var remoteHost: String {
-        passKit.Defaults.gitURL.gitHost
+    var remoteName: String {
+        passKit.Defaults.gitURL.gitPath
     }
 
     /// SSH keys have a passphrase, HTTPS remotes a password.

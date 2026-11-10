@@ -29,6 +29,11 @@ struct SettingsView: View {
                 dangerSection
             }
             .navigationTitle("Settings")
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done", action: model.close)
+                }
+            }
         }
     }
 
@@ -37,7 +42,7 @@ struct SettingsView: View {
             NavigationLink {
                 StoreView()
             } label: {
-                LabeledContent("Store", value: model.hasStore ? model.remoteHost : "NotSet".localize())
+                LabeledContent("Store", value: model.hasStore ? model.remoteName : "NotSet".localize())
             }
             NavigationLink {
                 KeysView()

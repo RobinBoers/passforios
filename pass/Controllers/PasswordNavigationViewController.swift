@@ -30,7 +30,6 @@ class PasswordNavigationViewController: UIViewController {
     private var parentPath: String?
 
     var viewingUnsyncedPasswords = false
-    var tapTabBarTime: TimeInterval = 0
     var searchText: String?
 
     lazy var passwordManager = PasswordManager(viewController: self)
@@ -53,6 +52,10 @@ class PasswordNavigationViewController: UIViewController {
     }()
 
     lazy var addPasswordUIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPasswordAction))
+
+    lazy var settingsUIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), primaryAction: UIAction { [unowned self] _ in
+        presentSettings()
+    })
 
     lazy var gestureRecognizer: UILongPressGestureRecognizer = {
         let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressAction))
@@ -91,9 +94,8 @@ class PasswordNavigationViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.delegate = self
         configureNavigationItem()
-        configureTabBarItem()
+        navigationController?.setToolbarHidden(false, animated: animated)
         configureNavigationBar()
     }
 
@@ -182,18 +184,6 @@ class PasswordNavigationViewController: UIViewController {
         tableView.dataSource = dataSource
     }
 
-    private func configureTabBarItem() {
-        guard let tabBarItem = navigationController?.tabBarItem else {
-            return
-        }
-        let numberOfLocalCommits = PasswordStore.shared.numberOfLocalCommits
-        if numberOfLocalCommits != 0 {
-            tabBarItem.badgeValue = "\(numberOfLocalCommits)"
-        } else {
-            tabBarItem.badgeValue = nil
-        }
-    }
-
     private func configureNavigationItem() {
         if isRootViewController() {
             navigationItem.largeTitleDisplayMode = .automatic
@@ -207,8 +197,15 @@ class PasswordNavigationViewController: UIViewController {
         }
 
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.rightBarButtonItem = addPasswordUIBarButtonItem
+        navigationItem.rightBarButtonItem = isRootViewController() ? settingsUIBarButtonItem : nil
         navigationItem.searchController = searchController
+        // The search bar shares the bottom toolbar with the add button where the system allows it.
+        if #available(iOS 26.0, *) {
+            navigationItem.preferredSearchBarPlacement = .integrated
+            toolbarItems = [navigationItem.searchBarPlacementBarButtonItem, .fixedSpace(0), addPasswordUIBarButtonItem]
+        } else {
+            toolbarItems = [.flexibleSpace(), addPasswordUIBarButtonItem]
+        }
     }
 
     private func configureNavigationBar() {
@@ -442,9 +439,7 @@ extension PasswordNavigationViewController {
 
     @objc
     func actOnPasswordStoreSyncSucceeded() {
-        DispatchQueue.main.async {
-            self.configureTabBarItem()
-        }
+        DispatchQueue.main.async {}
     }
 
     func resetViews() {
@@ -452,7 +447,6 @@ extension PasswordNavigationViewController {
         tableView.layoutIfNeeded()
         tableView.reloadData()
         configureNavigationItem()
-        configureTabBarItem()
         configureNavigationBar()
         configureSearchBar()
     }
@@ -507,21 +501,6 @@ extension PasswordNavigationViewController: UISearchBarDelegate {
         dataSource?.isSearchActive = false
         searchText = nil
         tableView.reloadData()
-    }
-}
-
-extension PasswordNavigationViewController: UITabBarControllerDelegate {
-    func tabBarController(_: UITabBarController, didSelect viewController: UIViewController) {
-        if viewController == navigationController {
-            let currentTime = Date().timeIntervalSince1970
-            let duration = currentTime - tapTabBarTime
-            tapTabBarTime = currentTime
-            if duration < 0.35, tableView.numberOfSections > 0 {
-                let topIndexPath = IndexPath(row: 0, section: 0)
-                tableView.scrollToRow(at: topIndexPath, at: .bottom, animated: true)
-                tapTabBarTime = 0
-            }
-        }
     }
 }
 

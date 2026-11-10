@@ -12,8 +12,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         case folders, passwords
     }
 
-    private let folder: PasswordEntity?
+    /// By path, as syncing replaces the folder's entity; holding on to it would list the children of one that is gone.
     private let folderPath: String?
+    private let folderName: String?
     private lazy var passwordManager = PasswordManager(viewController: self)
     private lazy var dataSource = makeDataSource()
     private var entries = [String: PasswordTableEntry]()
@@ -40,12 +41,12 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     })
 
     private var isRoot: Bool {
-        folder == nil
+        folderPath == nil
     }
 
     init(folder: PasswordEntity? = nil) {
-        self.folder = folder
         self.folderPath = folder?.path
+        self.folderName = folder?.name
         super.init(style: .insetGrouped)
     }
 
@@ -63,7 +64,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         }
         tableView.dataSource = dataSource
 
-        navigationItem.title = folder?.name ?? "PasswordStore".localize()
+        navigationItem.title = folderName ?? "PasswordStore".localize()
         navigationItem.largeTitleDisplayMode = isRoot ? .automatic : .never
 
         searchController.searchResultsUpdater = self
@@ -150,7 +151,11 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             if !query.isEmpty {
                 return store.fetchPasswordEntityCoreData(withDir: false)
             }
-            return Defaults.isShowFolderOn ? store.fetchPasswordEntityCoreData(parent: folder) : store.fetchPasswordEntityCoreData(withDir: false)
+            guard Defaults.isShowFolderOn else {
+                return store.fetchPasswordEntityCoreData(withDir: false)
+            }
+            let folder = folderPath.flatMap(store.fetchPasswordEntity(with:))
+            return folderPath != nil && folder == nil ? [] : store.fetchPasswordEntityCoreData(parent: folder)
         }()
         let shown = all
             .map(PasswordTableEntry.init)
@@ -233,11 +238,12 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        guard let path = dataSource.itemIdentifier(for: indexPath), let entry = entries[path] else {
+        // The rows can outlive their entities while a refresh holds back reloading.
+        guard let path = dataSource.itemIdentifier(for: indexPath), let entity = PasswordStore.shared.fetchPasswordEntity(with: path) else {
             return
         }
-        if entry.isDir {
-            navigationController?.pushViewController(PasswordListViewController(folder: entry.passwordEntity), animated: true)
+        if entity.isDir {
+            navigationController?.pushViewController(PasswordListViewController(folder: entity), animated: true)
             return
         }
         guard PGPAgent.shared.isPrepared else {
@@ -245,7 +251,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             return
         }
         let detail = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "passwordDetail") as! PasswordDetailTableViewController
-        detail.passwordEntity = entry.passwordEntity
+        detail.passwordEntity = entity
         navigationController?.pushViewController(detail, animated: true)
     }
 

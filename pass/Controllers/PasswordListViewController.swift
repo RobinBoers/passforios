@@ -22,6 +22,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private var isSyncing = false
     /// The sync finished while the list was still pulled down; the refresh ends once it is let go.
     private var isSyncFinished = false
+    private var needsReload = false
     private var syncStatusGeneration = 0
 
     private lazy var addButton = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
@@ -66,7 +67,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         tableView.dataSource = dataSource
 
         navigationItem.title = folder?.name ?? "PasswordStore".localize()
-        navigationItem.largeTitleDisplayMode = isRoot ? .always : .never
+        navigationItem.largeTitleDisplayMode = isRoot ? .automatic : .never
 
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -147,6 +148,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             .map(PasswordTableEntry.init)
             .filter { query.isEmpty || $0.matches(query) }
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        let previous = entries
         entries = Dictionary(shown.map { ($0.passwordEntity.path, $0) }, uniquingKeysWith: { first, _ in first })
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
@@ -160,10 +162,24 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             snapshot.appendSections([.passwords])
             snapshot.appendItems(passwords, toSection: .passwords)
         }
-        snapshot.reconfigureItems(snapshot.itemIdentifiers)
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        // Entities are recreated on every change, so only rows that look different are redrawn, and nothing
+        // is applied when nothing changed: a table that changes while it moves settles in the wrong place.
+        let changed = snapshot.itemIdentifiers.filter { path in
+            guard let old = previous[path], let new = entries[path] else {
+                return false
+            }
+            return old.title != new.title || old.isSynced != new.isSynced || old.categoryText != new.categoryText
+                || old.passwordEntity.children.count != new.passwordEntity.children.count
+        }
+        if snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers || snapshot.sectionIdentifiers != dataSource.snapshot().sectionIdentifiers || !changed.isEmpty {
+            snapshot.reconfigureItems(changed)
+            dataSource.apply(snapshot, animatingDifferences: animated)
+        }
 
-        tableView.backgroundView = isRoot && !store.repositoryExists() ? makeSetUpView() : nil
+        let showsSetUp = isRoot && !store.repositoryExists()
+        if showsSetUp != (tableView.backgroundView != nil) {
+            tableView.backgroundView = showsSetUp ? makeSetUpView() : nil
+        }
     }
 
     @objc
@@ -174,7 +190,12 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                 navigationController?.popToRootViewController(animated: true)
                 return
             }
-            reload(animated: !(refreshControl?.isRefreshing ?? false))
+            // The list holds still while a refresh shows; it catches up once that has ended.
+            guard refreshControl?.isRefreshing != true else {
+                needsReload = true
+                return
+            }
+            reload(animated: true)
             updateBarButtons()
         }
     }
@@ -298,6 +319,10 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         refreshControl?.endRefreshing()
         showLastSynced()
         updateBarButtons()
+        if needsReload {
+            needsReload = false
+            reload(animated: true)
+        }
     }
 
     override func scrollViewDidEndDragging(_: UIScrollView, willDecelerate _: Bool) {

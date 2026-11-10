@@ -242,7 +242,9 @@ class PasswordEditorTableViewController: UITableViewController {
             fields[index].value = otpauth
             tableView.reloadRows(at: [IndexPath(row: index, section: section)], with: .automatic)
         } else {
-            addField(Field(key: Constants.OTP_KEYWORD, value: otpauth, isSecret: true))
+            // pass keeps the URI as a line of its own, sec under a key named after the kind of code.
+            let key = Defaults.storeFormat == .pass ? Constants.OTP_KEYWORD : otpauth.hasPrefix("otpauth://hotp") ? "hotp" : "totp"
+            addField(Field(key: key, value: otpauth, isSecret: true))
         }
     }
 

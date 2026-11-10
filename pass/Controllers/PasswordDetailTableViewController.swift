@@ -19,7 +19,7 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
     var password: Password?
     private var oneTimePasswordIndexPath: IndexPath?
-    private var revealed = Set<IndexPath>()
+    private var revealed: IndexPath?
     private var oneTimePasswordTimer: Timer?
     private var shouldPopCurrentView = false
     private let passwordStore = PasswordStore.shared
@@ -50,6 +50,8 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.removeTopSpace()
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.sectionFooterHeight = UITableView.automaticDimension
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "header")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.addInteraction(editMenuInteraction)
@@ -90,10 +92,6 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         oneTimePasswordTimer?.invalidate()
-        if !revealed.isEmpty {
-            revealed.removeAll()
-            tableView.reloadData()
-        }
     }
 
     @objc
@@ -220,7 +218,7 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
     private func reloadTableData() {
         setTableData()
-        revealed.removeAll()
+        revealed = nil
         tableView.reloadData()
         updateTitle()
     }
@@ -232,14 +230,14 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
         var main = [Row]()
         if let user = password.user {
-            main.append(Row(kind: .field, key: "Username".localize(), value: user))
+            main.append(Row(kind: .field, key: Constants.USER_KEYWORD, value: user))
         }
         if !password.password.isEmpty {
-            main.append(Row(kind: .secret, key: (password.entry.isBodyPrimary ? "SSHKey" : "Password").localize(), value: password.password))
+            main.append(Row(kind: .secret, key: password.entry.isBodyPrimary ? Constants.BODY_KEYWORD : Constants.PASSWORD_KEYWORD, value: password.password))
         }
         if password.otpType != .none, let otp = password.currentOtp {
             oneTimePasswordIndexPath = IndexPath(row: main.count, section: tableData.count)
-            main.append(Row(kind: .oneTimePassword, key: "OneTimePassword".localize(), value: otp))
+            main.append(Row(kind: .oneTimePassword, key: password.entry.fields.first(where: \.isOtpauth)?.key ?? Constants.OTP_KEYWORD, value: otp))
         }
         if !main.isEmpty {
             tableData.append(TableSection(rows: main))
@@ -248,9 +246,6 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         let fields = password.additionalFields.map { field in
             if field.isSecret {
                 return Row(kind: .secret, key: field.key, value: field.value)
-            }
-            if field.key == Constants.URL_KEYWORD {
-                return Row(kind: .link, key: "Website".localize(), value: field.value)
             }
             let isLink = field.key.lowercased().contains("url") || field.value.hasPrefix("https://") || field.value.hasPrefix("http://")
             return Row(kind: isLink ? .link : .field, key: field.key, value: field.value)
@@ -343,13 +338,14 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
     // MARK: - Rows
 
-    private func setRevealed(_ isRevealed: Bool, at indexPath: IndexPath) {
-        if isRevealed {
-            revealed.insert(indexPath)
-        } else {
-            revealed.remove(indexPath)
+    /// Shows at most one secret, for as long as its menu is up.
+    private func reveal(_ indexPath: IndexPath?) {
+        guard revealed != indexPath else {
+            return
         }
-        tableView.reconfigureRows(at: [indexPath])
+        let changed = [revealed, indexPath].compactMap(\.self)
+        revealed = indexPath
+        tableView.reconfigureRows(at: changed)
     }
 
     private func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {
@@ -371,7 +367,7 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         switch row.kind {
         case .secret:
             content.secondaryTextProperties.font = Globals.passwordFont
-            if !revealed.contains(indexPath) {
+            if revealed != indexPath {
                 content.secondaryText = Globals.passwordDots
                 cell.accessibilityLabel = row.key
             } else if !row.value.contains("\n") {
@@ -458,8 +454,8 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         case .raw:
             performSegue(withIdentifier: "showRawPasswordSegue", sender: self)
         default:
-            if row.kind == .secret, !revealed.contains(indexPath) {
-                setRevealed(true, at: indexPath)
+            if row.kind == .secret {
+                reveal(indexPath)
             }
             let rect = tableView.rectForRow(at: indexPath)
             editMenuInteraction.presentEditMenu(with: UIEditMenuConfiguration(identifier: indexPath as NSIndexPath, sourcePoint: CGPoint(x: rect.midX, y: rect.minY)))
@@ -480,13 +476,6 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
             },
         ]
         switch row.kind {
-        case .secret:
-            let isRevealed = revealed.contains(indexPath)
-            actions.append(
-                UIAction(title: (isRevealed ? "Hide" : "Show").localize(), image: UIImage(systemName: isRevealed ? "eye.slash" : "eye")) { [weak self] _ in
-                    self?.setRevealed(!isRevealed, at: indexPath)
-                }
-            )
         case .link:
             actions.append(
                 UIAction(title: "CopyAndOpen".localize(), image: UIImage(systemName: "safari")) { [weak self] _ in
@@ -513,9 +502,13 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
     }
 
     func editMenuInteraction(_: UIEditMenuInteraction, willDismissMenuFor configuration: UIEditMenuConfiguration, animator _: any UIEditMenuInteractionAnimating) {
-        if let indexPath = configuration.identifier as? IndexPath {
-            tableView.deselectRow(at: indexPath, animated: true)
+        guard let indexPath = configuration.identifier as? IndexPath else {
+            return
         }
+        if revealed == indexPath {
+            reveal(nil)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
 

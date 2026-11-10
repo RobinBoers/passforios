@@ -417,6 +417,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "KeepEditing" = "Weiter bearbeiten";
 "SyncFailed" = "Synchronisierung fehlgeschlagen";
 "CopyPassword" = "Passwort kopieren";
-"Show" = "Einblenden";
-"Hide" = "Ausblenden";
 "NotSynced" = "Nicht synchronisiert";

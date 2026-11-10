@@ -6,11 +6,10 @@
 import passKit
 import UIKit
 
-class FieldTableViewCell: UITableViewCell {
+class FieldTableViewCell: UITableViewCell, UITextFieldDelegate {
     let keyTextField = UITextField()
     let valueTextField = UITextField()
     private let secretButton = UIButton(type: .system)
-    private let generateButton = UIButton(type: .system)
     private var allowsSecret = true
 
     var onChange: ((Field) -> Void)?
@@ -41,22 +40,16 @@ class FieldTableViewCell: UITableViewCell {
         valueTextField.spellCheckingType = .no
         valueTextField.clearButtonMode = .whileEditing
         valueTextField.addTarget(self, action: #selector(valueChanged), for: .editingChanged)
+        valueTextField.delegate = self
 
         secretButton.addTarget(self, action: #selector(toggleSecret), for: .touchUpInside)
         secretButton.setContentHuggingPriority(.required, for: .horizontal)
 
-        generateButton.setImage(UIImage(systemName: "wand.and.stars"), for: .normal)
-        generateButton.accessibilityLabel = "GeneratePassword".localize()
-        generateButton.addTarget(self, action: #selector(generate), for: .touchUpInside)
-        generateButton.setContentHuggingPriority(.required, for: .horizontal)
-
         // The value gives way to the buttons when it runs long.
         valueTextField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        for button in [generateButton, secretButton] {
-            button.setContentCompressionResistancePriority(.required, for: .horizontal)
-        }
+        secretButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-        let stack = UIStackView(arrangedSubviews: [keyTextField, valueTextField, generateButton, secretButton])
+        let stack = UIStackView(arrangedSubviews: [keyTextField, valueTextField, secretButton])
         stack.spacing = 12
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +80,6 @@ class FieldTableViewCell: UITableViewCell {
 
     private func render() {
         secretButton.isHidden = !allowsSecret
-        generateButton.isHidden = !field.isSecret || field.isOtpauth
         valueTextField.font = field.isSecret ? Globals.passwordFont : .preferredFont(forTextStyle: .body)
         secretButton.setImage(UIImage(systemName: field.isSecret ? "lock.fill" : "lock.open"), for: .normal)
         secretButton.tintColor = field.isSecret ? .tintColor : .tertiaryLabel
@@ -106,11 +98,32 @@ class FieldTableViewCell: UITableViewCell {
         onChange?(field)
     }
 
-    @objc
     private func generate() {
         field.value = Defaults.passwordGenerator.generate()
         valueTextField.text = field.value
         onChange?(field)
+    }
+
+    // MARK: - UITextFieldDelegate
+
+    /// A generated password is kept or typed over, so tapping into a secret selects all of it.
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        guard field.isSecret, !field.isOtpauth else {
+            return
+        }
+        DispatchQueue.main.async {
+            textField.selectAll(nil)
+        }
+    }
+
+    func textField(_: UITextField, editMenuForCharactersIn _: NSRange, suggestedActions: [UIMenuElement]) -> UIMenu? {
+        guard field.isSecret, !field.isOtpauth else {
+            return nil
+        }
+        let generate = UIAction(title: "GeneratePassword".localize(), image: UIImage(systemName: "key")) { [weak self] _ in
+            self?.generate()
+        }
+        return UIMenu(children: suggestedActions + [generate])
     }
 
     @objc

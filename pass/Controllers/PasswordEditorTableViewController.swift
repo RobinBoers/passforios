@@ -186,7 +186,7 @@ class PasswordEditorTableViewController: UITableViewController {
             switch fieldsRows[indexPath.row] {
             case .addPassword:
                 let hasPassword = fields.contains { $0.key == Constants.PASSWORD_KEYWORD }
-                addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: "", isSecret: true))
+                addField(Field(key: hasPassword ? "" : Constants.PASSWORD_KEYWORD, value: Defaults.passwordGenerator.generate(), isSecret: true))
             case .addOneTimePassword:
                 performSegue(withIdentifier: "showQRScannerSegue", sender: self)
             case .addText:

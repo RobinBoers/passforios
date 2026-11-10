@@ -17,6 +17,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private lazy var passwordManager = PasswordManager(viewController: self)
     private lazy var dataSource = makeDataSource()
     private var entries = [String: PasswordTableEntry]()
+    /// Rows make room for the unsynced dot only when one of them has it.
+    private var hasUnsyncedEntries = false
     private let searchController = UISearchController(searchResultsController: nil)
 
     private var isSyncing = false
@@ -117,7 +119,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                 content.secondaryText = entry.categoryText.isEmpty ? nil : entry.categoryText
                 content.secondaryTextProperties.color = .secondaryLabel
             }
-            content.directionalLayoutMargins.leading += PasswordListCell.gutter
+            if hasUnsyncedEntries {
+                content.directionalLayoutMargins.leading += PasswordListCell.gutter
+            }
             cell.contentConfiguration = content
             cell.accessoryType = entry.isDir ? .disclosureIndicator : .none
             cell.isSynced = entry.isSynced
@@ -145,6 +149,8 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         let previous = entries
         entries = Dictionary(shown.map { ($0.passwordEntity.path, $0) }, uniquingKeysWith: { first, _ in first })
+        let hadUnsyncedEntries = hasUnsyncedEntries
+        hasUnsyncedEntries = shown.contains { !$0.isSynced }
 
         var snapshot = NSDiffableDataSourceSnapshot<Section, String>()
         let folders = shown.filter(\.isDir).map(\.passwordEntity.path)
@@ -163,7 +169,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             guard let old = previous[path], let new = entries[path] else {
                 return false
             }
-            return old.title != new.title || old.isSynced != new.isSynced || old.categoryText != new.categoryText
+            return hasUnsyncedEntries != hadUnsyncedEntries || old.title != new.title || old.isSynced != new.isSynced || old.categoryText != new.categoryText
                 || old.passwordEntity.children.count != new.passwordEntity.children.count
         }
         if snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers || snapshot.sectionIdentifiers != dataSource.snapshot().sectionIdentifiers || !changed.isEmpty {
@@ -484,7 +490,7 @@ extension PasswordListViewController: UISearchResultsUpdating {
 
 /// Marks entries with changes that are not pushed yet with a dot before them, like unread mail.
 private class PasswordListCell: UITableViewCell {
-    /// Room before the content for the dot, kept on every row so that they line up.
+    /// Room before the content for the dot, kept on every row of a list with one so that they line up.
     static let gutter: CGFloat = 20
 
     private let dot: UIView = {

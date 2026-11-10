@@ -127,7 +127,7 @@
 "ScanPublicKeyQrCodes"                      = "Scan Public Key QR codes";
 "SetPrivateKey."                            = "Please set the private key first.";
 "SetPublicKey."                             = "Please set the public key first.";
-"NoQrCodeDetected."                         = "No QR code detected.";
+"NoQrCodeDetected."                         = "Point the camera at a QR code.";
 "NoStringValue"                             = "No string value";
 "CameraAccessDenied."                       = "Camera access denied.";
 "WarningToggleCameraPermissionsResetsApp."  = "WARNING: Toggle the camera permission resets the app! Save your changes.";

@@ -29,12 +29,12 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
 
     var idleMessage = "NoQrCodeDetected.".localize()
 
+    private var statusView = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if scannerOutput == nil {
-            addScannerOutput()
-        }
+        addScannerOutput()
 
         if AVCaptureDevice.authorizationStatus(for: .video) == .denied {
             presentCameraSettings()
@@ -73,9 +73,8 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
             captureSession?.startRunning()
 
             // Move the message label to the front
-            scannerOutput.layer.cornerRadius = 10
             scannerOutput.text = idleMessage
-            view.bringSubviewToFront(scannerOutput)
+            view.bringSubviewToFront(statusView)
 
             // Initialize QR Code Frame to highlight the QR code
             qrCodeFrameView = UIView()
@@ -143,23 +142,46 @@ class QRScannerController: UIViewController, AVCaptureMetadataOutputObjectsDeleg
 
     func didClose() {}
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if #unavailable(iOS 26.0) {
+            statusView.layer.cornerRadius = statusView.bounds.height / 2
+        }
+    }
+
+    /// The status, in a capsule over the camera, replacing the plain label some storyboards still have.
     private func addScannerOutput() {
+        scannerOutput?.removeFromSuperview()
+
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = .preferredFont(forTextStyle: .body)
+        label.font = .preferredFont(forTextStyle: .subheadline)
         label.adjustsFontForContentSizeCategory = true
-        label.backgroundColor = UIColor.white.withAlphaComponent(0.5)
-        label.clipsToBounds = true
+        label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+
+        let capsule = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+        if #available(iOS 26.0, *) {
+            capsule.effect = UIGlassEffect()
+            capsule.cornerConfiguration = .capsule()
+        }
+        capsule.clipsToBounds = true
+        capsule.translatesAutoresizingMaskIntoConstraints = false
+        capsule.contentView.addSubview(label)
+        view.addSubview(capsule)
+
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.widthAnchor.constraint(greaterThanOrEqualToConstant: 300),
-            label.heightAnchor.constraint(greaterThanOrEqualToConstant: 45),
-            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),
+            label.leadingAnchor.constraint(equalTo: capsule.contentView.leadingAnchor, constant: 20),
+            label.trailingAnchor.constraint(equalTo: capsule.contentView.trailingAnchor, constant: -20),
+            label.topAnchor.constraint(equalTo: capsule.contentView.topAnchor, constant: 12),
+            label.bottomAnchor.constraint(equalTo: capsule.contentView.bottomAnchor, constant: -12),
+            capsule.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            capsule.leadingAnchor.constraint(greaterThanOrEqualTo: view.layoutMarginsGuide.leadingAnchor),
+            capsule.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24),
         ])
         scannerOutput = label
+        statusView = capsule
     }
 
     private func setNotDetected() {

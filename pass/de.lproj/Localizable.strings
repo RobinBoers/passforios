@@ -126,7 +126,7 @@
 "ScanPublicKeyQrCodes"                      = "QR-Code für öffentlichen Schlüssel scannen";
 "SetPrivateKey."                            = "Bitte richte zuerst den privaten Schlüssel ein.";
 "SetPublicKey."                             = "Bitte richte zuerst den öffentlichen Schlüssel ein..";
-"NoQrCodeDetected."                         = "Kein QR-Code gefunden.";
+"NoQrCodeDetected."                         = "Richte die Kamera auf einen QR-Code.";
 "NoStringValue"                             = "Kein Zeichenkette gefunden";
 "CameraAccessDenied."                       = "Zugriff auf die Kamera verweigert.";
 "WarningToggleCameraPermissionsResetsApp."  = "Warnung: Änderung der Befugnisse der Kamera führt zum Zurücksetzen der App! Bitte speichere deine Daten vorher.";

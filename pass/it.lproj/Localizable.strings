@@ -125,7 +125,7 @@
 "ScanPublicKeyQrCodes"                      = "Scansiona i codici QR della chiave publica";
 "SetPrivateKey."                            = "Impostare prima la chiave privata.";
 "SetPublicKey."                             = "Impostare prima la chiave pubblica.";
-"NoQrCodeDetected."                         = "Nessun codice QR rilevato.";
+"NoQrCodeDetected."                         = "Inquadra un codice QR.";
 "NoStringValue"                             = "Nessuna stringa";
 "CameraAccessDenied."                       = "L'accesso alla fotocamera è bloccato.";
 "WarningToggleCameraPermissionsResetsApp."  = "ATTENZIONE: Cambiare il permesso della fotocamera reimposta l'app! Salva le modifiche.";

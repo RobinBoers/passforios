@@ -70,6 +70,7 @@ struct SettingsView: View {
             Button("ClearSavedSuggestions") {
                 model.clearSuggestions()
             }
+            .disabled(!model.hasSavedSuggestions)
         } header: {
             Text("AutoFill")
         } footer: {

@@ -24,6 +24,11 @@ public struct SavedCredentialIdentity: Codable, Equatable, DefaultsSerializable 
 /// The QuickType suggestions offered by AutoFill. The system store cannot be read back, so the suggestions are
 /// mirrored in the shared defaults, which lets them follow the password store when entries are moved or removed.
 public enum CredentialIdentities {
+    /// Whether there are suggestions to clear; unknown before they were first mirrored, so assumed then.
+    public static var isEmpty: Bool {
+        Defaults.hasKey(\.credentialIdentities) && Defaults.credentialIdentities.isEmpty
+    }
+
     public static func save(service: ASCredentialServiceIdentifier, user: String, path: String) {
         var identities = Defaults.credentialIdentities.filter { $0.service != service.identifier || $0.path != path }
         identities.append(SavedCredentialIdentity(service: service.identifier, serviceType: service.type.rawValue, user: user, path: path))

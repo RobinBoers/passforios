@@ -24,6 +24,7 @@ final class SettingsModel: ObservableObject {
     @Published var pgpKeyIDs = [String]()
     @Published var hasSSHKey = false
     @Published var sshKeySummary: String?
+    @Published var hasSavedSuggestions = false
     @Published var hasStore = false
 
     private var observers = [NSObjectProtocol]()
@@ -46,6 +47,7 @@ final class SettingsModel: ObservableObject {
         let sshKey: String? = AppKeychain.shared.get(for: SSHKey.PRIVATE.getKeychainKey())
         hasSSHKey = sshKey != nil
         sshKeySummary = sshKey.flatMap(SSHKey.fingerprint)
+        hasSavedSuggestions = !CredentialIdentities.isEmpty
         Task.detached(priority: .userInitiated) {
             let info = StoreInfo(
                 passwords: store.numberOfPasswords,
@@ -131,9 +133,9 @@ final class SettingsModel: ObservableObject {
     }
 
     func sync() {
-        host?.syncRepository { [weak self] in
+        host?.syncRepository(completion: { [weak self] _ in
             self?.refresh()
-        }
+        })
     }
 
     var remoteHost: String {
@@ -192,6 +194,7 @@ final class SettingsModel: ObservableObject {
                     self?.host?.alert(title: "Error".localize(), message: "FailedToClearQuickTypeSuggestions".localize(error))
                 } else {
                     Feedback.success()
+                    self?.refresh()
                 }
             }
         }

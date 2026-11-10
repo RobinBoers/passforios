@@ -125,9 +125,23 @@ extension PasswordAlertPresenter where Self: UIViewController {
         present(alert, animated: true)
     }
 
-    /// Pulls, then pushes any local commits.
-    func syncRepository(completion: @escaping () -> Void = {}) {
-        ProgressSheet.show("SyncingPasswordStore".localize(), on: self)
+    /// Pulls, then pushes any local commits. Progress goes to `status` when given, for showing it inline,
+    /// and to a progress sheet otherwise. `completion` runs either way, telling whether the sync succeeded.
+    func syncRepository(status: ((String) -> Void)? = nil, completion: @escaping (Bool) -> Void = { _ in }) {
+        let report: (Float, String) -> Void = { progress, message in
+            DispatchQueue.main.async {
+                if let status {
+                    status(progress.isFinite ? "\(message) \(Int(progress * 100))%" : message)
+                } else {
+                    ProgressSheet.update(progress: progress, status: message)
+                }
+            }
+        }
+        if let status {
+            status("SyncingPasswordStore".localize())
+        } else {
+            ProgressSheet.show("SyncingPasswordStore".localize(), on: self)
+        }
         let gitCredential = GitCredential.from(
             authenticationMethod: Defaults.gitAuthenticationMethod,
             userName: Defaults.gitUsername,
@@ -137,23 +151,19 @@ extension PasswordAlertPresenter where Self: UIViewController {
             do {
                 let pullOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
                 try PasswordStore.shared.pullRepository(options: pullOptions) { git_transfer_progress, _ in
-                    DispatchQueue.main.async {
-                        ProgressSheet.update(progress: Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), status: "PullingFromRemoteRepository".localize())
-                    }
+                    report(Float(git_transfer_progress.pointee.received_objects) / Float(git_transfer_progress.pointee.total_objects), "PullingFromRemoteRepository".localize())
                 }
                 if PasswordStore.shared.numberOfLocalCommits > 0 {
                     let pushOptions = gitCredential.getCredentialOptions(passwordProvider: self.present)
                     try PasswordStore.shared.pushRepository(options: pushOptions) { current, total, _, _ in
-                        DispatchQueue.main.async {
-                            ProgressSheet.update(progress: Float(current) / Float(total), status: "PushingToRemoteRepository".localize())
-                        }
+                        report(Float(current) / Float(total), "PushingToRemoteRepository".localize())
                     }
                 }
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: .passwordStoreSyncSucceeded, object: nil)
                     ProgressSheet.dismiss {
                         Feedback.success()
-                        completion()
+                        completion(true)
                     }
                 }
             } catch let error as NSError {
@@ -170,6 +180,7 @@ extension PasswordAlertPresenter where Self: UIViewController {
                         let mergeConflictFilesString = mergeConflictFiles.componentsJoined(by: ", ")
                         message = message | "MergeConflictError".localize(mergeConflictFilesString)
                     }
+                    completion(false)
                     Utils.alert(title: "Error".localize(), message: message, controller: self, completion: nil)
                 }
             }

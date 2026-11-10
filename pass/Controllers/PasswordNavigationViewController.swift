@@ -304,9 +304,19 @@ class PasswordNavigationViewController: UIViewController {
 
     @objc
     func handleRefreshControl() {
-        syncPasswords()
-        DispatchQueue.main.async {
-            self.refreshControl.endRefreshing()
+        guard PasswordStore.shared.repositoryExists() else {
+            refreshControl.endRefreshing()
+            Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
+            return
+        }
+        syncRepository { [weak self] status in
+            self?.refreshControl.attributedTitle = NSAttributedString(string: status)
+        } completion: { [weak self] _ in
+            guard let self else {
+                return
+            }
+            refreshControl.endRefreshing()
+            refreshControl.attributedTitle = NSAttributedString(string: "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)")
         }
     }
 }
@@ -515,12 +525,4 @@ extension PasswordNavigationViewController: UITabBarControllerDelegate {
     }
 }
 
-extension PasswordNavigationViewController: PasswordAlertPresenter {
-    private func syncPasswords() {
-        guard PasswordStore.shared.repositoryExists() else {
-            Utils.alert(title: "Error".localize(), message: "NoPasswordStore.".localize(), controller: self, completion: nil)
-            return
-        }
-        syncRepository()
-    }
-}
+extension PasswordNavigationViewController: PasswordAlertPresenter {}

@@ -18,7 +18,7 @@ final class AppLockViewController: UIViewController {
 
         view.backgroundColor = .secondarySystemBackground
 
-        let iconSize: CGFloat = 118
+        let iconSize: CGFloat = 120
         let icon = UIImageView(image: #imageLiteral(resourceName: "Logo"))
         icon.layer.cornerRadius = iconSize * 0.225
         icon.layer.cornerCurve = .continuous
@@ -28,7 +28,7 @@ final class AppLockViewController: UIViewController {
         icon.translatesAutoresizingMaskIntoConstraints = false
 
         let lock = UIImageView(image: UIImage(systemName: "lock.fill"))
-        lock.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: iconSize * 0.56)
+        lock.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: iconSize * 0.55, weight: .semibold)
         lock.tintColor = .systemGray
         lock.translatesAutoresizingMaskIntoConstraints = false
 
@@ -44,8 +44,8 @@ final class AppLockViewController: UIViewController {
             icon.bottomAnchor.constraint(equalTo: image.bottomAnchor),
             icon.leadingAnchor.constraint(equalTo: image.leadingAnchor),
             icon.trailingAnchor.constraint(equalTo: image.trailingAnchor),
-            lock.centerXAnchor.constraint(equalTo: icon.trailingAnchor, constant: iconSize * 0.015),
-            lock.centerYAnchor.constraint(equalTo: icon.bottomAnchor, constant: -iconSize * 0.045),
+            lock.centerXAnchor.constraint(equalTo: icon.trailingAnchor, constant: iconSize * 0.01),
+            lock.centerYAnchor.constraint(equalTo: icon.bottomAnchor, constant: -iconSize * 0.06),
         ])
 
         let title = UILabel()
@@ -61,11 +61,11 @@ final class AppLockViewController: UIViewController {
         configuration.baseForegroundColor = .tintColor
         configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
             var attributes = attributes
-            attributes.font = UIFontMetrics(forTextStyle: .title3).scaledFont(for: .systemFont(ofSize: 20, weight: .semibold))
+            attributes.font = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 17, weight: .medium))
             return attributes
         }
         configuration.cornerStyle = .capsule
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 14, leading: 20, bottom: 14, trailing: 20)
         let button = UIButton(configuration: configuration, primaryAction: UIAction { [unowned self] _ in
             authenticate()
         })
@@ -79,7 +79,7 @@ final class AppLockViewController: UIViewController {
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 6),
+            stack.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor, constant: 4),
             stack.leadingAnchor.constraint(greaterThanOrEqualTo: view.readableContentGuide.leadingAnchor),
             stack.trailingAnchor.constraint(lessThanOrEqualTo: view.readableContentGuide.trailingAnchor),
         ])

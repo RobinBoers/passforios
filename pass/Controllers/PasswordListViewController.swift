@@ -134,6 +134,15 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     }
 
     /// Folders first, then passwords, each in their own group; a search covers every password in the store.
+    @available(iOS 17.0, *)
+    override func updateContentUnavailableConfiguration(using state: UIContentUnavailableConfigurationState) {
+        guard isSearching, entries.isEmpty else {
+            contentUnavailableConfiguration = nil
+            return
+        }
+        contentUnavailableConfiguration = UIContentUnavailableConfiguration.search().updated(for: state)
+    }
+
     private func reload(animated: Bool) {
         let store = PasswordStore.shared
         let query = searchController.searchBar.text ?? ""
@@ -175,6 +184,10 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         if snapshot.itemIdentifiers != dataSource.snapshot().itemIdentifiers || snapshot.sectionIdentifiers != dataSource.snapshot().sectionIdentifiers || !changed.isEmpty {
             snapshot.reconfigureItems(changed)
             dataSource.apply(snapshot, animatingDifferences: animated)
+        }
+
+        if #available(iOS 17.0, *) {
+            setNeedsUpdateContentUnavailableConfiguration()
         }
 
         let showsSetUp = isRoot && !store.repositoryExists()

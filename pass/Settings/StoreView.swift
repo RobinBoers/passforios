@@ -175,6 +175,7 @@ struct StoreView: View {
 struct CommitLogView: View {
     @State private var commits = [GTCommit]()
     @State private var error: String?
+    @State private var isLoading = true
 
     var body: some View {
         List(commits, id: \.sha) { commit in
@@ -190,18 +191,33 @@ struct CommitLogView: View {
             }
         }
         .overlay {
-            if let error {
-                Text(error).foregroundStyle(.secondary).padding()
+            if isLoading {
+                ProgressView()
+            } else if let error {
+                if #available(iOS 17.0, *) {
+                    ContentUnavailableView {
+                        Label("CouldNotLoadHistory", systemImage: "exclamationmark.triangle")
+                    } description: {
+                        Text(error)
+                    }
+                } else {
+                    Text(error).foregroundStyle(.secondary).padding()
+                }
             }
         }
         .navigationTitle("CommitLogs")
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            do {
-                commits = try PasswordStore.shared.getRecentCommits(count: 20)
-            } catch {
+            let result = await Task.detached(priority: .userInitiated) {
+                Result { try PasswordStore.shared.getRecentCommits(count: 20) }
+            }.value
+            switch result {
+            case let .success(commits):
+                self.commits = commits
+            case let .failure(error):
                 self.error = error.localizedDescription
             }
+            isLoading = false
         }
     }
 }

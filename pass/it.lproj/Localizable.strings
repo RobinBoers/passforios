@@ -416,3 +416,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "OpenWebsite" = "Apri sito web";
 "IsLocked(%@)" = "%@ è bloccata";
 "Use(%@)" = "Usa %@";
+"CouldNotLoadHistory" = "Impossibile caricare la cronologia";

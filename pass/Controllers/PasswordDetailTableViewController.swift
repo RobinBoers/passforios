@@ -60,6 +60,9 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         navigationItem.rightBarButtonItem = editUIBarButtonItem
         navigationItem.largeTitleDisplayMode = .never
 
+        if #available(iOS 17.0, *) {
+            contentUnavailableConfiguration = UIContentUnavailableConfiguration.loading()
+        }
         decryptThenShowPassword()
 
         // pop the current view because this password might be "discarded"
@@ -153,6 +156,9 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
 
     private func showPassword() {
         DispatchQueue.main.async { [weak self] in
+            if #available(iOS 17.0, *) {
+                self?.contentUnavailableConfiguration = nil
+            }
             self?.reloadTableData()
             self?.editUIBarButtonItem.isEnabled = true
         }

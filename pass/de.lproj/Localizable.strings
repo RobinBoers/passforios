@@ -420,3 +420,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "OpenWebsite" = "Website öffnen";
 "IsLocked(%@)" = "%@ ist gesperrt";
 "Use(%@)" = "%@ verwenden";
+"CouldNotLoadHistory" = "Verlauf konnte nicht geladen werden";

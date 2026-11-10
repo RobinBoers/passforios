@@ -421,3 +421,4 @@ Finally, copy them to a location accessible by the Files app.";
 "OpenWebsite" = "Open Website";
 "IsLocked(%@)" = "%@ Is Locked";
 "Use(%@)" = "Use %@";
+"CouldNotLoadHistory" = "Couldn't Load History";

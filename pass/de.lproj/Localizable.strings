@@ -414,3 +414,4 @@ wird überprüft, dass nicht aus Versehen der Unterschlüssel für Authentifizie
 "AllowNotifications" = "Mitteilungen erlauben";
 "AppLockMessage." = "Vor dem Anzeigen oder Ausfüllen von Passwörtern nachfragen.";
 "UseMethod(%@)" = "%@ verwenden";
+"Search" = "Suchen";

@@ -30,6 +30,9 @@ class PasswordNavigationViewController: UIViewController {
     private var parentPath: String?
 
     var viewingUnsyncedPasswords = false
+    /// The list behind the search tab, which searches all passwords. Other lists leave searching to that tab
+    /// where the system has one.
+    var isSearchTab = false
     var tapTabBarTime: TimeInterval = 0
     var searchText: String?
 
@@ -108,8 +111,15 @@ class PasswordNavigationViewController: UIViewController {
         }
     }
 
+    private var hasSearchTab: Bool {
+        if #available(iOS 18.0, *) {
+            return tabBarController?.tabs.contains { $0 is UISearchTab } ?? false
+        }
+        return false
+    }
+
     private func configureSearchBar() {
-        if Defaults.isShowFolderOn {
+        if Defaults.isShowFolderOn, !isSearchTab {
             searchBar.scopeButtonTitles = SearchBarScope.allCases.map(\.localizedName)
         } else {
             searchBar.scopeButtonTitles = nil
@@ -124,7 +134,11 @@ class PasswordNavigationViewController: UIViewController {
         let atribbutedTitle = "LastSynced".localize() + ": \(PasswordStore.shared.lastSyncedTimeString)"
         refreshControl.attributedTitle = NSAttributedString(string: atribbutedTitle)
         tableView.refreshControl = refreshControl
-        tableView.backgroundView = isRootViewController() && !PasswordStore.shared.repositoryExists() ? makeSetUpView() : nil
+        tableView.backgroundView = isRootViewController() && !isSearchTab && !PasswordStore.shared.repositoryExists() ? makeSetUpView() : nil
+        if isSearchTab {
+            activateSearch(SearchBarScope.all.rawValue)
+            search(matching: searchText ?? "")
+        }
     }
 
     private func makeSetUpView() -> UIView {
@@ -205,10 +219,13 @@ class PasswordNavigationViewController: UIViewController {
         if viewingUnsyncedPasswords {
             navigationItem.title = "Unsynced"
         }
+        if isSearchTab {
+            navigationItem.title = "Search".localize()
+        }
 
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.rightBarButtonItem = addPasswordUIBarButtonItem
-        navigationItem.searchController = searchController
+        navigationItem.rightBarButtonItem = isSearchTab ? nil : addPasswordUIBarButtonItem
+        navigationItem.searchController = isSearchTab || !hasSearchTab ? searchController : nil
     }
 
     private func configureNavigationBar() {
@@ -299,6 +316,12 @@ class PasswordNavigationViewController: UIViewController {
 
     @objc
     func actOnSearchNotification() {
+        if hasSearchTab, !isSearchTab {
+            if #available(iOS 18.0, *) {
+                tabBarController?.selectedTab = tabBarController?.tabs.first { $0 is UISearchTab }
+            }
+            return
+        }
         searchBar.becomeFirstResponder()
     }
 
@@ -481,7 +504,7 @@ extension PasswordNavigationViewController: UISearchBarDelegate {
     }
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        if Defaults.searchDefault == .all {
+        if isSearchTab || Defaults.searchDefault == .all {
             searchBar.selectedScopeButtonIndex = SearchBarScope.all.rawValue
         } else {
             searchBar.selectedScopeButtonIndex = SearchBarScope.current.rawValue
@@ -503,9 +526,14 @@ extension PasswordNavigationViewController: UISearchBarDelegate {
     }
 
     func cancelSearch() {
+        searchText = nil
+        guard !isSearchTab else {
+            activateSearch(SearchBarScope.all.rawValue)
+            search(matching: "")
+            return
+        }
         configureTableView(in: parentPasswordEntity)
         dataSource?.isSearchActive = false
-        searchText = nil
         tableView.reloadData()
     }
 }

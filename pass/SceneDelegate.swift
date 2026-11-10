@@ -20,9 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         if let tabBarController = window?.rootViewController as? UITabBarController {
-            let settings = SettingsViewController()
-            settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
-            tabBarController.viewControllers = (tabBarController.viewControllers ?? []) + [settings]
+            configureTabs(of: tabBarController)
         }
         appLockPresenter = AppLockPresenter(windowScene: windowScene)
         appLockPresenter?.lockIfEnabled()
@@ -42,6 +40,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         (tabBarController.selectedViewController as? UINavigationController)?.popToRootViewController(animated: false)
         perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         completionHandler(true)
+    }
+
+    /// Passwords and Settings, plus a search tab where the system has one, which puts search at the bottom.
+    private func configureTabs(of tabBarController: UITabBarController) {
+        let settings = SettingsViewController()
+        settings.tabBarItem = UITabBarItem(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), selectedImage: UIImage(systemName: "gearshape.fill"))
+        guard #available(iOS 18.0, *),
+              let passwords = tabBarController.viewControllers?.first,
+              let search = tabBarController.storyboard?.instantiateViewController(withIdentifier: "passwordNavigation") as? PasswordNavigationViewController else {
+            tabBarController.viewControllers = (tabBarController.viewControllers ?? []) + [settings]
+            return
+        }
+        search.isSearchTab = true
+        let searchTab = UISearchTab { _ in
+            UINavigationController(rootViewController: search)
+        }
+        if #available(iOS 26.0, *) {
+            searchTab.automaticallyActivatesSearch = true
+        }
+        tabBarController.tabs = [
+            UITab(title: "Passwords".localize(), image: UIImage(systemName: "key.fill"), identifier: "passwords") { _ in passwords },
+            UITab(title: "Settings".localize(), image: UIImage(systemName: "gearshape"), identifier: "settings") { _ in settings },
+            searchTab,
+        ]
     }
 
     private func presentOnboardingIfNeeded() {

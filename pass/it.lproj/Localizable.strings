@@ -410,3 +410,4 @@ Infine, copiarla in una posizione a cui File abbia accesso.";
 "AllowNotifications" = "Consenti notifiche";
 "AppLockMessage." = "Chiedi prima di mostrare o inserire le password.";
 "UseMethod(%@)" = "Usa %@";
+"Search" = "Cerca";

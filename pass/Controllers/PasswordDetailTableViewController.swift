@@ -468,7 +468,12 @@ class PasswordDetailTableViewController: UITableViewController, UIEditMenuIntera
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "header", for: indexPath)
         cell.contentConfiguration = UIHostingConfiguration {
-            PasswordDetailHeader(name: passwordEntity.name, folder: passwordEntity.dirText, isSynced: !passwordEntity.hasUnsyncedChanges)
+            PasswordDetailHeader(
+                name: passwordEntity.name,
+                folder: passwordEntity.dirText,
+                isSynced: !passwordEntity.hasUnsyncedChanges,
+                symbol: password?.entry.value(of: Constants.PROTO_KEYWORD).flatMap(KnownProto.named)?.symbol
+            )
         }
         cell.backgroundConfiguration = .clear()
         cell.selectionStyle = .none
@@ -614,6 +619,8 @@ private struct PasswordDetailHeader: View {
     let name: String
     let folder: String
     let isSynced: Bool
+    /// The symbol of the entry's proto, shown instead of its initial.
+    let symbol: String?
 
     @ScaledMetric(relativeTo: .largeTitle) private var tileSize = 72.0
 
@@ -627,23 +634,30 @@ private struct PasswordDetailHeader: View {
 
     var body: some View {
         VStack(spacing: 6) {
-            Text(name.prefix(1).uppercased())
-                .font(.system(.largeTitle, design: .rounded, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(width: tileSize, height: tileSize)
-                .background(color.gradient, in: RoundedRectangle(cornerRadius: tileSize * 0.225, style: .continuous))
-                .overlay(alignment: .topTrailing) {
-                    if !isSynced {
-                        Circle()
-                            .fill(.orange)
-                            .frame(width: tileSize * 0.26, height: tileSize * 0.26)
-                            .padding(tileSize * 0.04)
-                            .background(Color(uiColor: .systemGroupedBackground), in: Circle())
-                            .offset(x: tileSize * 0.1, y: -tileSize * 0.1)
-                    }
+            Group {
+                if let symbol {
+                    Image(systemName: symbol)
+                        .font(.system(size: tileSize * 0.42, weight: .medium))
+                } else {
+                    Text(name.prefix(1).uppercased())
+                        .font(.system(.largeTitle, design: .rounded, weight: .semibold))
                 }
-                .padding(.bottom, 6)
-                .accessibilityHidden(true)
+            }
+            .foregroundStyle(.white)
+            .frame(width: tileSize, height: tileSize)
+            .background(color.gradient, in: RoundedRectangle(cornerRadius: tileSize * 0.225, style: .continuous))
+            .overlay(alignment: .topTrailing) {
+                if !isSynced {
+                    Circle()
+                        .fill(.orange)
+                        .frame(width: tileSize * 0.26, height: tileSize * 0.26)
+                        .padding(tileSize * 0.04)
+                        .background(Color(uiColor: .systemGroupedBackground), in: Circle())
+                        .offset(x: tileSize * 0.1, y: -tileSize * 0.1)
+                }
+            }
+            .padding(.bottom, 6)
+            .accessibilityHidden(true)
             Text(name)
                 .font(.title2.bold())
                 .multilineTextAlignment(.center)

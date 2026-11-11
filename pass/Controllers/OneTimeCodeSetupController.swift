@@ -6,7 +6,7 @@
 import passKit
 import UIKit
 
-/// Asks where the verification code of an `otpauth` link goes: into a new entry, or one that exists.
+/// Asks which entry the verification code of an `otpauth` link goes into, or, with +, makes a new one.
 final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUpdating {
     enum Choice {
         case newEntry
@@ -45,6 +45,11 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [unowned self] _ in
             dismiss(animated: true)
         })
+        let add = UIBarButtonItem(systemItem: .add, primaryAction: UIAction { [unowned self] _ in
+            choose(.newEntry)
+        })
+        add.accessibilityLabel = "CreateNewEntry".localize()
+        navigationItem.rightBarButtonItem = add
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -69,38 +74,27 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
     }
 
-    override func numberOfSections(in _: UITableView) -> Int {
-        2
-    }
-
-    override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        section == 0 ? 1 : shown.count
+    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        shown.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let entry = shown[indexPath.row]
         var content = UIListContentConfiguration.subtitleCell()
-        if indexPath.section == 0 {
-            content.text = "CreateNewEntry".localize()
-            content.image = UIImage(systemName: "plus.circle.fill")
-            content.textProperties.color = .tintColor
-        } else {
-            let entry = shown[indexPath.row]
-            content.text = entry.title
-            content.secondaryText = entry.categoryText.isEmpty ? nil : entry.categoryText
-            content.secondaryTextProperties.color = .secondaryLabel
-        }
+        content.text = entry.title
+        content.secondaryText = entry.categoryText.isEmpty ? nil : entry.categoryText
+        content.secondaryTextProperties.color = .secondaryLabel
         cell.contentConfiguration = content
         return cell
     }
 
-    override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 1 && !shown.isEmpty ? "AddToExistingEntry".localize() : nil
-    }
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let choice = indexPath.section == 0 ? Choice.newEntry : .entry(path: shown[indexPath.row].passwordEntity.path)
+        choose(.entry(path: shown[indexPath.row].passwordEntity.path))
+    }
+
+    private func choose(_ choice: Choice) {
         searchController.isActive = false
         dismiss(animated: true) { [onChoose] in
             onChoose?(choice)

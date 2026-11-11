@@ -163,8 +163,8 @@
 // Password editor
 "DeletePassword"                    = "Passwort löschen";
 "Notes"                             = "Notizen";
-"Key"                               = "Schlüssel";
-"Value"                             = "Wert";
+"Key"                               = "schlüssel";
+"Value"                             = "wert";
 "Copy"                              = "Kopieren";
 "Secret"                            = "Geheim";
 "NotSecret"                         = "Nicht geheim";
@@ -285,3 +285,4 @@
 "ProtoWeb" = "Website";
 "ProtoWifi" = "WLAN";
 "ProtoDatabase" = "Datenbank";
+"EntryName" = "name";

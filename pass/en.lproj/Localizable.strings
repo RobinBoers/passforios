@@ -164,8 +164,8 @@
 // Password editor
 "DeletePassword"                    = "Delete Password";
 "Notes"                             = "Notes";
-"Key"                               = "Key";
-"Value"                             = "Value";
+"Key"                               = "key";
+"Value"                             = "value";
 "Copy"                              = "Copy";
 "Secret"                            = "Secret";
 "NotSecret"                         = "Not Secret";
@@ -286,3 +286,4 @@
 "ProtoWeb" = "Website";
 "ProtoWifi" = "WiFi";
 "ProtoDatabase" = "Database";
+"EntryName" = "name";

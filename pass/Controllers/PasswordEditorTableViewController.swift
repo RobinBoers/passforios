@@ -476,7 +476,7 @@ private final class NameTableViewCell: UITableViewCell {
         folderLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         folderLabel.lineBreakMode = .byTruncatingHead
 
-        textField.placeholder = "Name".localize()
+        textField.placeholder = "EntryName".localize()
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
         textField.autocapitalizationType = .none

@@ -11,13 +11,34 @@ public struct SavedCredentialIdentity: Codable, Equatable, DefaultsSerializable 
     var serviceType: Int
     var user: String
     var path: String
+    /// Suggests the entry's verification code rather than its password.
+    var isOneTimeCode = false
+
+    private var serviceIdentifier: ASCredentialServiceIdentifier {
+        ASCredentialServiceIdentifier(identifier: service, type: ASCredentialServiceIdentifier.IdentifierType(rawValue: serviceType) ?? .URL)
+    }
 
     var asIdentity: ASPasswordCredentialIdentity {
-        ASPasswordCredentialIdentity(
-            serviceIdentifier: ASCredentialServiceIdentifier(identifier: service, type: ASCredentialServiceIdentifier.IdentifierType(rawValue: serviceType) ?? .URL),
-            user: user,
-            recordIdentifier: path
-        )
+        ASPasswordCredentialIdentity(serviceIdentifier: serviceIdentifier, user: user, recordIdentifier: path)
+    }
+
+    @available(iOS 18.0, *) var asEntry: any ASCredentialIdentity {
+        guard isOneTimeCode else {
+            return asIdentity
+        }
+        return ASOneTimeCodeCredentialIdentity(serviceIdentifier: serviceIdentifier, label: user, recordIdentifier: path)
+    }
+}
+
+public extension SavedCredentialIdentity {
+    /// Suggestions saved before verification codes lack the flag.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.service = try container.decode(String.self, forKey: .service)
+        self.serviceType = try container.decode(Int.self, forKey: .serviceType)
+        self.user = try container.decode(String.self, forKey: .user)
+        self.path = try container.decode(String.self, forKey: .path)
+        self.isOneTimeCode = try container.decodeIfPresent(Bool.self, forKey: .isOneTimeCode) ?? false
     }
 }
 
@@ -29,9 +50,12 @@ public enum CredentialIdentities {
         Defaults.hasKey(\.credentialIdentities) && Defaults.credentialIdentities.isEmpty
     }
 
-    public static func save(service: ASCredentialServiceIdentifier, user: String, path: String) {
-        var identities = Defaults.credentialIdentities.filter { $0.service != service.identifier || $0.path != path }
-        identities.append(SavedCredentialIdentity(service: service.identifier, serviceType: service.type.rawValue, user: user, path: path))
+    /// Remembers the entry as a suggestion for the service, for its password or for its verification code.
+    public static func save(service: ASCredentialServiceIdentifier, user: String, path: String, isOneTimeCode: Bool = false) {
+        var identities = Defaults.credentialIdentities.filter { identity in
+            identity.service != service.identifier || identity.path != path || identity.isOneTimeCode != isOneTimeCode
+        }
+        identities.append(SavedCredentialIdentity(service: service.identifier, serviceType: service.type.rawValue, user: user, path: path, isOneTimeCode: isOneTimeCode))
         publish(identities)
     }
 
@@ -72,7 +96,11 @@ public enum CredentialIdentities {
             guard state.isEnabled else {
                 return
             }
-            ASCredentialIdentityStore.shared.replaceCredentialIdentities(with: identities.map(\.asIdentity))
+            if #available(iOS 18.0, *) {
+                ASCredentialIdentityStore.shared.replaceCredentialIdentities(identities.map(\.asEntry))
+            } else {
+                ASCredentialIdentityStore.shared.replaceCredentialIdentities(with: identities.filter { !$0.isOneTimeCode }.map(\.asIdentity))
+            }
         }
     }
 }

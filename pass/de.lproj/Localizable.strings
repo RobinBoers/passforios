@@ -286,3 +286,5 @@
 "ProtoWifi" = "WLAN";
 "ProtoDatabase" = "Datenbank";
 "EntryName" = "name";
+"CannotFillInCode" = "Code kann nicht ausgefüllt werden";
+"NoTimeBasedCode." = "%@ hat keinen zeitbasierten Bestätigungscode.";

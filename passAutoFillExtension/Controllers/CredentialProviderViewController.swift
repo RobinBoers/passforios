@@ -19,6 +19,9 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     private lazy var passwordsTableEntries = PasswordStore.shared.fetchPasswordEntityCoreData(withDir: false)
         .map(PasswordTableEntry.init)
 
+    /// Whether the list was asked for a verification code rather than a password.
+    private var isOneTimeCodeRequest = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
         passwordsViewController.dataSource = PasswordsTableDataSource(entries: passwordsTableEntries)
@@ -38,6 +41,48 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
                 .flatMap(URL.init)
             passwordsViewController.navigationItem.prompt = url?.host
             passwordsViewController.showPasswordsWithSuggestion(matching: url?.host ?? "")
+        }
+    }
+
+    @available(iOS 18.0, *)
+    override func prepareOneTimeCodeCredentialList(for serviceIdentifiers: [ASCredentialServiceIdentifier]) {
+        isOneTimeCodeRequest = true
+        prepareCredentialList(for: serviceIdentifiers)
+    }
+
+    @available(iOS 17.0, *)
+    override func provideCredentialWithoutUserInteraction(for credentialRequest: any ASCredentialRequest) {
+        if #available(iOS 18.0, *), let identity = credentialRequest.credentialIdentity as? ASOneTimeCodeCredentialIdentity {
+            guard exists(identity.recordIdentifier) else {
+                identity.recordIdentifier.map(CredentialIdentities.remove(path:))
+                extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.credentialIdentityNotFound.rawValue))
+                return
+            }
+            if !AppLock.isEnabled, Defaults.isRememberPGPPassphraseOn {
+                credentialProvider.oneTimeCodeWithoutUserInteraction(for: identity)
+            } else {
+                extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.userInteractionRequired.rawValue))
+            }
+        } else if let identity = credentialRequest.credentialIdentity as? ASPasswordCredentialIdentity {
+            provideCredentialWithoutUserInteraction(for: identity)
+        } else {
+            extensionContext.cancelRequest(withError: NSError(domain: ASExtensionErrorDomain, code: ASExtensionError.credentialIdentityNotFound.rawValue))
+        }
+    }
+
+    @available(iOS 17.0, *)
+    override func prepareInterfaceToProvideCredential(for credentialRequest: any ASCredentialRequest) {
+        if #available(iOS 18.0, *), let identity = credentialRequest.credentialIdentity as? ASOneTimeCodeCredentialIdentity {
+            guard exists(identity.recordIdentifier) else {
+                identity.recordIdentifier.map(CredentialIdentities.remove(path:))
+                prepareOneTimeCodeCredentialList(for: [identity.serviceIdentifier])
+                return
+            }
+            unlock { [unowned self] in
+                credentialProvider.oneTimeCode(for: identity)
+            }
+        } else if let identity = credentialRequest.credentialIdentity as? ASPasswordCredentialIdentity {
+            prepareInterfaceToProvideCredential(for: identity)
         }
     }
 
@@ -86,7 +131,11 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     }
 
     private func exists(_ credentialIdentity: ASPasswordCredentialIdentity) -> Bool {
-        credentialIdentity.recordIdentifier.flatMap(PasswordStore.shared.fetchPasswordEntity(with:)) != nil
+        exists(credentialIdentity.recordIdentifier)
+    }
+
+    private func exists(_ recordIdentifier: String?) -> Bool {
+        recordIdentifier.flatMap(PasswordStore.shared.fetchPasswordEntity(with:)) != nil
     }
 
     private func removeSuggestion(_ credentialIdentity: ASPasswordCredentialIdentity) {
@@ -103,6 +152,10 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
 
 extension CredentialProviderViewController: PasswordSelectionDelegate {
     func selected(password: PasswordTableEntry) {
-        credentialProvider.persistAndProvideCredentials(with: password.passwordEntity.path)
+        if #available(iOS 18.0, *), isOneTimeCodeRequest {
+            credentialProvider.persistAndProvideOneTimeCode(with: password.passwordEntity.path)
+        } else {
+            credentialProvider.persistAndProvideCredentials(with: password.passwordEntity.path)
+        }
     }
 }

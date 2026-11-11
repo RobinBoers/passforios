@@ -282,3 +282,5 @@
 "ProtoWifi" = "Wi-Fi";
 "ProtoDatabase" = "Database";
 "EntryName" = "nome";
+"CannotFillInCode" = "Impossibile inserire il codice";
+"NoTimeBasedCode." = "%@ non ha un codice di verifica basato sul tempo.";

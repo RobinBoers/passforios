@@ -46,8 +46,6 @@ public extension DefaultsKeys {
     var gitSSHPrivateKeyArmor: DefaultsKey<String?> { DefaultsKey("gitSSHPrivateKeyArmor") }
     var isAppLockOn: DefaultsKey<Bool> { DefaultsKey("isAppLockOn", defaultValue: false) }
     var storeFormat: DefaultsKey<StoreFormat> { DefaultsKey("storeFormat", defaultValue: .sec) }
-    /// Templates for new entries by name, as `sec` keeps them in its protos directory.
-    var protos: DefaultsKey<[String: String]> { DefaultsKey("protos", defaultValue: [:]) }
     var isOnboarded: DefaultsKey<Bool> { DefaultsKey("isOnboarded", defaultValue: false) }
 
     var gitURL: DefaultsKey<URL> { DefaultsKey("gitURL", defaultValue: URL(string: "https://")!) }

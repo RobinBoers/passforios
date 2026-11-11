@@ -26,10 +26,6 @@ struct Passport: Equatable {
     let pgpKey: String
     /// The public keys of the store's other recipients, so entries saved here stay readable for them.
     let recipientKeys: [String]
-    /// Templates for new entries by name, from `sec`'s protos directory.
-    let protos: [String: String]
-
-    private static let protoPrefix = "-----BEGIN SEC PROTO "
 
     init(parsing text: String) throws {
         let entry = try Entry(parsing: text, format: .sec)
@@ -58,15 +54,9 @@ struct Passport: Equatable {
         self.branch = branch
         self.name = value(of: "name")
         self.email = value(of: "email")
-        self.sshKey = blocks.first { !$0.hasPrefix("-----BEGIN PGP") && !$0.hasPrefix(Self.protoPrefix) }
+        self.sshKey = blocks.first { !$0.hasPrefix("-----BEGIN PGP") }
         self.pgpKey = pgpKey
         self.recipientKeys = blocks.filter { $0.hasPrefix("-----BEGIN PGP PUBLIC KEY BLOCK-----") }
-        let protos = blocks.filter { $0.hasPrefix(Self.protoPrefix) }.map { block in
-            let lines = block.split(separator: "\n").map(String.init)
-            let name = lines[0].dropFirst(Self.protoPrefix.count).dropLast("-----".count)
-            return (String(name), lines.dropFirst().dropLast().joined(separator: "\n") + "\n")
-        }
-        self.protos = Dictionary(protos) { first, _ in first }
     }
 }
 

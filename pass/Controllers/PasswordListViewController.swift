@@ -305,8 +305,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     }
 
     /// With protos, adding starts from a menu of them, as `sec add` takes one; without, it starts right away.
+    /// In a directory with a default proto, tapping starts from it and holding offers the others.
     private func updateAddButton() {
-        let protos = Defaults.storeFormat == .sec ? Defaults.protos : [:]
+        let protos = Defaults.storeFormat == .sec ? PasswordStore.shared.protos : [:]
         guard !protos.isEmpty else {
             addButton.menu = nil
             addButton.primaryAction = UIAction(image: UIImage(systemName: "plus")) { [unowned self] _ in
@@ -325,10 +326,15 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         let split = known.firstIndex { KnownProto.bottom.contains($0.name) } ?? known.count
         let templates = (known[..<split] + others + known[split...]).map { proto in
             UIAction(title: proto.titleKey.localize(), image: UIImage(systemName: proto.symbol)) { [unowned self] _ in
-                addPassword(proto: Defaults.protos[proto.name])
+                addPassword(proto: protos[proto.name])
             }
         }
-        addButton.primaryAction = nil
+        let defaultProto = PasswordStore.shared.defaultProto(in: folderPath).flatMap { protos[$0] }
+        addButton.primaryAction = defaultProto.map { proto in
+            UIAction(image: UIImage(systemName: "plus")) { [unowned self] _ in
+                addPassword(proto: proto)
+            }
+        }
         // A menu lists its first items nearest the button, which in the bottom toolbar is at the bottom.
         let isInToolbar = toolbarItems?.contains(addButton) == true
         addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: isInToolbar ? templates.reversed() : templates)])

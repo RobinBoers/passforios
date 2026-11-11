@@ -44,6 +44,32 @@ public class PasswordStore {
     }
 
     private let fileManager = FileManager.default
+
+    /// Templates for new entries by name, kept in the store as `sec` does.
+    public var protos: [String: String] {
+        let directory = storeURL.appendingPathComponent(".sec/protos")
+        let names = (try? fileManager.contentsOfDirectory(atPath: directory.path)) ?? []
+        return Dictionary(uniqueKeysWithValues: names.filter { !$0.hasPrefix(".") }.compactMap { name in
+            (try? String(contentsOf: directory.appendingPathComponent(name), encoding: .utf8)).map { (name, $0) }
+        })
+    }
+
+    /// The proto named in the nearest `.sec-proto`, from `directory` up to the store's root.
+    public func defaultProto(in directory: String?) -> String? {
+        var components = directory?.split(separator: "/").map(String.init) ?? []
+        while true {
+            let file = components.reduce(storeURL) { $0.appendingPathComponent($1) }.appendingPathComponent(".sec-proto")
+            if let contents = try? String(contentsOf: file, encoding: .utf8) {
+                let name = contents.split(whereSeparator: \.isNewline).first.map { $0.trimmingCharacters(in: .whitespaces) }
+                return name?.isEmpty == false ? name : nil
+            }
+            guard !components.isEmpty else {
+                return nil
+            }
+            components.removeLast()
+        }
+    }
+
     private let notificationCenter = NotificationCenter.default
     private lazy var context: NSManagedObjectContext = PersistenceController.shared.viewContext()
 

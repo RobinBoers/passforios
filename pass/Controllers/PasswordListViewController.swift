@@ -631,10 +631,13 @@ private class PasswordListCell: UITableViewCell {
         return dot
     }()
 
+    /// Set along with each new configuration, which can move the text, and the dot with it, like when the list
+    /// makes room for the dot.
     var isSynced = true {
         didSet {
             dot.isHidden = isSynced
             accessibilityValue = isSynced ? nil : "NotSynced".localize()
+            setNeedsLayout()
         }
     }
 
@@ -642,6 +645,8 @@ private class PasswordListCell: UITableViewCell {
         super.layoutSubviews()
         // A content configuration brings its own view, so the dot joins it once it is there.
         let content = contentView as? UIListContentView ?? contentView.subviews.lazy.compactMap { $0 as? UIListContentView }.first
+        // Its layout guides only have their new place once it has laid out itself.
+        content?.layoutIfNeeded()
         guard let content, let text = content.textLayoutGuide?.layoutFrame else {
             return
         }

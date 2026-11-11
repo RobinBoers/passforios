@@ -317,7 +317,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
                 save(false)
                 return
             }
-            let alert = UIAlertController(title: "ReplaceCode?".localize(), message: password.name, preferredStyle: .alert)
+            let alert = UIAlertController(title: "ReplaceCode?".localize(), message: nil, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Replace".localize(), style: .destructive) { _ in save(true) })
             alert.addAction(UIAlertAction(title: "KeepBoth".localize(), style: .default) { _ in save(false) })
             alert.addAction(UIAlertAction.cancel())
@@ -354,7 +354,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
 
     /// By path, as the entity shown may have been replaced by a sync since.
     private func confirmDelete(_ path: String, completion: @escaping (Bool) -> Void = { _ in }) {
-        let alert = UIAlertController(title: "DeletePassword?".localize(), message: entries[path]?.title, preferredStyle: .alert)
+        let alert = UIAlertController(title: "DeletePassword?".localize(), message: nil, preferredStyle: .alert)
         alert.addAction(
             UIAlertAction(title: "Delete".localize(), style: .destructive) { [unowned self] _ in
                 do {

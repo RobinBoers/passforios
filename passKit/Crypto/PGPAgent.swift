@@ -44,7 +44,11 @@ public class PGPAgent {
         if let error {
             throw error
         }
-        AppKeychain.shared.removeAllContent(withPrefix: Globals.pgpKeyPassphrase)
+        // Passphrases remembered for the same key stay, so setting up again does not ask for them.
+        let isSameKey = (try? checkAndInit()) != nil && pgpInterface?.containsPrivateKey(with: key.getFingerprint()) == true
+        if !isSameKey {
+            AppKeychain.shared.removeAllContent(withPrefix: Globals.pgpKeyPassphrase)
+        }
         try KeyFileManager.PublicPGP.importKey(from: ([ownPublicKey] + otherPublicKeys).joined(separator: "\n"))
         try KeyFileManager.PrivatePGP.importKey(from: privateKey)
         try initKeys()

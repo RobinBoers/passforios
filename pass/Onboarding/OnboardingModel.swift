@@ -81,7 +81,8 @@ final class OnboardingModel: ObservableObject {
                     } else if passport.needsGitSecret {
                         self.go(to: .gitPassphrase)
                     } else {
-                        self.clone(secret: "", remember: false)
+                        let secret = passport.rememberedGitSecret
+                        self.clone(secret: secret ?? "", remember: secret != nil)
                     }
                 }
                 if showsProgress {
@@ -112,13 +113,13 @@ final class OnboardingModel: ObservableObject {
             username: passport.username ?? passport.url.user ?? "git",
             passwordProvider: provider,
             completion: { [weak self] in
-                self?.go(to: .gpgPassphrase)
+                self?.verifyRememberedPassphrase()
             },
             failure: { [weak self] message in
                 guard let self else {
                     return
                 }
-                guard passport.needsGitSecret else {
+                guard passport.usesGitSecret else {
                     fail(title: "CouldNotClone".localize(), message: message)
                     return
                 }
@@ -128,6 +129,20 @@ final class OnboardingModel: ObservableObject {
                 }
             }
         )
+    }
+
+    /// Skips asking for the GPG passphrase when the one remembered for the key still decrypts.
+    private func verifyRememberedPassphrase() {
+        guard let path = PasswordStore.shared.fetchPasswordEntityCoreData(withDir: false).first?.path else {
+            go(to: .gpgPassphrase)
+            return
+        }
+        Task.detached(priority: .userInitiated) {
+            let decrypts = (try? PasswordStore.shared.decrypt(path: path) { _ in throw CancellationError() }) != nil
+            await MainActor.run {
+                self.go(to: decrypts ? .autoFill : .gpgPassphrase)
+            }
+        }
     }
 
     /// Decrypts one entry with the passphrase, so a typo shows up now instead of in AutoFill later.

@@ -258,8 +258,11 @@ extension Passport {
     func importKeys() throws {
         try PGPAgent.shared.importKeys(privateKey: pgpKey, otherPublicKeys: recipientKeys)
 
-        PasswordStore.shared.gitPassword = nil
-        PasswordStore.shared.gitSSHPrivateKeyPassphrase = nil
+        // A remembered passphrase belongs to its key; a password to its account, which cloning checks.
+        let previousSSHKey: String? = AppKeychain.shared.get(for: SSHKey.PRIVATE.getKeychainKey())
+        if sshKey?.trimmed != previousSSHKey?.trimmed {
+            PasswordStore.shared.gitSSHPrivateKeyPassphrase = nil
+        }
         if let sshKey {
             try KeyFileManager.PrivateSSH.importKey(from: sshKey)
             Defaults.gitSSHKeySource = .armor
@@ -274,8 +277,27 @@ extension Passport {
         Defaults.gitSignatureEmail = email
     }
 
+    /// Whether cloning takes a passphrase or password at all.
+    var usesGitSecret: Bool {
+        sshKey.map(SSHKey.isEncrypted) ?? true
+    }
+
+    /// The passphrase remembered for the same SSH key, or the password for the same account, after importing.
+    var rememberedGitSecret: String? {
+        guard usesGitSecret else {
+            return nil
+        }
+        if sshKey != nil {
+            return PasswordStore.shared.gitSSHPrivateKeyPassphrase
+        }
+        guard url.gitHost == Defaults.gitURL.gitHost, (username ?? url.user ?? "git") == Defaults.gitUsername else {
+            return nil
+        }
+        return PasswordStore.shared.gitPassword
+    }
+
     /// Whether cloning needs a passphrase or password, which onboarding asks for on a screen of its own.
     var needsGitSecret: Bool {
-        sshKey.map(SSHKey.isEncrypted) ?? true
+        usesGitSecret && rememberedGitSecret == nil
     }
 }

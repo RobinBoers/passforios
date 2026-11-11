@@ -41,6 +41,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if connectionOptions.shortcutItem?.type == Globals.bundleIdentifier + ".search" {
             perform(#selector(postSearchNotification), with: nil, afterDelay: 0.4)
         }
+        if let url = connectionOptions.urlContexts.first?.url {
+            DispatchQueue.main.async {
+                self.open(url)
+            }
+        }
+    }
+
+    func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        URLContexts.first.map { open($0.url) }
+    }
+
+    /// Verification codes to set up, from `otpauth` links; nothing to set them up in before onboarding.
+    private func open(_ url: URL) {
+        let root = window?.rootViewController
+        let tabBarController = root as? UITabBarController
+        guard url.scheme == Constants.OTPAUTH, PasswordStore.shared.repositoryExists(),
+              let navigationController = (tabBarController?.viewControllers?.first ?? root) as? UINavigationController,
+              let list = navigationController.viewControllers.first as? PasswordListViewController else {
+            return
+        }
+        tabBarController?.selectedIndex = 0
+        list.setUpOneTimeCode(url)
     }
 
     func windowScene(_: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {

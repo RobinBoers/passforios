@@ -7,7 +7,7 @@
 //
 
 public enum Constants {
-    static let OTPAUTH = "otpauth"
+    public static let OTPAUTH = "otpauth"
     static let OTPAUTH_URL_START = "\(OTPAUTH)://"
 
     public static let PASSWORD_KEYWORD = "pass"

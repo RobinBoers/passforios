@@ -3,6 +3,7 @@
 //  pass
 //
 
+import OneTimePassword
 import passKit
 import UIKit
 
@@ -250,9 +251,61 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             Utils.alert(title: "CannotShowPassword".localize(), message: "PgpKeyNotSet.".localize(), controller: self)
             return
         }
+        showDetail(of: entity)
+    }
+
+    private func showDetail(of entity: PasswordEntity) {
         let detail = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "passwordDetail") as! PasswordDetailTableViewController
         detail.passwordEntity = entity
         navigationController?.pushViewController(detail, animated: true)
+    }
+
+    /// Puts the verification code of an `otpauth` link into a new entry, or one that exists.
+    func setUpOneTimeCode(_ url: URL) {
+        guard let token = Token(url: url) else {
+            Utils.alert(title: "CannotAddPassword".localize(), message: "InvalidTokenUrl".localize(), controller: self)
+            return
+        }
+        guard PGPAgent.shared.isPrepared, PasswordStore.shared.gitRepository != nil else {
+            Utils.alert(title: "CannotAddPassword".localize(), message: "MakeSurePgpAndGitProperlySet.".localize(), controller: self)
+            return
+        }
+        let otpauth = url.absoluteString
+        let setup = OneTimeCodeSetupController(issuer: token.issuer)
+        setup.onChoose = { [unowned self] choice in
+            switch choice {
+            case .newEntry:
+                let format = Defaults.storeFormat
+                let user = token.name.isEmpty ? [] : [Field(key: Constants.USER_KEYWORD, value: token.name)]
+                let fields = user + [Field(key: Constants.PASSWORD_KEYWORD, value: "", isSecret: true), Field.oneTimeCode(otpauth, format: format)]
+                addPassword(template: Entry(fields: fields, format: format), name: token.issuer)
+            case let .entry(path):
+                addOneTimeCode(otpauth, toEntryAt: path)
+            }
+        }
+        navigationController?.popToRootViewController(animated: false)
+        dismiss(animated: false)
+        present(UINavigationController(rootViewController: setup), animated: true)
+    }
+
+    /// The code goes after the entry's last code, or else after its password, or else at the end.
+    private func addOneTimeCode(_ otpauth: String, toEntryAt path: String) {
+        decryptPassword(in: self, with: path) { [unowned self] password in
+            var entry = password.entry
+            let after = entry.fields.lastIndex(where: \.isOtpauth) ?? entry.fields.firstIndex { $0.key == Constants.PASSWORD_KEYWORD }
+            entry.fields.insert(Field.oneTimeCode(otpauth, format: entry.format), at: after.map { $0 + 1 } ?? entry.fields.count)
+            password.updatePassword(name: password.name, path: password.path, plainText: entry.plainText)
+            do {
+                guard let entity = PasswordStore.shared.fetchPasswordEntity(with: path),
+                      let saved = try PasswordStore.shared.edit(passwordEntity: entity, password: password) else {
+                    return
+                }
+                Feedback.success()
+                showDetail(of: saved)
+            } catch {
+                Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
+            }
+        }
     }
 
     override func tableView(_: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point _: CGPoint) -> UIContextMenuConfiguration? {
@@ -341,7 +394,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     }
 
     /// Without a proto, a sec entry starts from a password field, as `sec add` does.
-    private func addPassword(proto: String? = nil) {
+    private func addPassword(proto: String? = nil, template: Entry? = nil, name: String = "") {
         guard PGPAgent.shared.isPrepared, PasswordStore.shared.gitRepository != nil else {
             Utils.alert(title: "CannotAddPassword".localize(), message: "MakeSurePgpAndGitProperlySet.".localize(), controller: self)
             return
@@ -351,9 +404,12 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             if let folderPath {
                 add.defaultDirPrefix = "\(folderPath)/"
             }
-            if Defaults.storeFormat == .sec {
+            if let template {
+                add.template = template
+            } else if Defaults.storeFormat == .sec {
                 add.template = try? Entry(parsing: proto ?? "\(Constants.PASSWORD_KEYWORD)!:", format: .sec)
             }
+            add.name = name
         }
         present(navigation, animated: true)
     }

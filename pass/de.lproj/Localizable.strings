@@ -288,3 +288,6 @@
 "EntryName" = "name";
 "CannotFillInCode" = "Code kann nicht ausgefüllt werden";
 "NoTimeBasedCode." = "%@ hat keinen zeitbasierten Bestätigungscode.";
+"SetUpCode" = "Code einrichten";
+"NewPassword" = "Neues Passwort";
+"AddToEntry" = "Zu Eintrag hinzufügen";

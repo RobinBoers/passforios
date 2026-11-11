@@ -26,6 +26,7 @@
 		EA7518352D39105A27E5147E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA63219CFBD6EE49C671897A /* SceneDelegate.swift */; };
 		8AD4CEA6B4D58292184B5613 /* RepositorySetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C80790B13DDE035EDB07B56 /* RepositorySetup.swift */; };
 		C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1290894DF7397F414F0D2E /* PassportScannerController.swift */; };
+		8B2D1F6E3CA05F7B9E4D2C30 /* OneTimeCodeSetupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D1F6E3CA05F7B9E4D2C31 /* OneTimeCodeSetupController.swift */; };
 		BBCE3CD450CE8D9AED0275DD /* Passport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CA7132E57DF5BC0985E407 /* Passport.swift */; };
 		7A1C0E5D2B9F4E6A8D3C1B20 /* Proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C0E5D2B9F4E6A8D3C1B21 /* Proto.swift */; };
 		300713C52219D54100F553AC /* AutoCellHeightUITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300713C42219D54100F553AC /* AutoCellHeightUITableViewController.swift */; };
@@ -287,6 +288,7 @@
 		CA63219CFBD6EE49C671897A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		2C80790B13DDE035EDB07B56 /* RepositorySetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositorySetup.swift; sourceTree = "<group>"; };
 		2E1290894DF7397F414F0D2E /* PassportScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassportScannerController.swift; sourceTree = "<group>"; };
+		8B2D1F6E3CA05F7B9E4D2C31 /* OneTimeCodeSetupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeCodeSetupController.swift; sourceTree = "<group>"; };
 		51CA7132E57DF5BC0985E407 /* Passport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Passport.swift; sourceTree = "<group>"; };
 		7A1C0E5D2B9F4E6A8D3C1B21 /* Proto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proto.swift; sourceTree = "<group>"; };
 		300713C42219D54100F553AC /* AutoCellHeightUITableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCellHeightUITableViewController.swift; sourceTree = "<group>"; };
@@ -852,6 +854,7 @@
 				DCFB77A81E502FF6008DE471 /* PasswordEditorTableViewController.swift */,
 				A2A7813E1E97DBD9001311F5 /* QRScannerController.swift */,
 				2E1290894DF7397F414F0D2E /* PassportScannerController.swift */,
+				8B2D1F6E3CA05F7B9E4D2C31 /* OneTimeCodeSetupController.swift */,
 				DEC0F601AD00B6EBB26FAE9B /* AppLockViewController.swift */,
 				079FD0FC340BE821F14BF5E8 /* PasswordListViewController.swift */,
 				DCC441511E8F6C06008A90C4 /* RawPasswordViewController.swift */,
@@ -1464,6 +1467,7 @@
 				DCFB77A71E502DF9008DE471 /* EditPasswordTableViewController.swift in Sources */,
 				A2A7813F1E97DBD9001311F5 /* QRScannerController.swift in Sources */,
 				C7FEA70CE3B266826E2E419D /* PassportScannerController.swift in Sources */,
+				8B2D1F6E3CA05F7B9E4D2C30 /* OneTimeCodeSetupController.swift in Sources */,
 				219F1A7614266C9355CEAD8C /* AppLockViewController.swift in Sources */,
 				5EA3B1551888D57F0B95AD13 /* PasswordListViewController.swift in Sources */,
 				BBCE3CD450CE8D9AED0275DD /* Passport.swift in Sources */,

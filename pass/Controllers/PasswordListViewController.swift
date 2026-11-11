@@ -329,7 +329,9 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             }
         }
         addButton.primaryAction = nil
-        addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: templates)])
+        // A menu lists its first items nearest the button, which in the bottom toolbar is at the bottom.
+        let isInToolbar = toolbarItems?.contains(addButton) == true
+        addButton.menu = UIMenu(children: [plain, UIMenu(options: .displayInline, children: isInToolbar ? templates.reversed() : templates)])
     }
 
     /// Without a proto, a sec entry starts from a password field, as `sec add` does.

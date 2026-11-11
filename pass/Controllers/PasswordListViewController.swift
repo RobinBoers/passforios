@@ -344,7 +344,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
     private static let knownProtos = [
         KnownProto(name: "card", title: "ProtoCard", symbol: "creditcard"),
         KnownProto(name: "license", title: "ProtoLicense", symbol: "checkmark.seal"),
-        KnownProto(name: "db", title: "ProtoDatabase", symbol: "cylinder"),
+        KnownProto(name: "database", title: "ProtoDatabase", symbol: "cylinder"),
         KnownProto(name: "ssh", title: "ProtoSsh", symbol: "terminal"),
         KnownProto(name: "imap", title: "ProtoImap", symbol: "envelope"),
         KnownProto(name: "smtp", title: "ProtoSmtp", symbol: "paperplane"),

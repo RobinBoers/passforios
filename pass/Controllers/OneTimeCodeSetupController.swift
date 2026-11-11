@@ -16,12 +16,14 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
     var onChoose: ((Choice) -> Void)?
 
     private let issuer: String
+    private let account: String
     private let entries = PasswordStore.shared.fetchPasswordEntityCoreData(withDir: false).map(PasswordTableEntry.init)
     private var shown = [PasswordTableEntry]()
     private let searchController = UISearchController(searchResultsController: nil)
 
-    init(issuer: String) {
+    init(issuer: String, account: String) {
         self.issuer = issuer
+        self.account = account
         super.init(style: .insetGrouped)
     }
 
@@ -32,7 +34,7 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "SetUpCode".localize()
+        title = "AddVerificationCode".localize()
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [unowned self] _ in
             dismiss(animated: true)
         })
@@ -72,7 +74,7 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var content = UIListContentConfiguration.subtitleCell()
         if indexPath.section == 0 {
-            content.text = "NewPassword".localize()
+            content.text = "CreateNewEntry".localize()
             content.image = UIImage(systemName: "plus.circle.fill")
             content.textProperties.color = .tintColor
         } else {
@@ -86,7 +88,13 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 1 && !shown.isEmpty ? "AddToEntry".localize() : nil
+        switch section {
+        case 0:
+            // What the code is for, so it is clear where it is going.
+            [issuer, account].filter { !$0.isEmpty }.joined(separator: " · ")
+        default:
+            shown.isEmpty ? nil : "AddToExistingEntry".localize()
+        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -289,9 +289,9 @@
 "EntryName" = "name";
 "CannotFillInCode" = "Can't Fill In Code";
 "NoTimeBasedCode." = "%@ has no time-based verification code.";
-"SetUpCode" = "Set Up Code";
-"NewPassword" = "New Password";
-"AddToEntry" = "Add to Entry";
 "ReplaceCode?" = "Replace Verification Code?";
 "Replace" = "Replace";
 "KeepBoth" = "Keep Both";
+"AddVerificationCode" = "Add Verification Code";
+"CreateNewEntry" = "Create New Entry";
+"AddToExistingEntry" = "Add to Existing Entry";

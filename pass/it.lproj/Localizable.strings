@@ -284,9 +284,9 @@
 "EntryName" = "nome";
 "CannotFillInCode" = "Impossibile inserire il codice";
 "NoTimeBasedCode." = "%@ non ha un codice di verifica basato sul tempo.";
-"SetUpCode" = "Configura codice";
-"NewPassword" = "Nuova password";
-"AddToEntry" = "Aggiungi a una voce";
 "ReplaceCode?" = "Sostituire il codice di verifica?";
 "Replace" = "Sostituisci";
 "KeepBoth" = "Mantieni entrambi";
+"AddVerificationCode" = "Aggiungi codice di verifica";
+"CreateNewEntry" = "Crea nuova voce";
+"AddToExistingEntry" = "Aggiungi a una voce esistente";

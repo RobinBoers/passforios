@@ -271,7 +271,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             return
         }
         let otpauth = url.absoluteString
-        let setup = OneTimeCodeSetupController(issuer: token.issuer)
+        let setup = OneTimeCodeSetupController(issuer: token.issuer, account: token.name)
         setup.onChoose = { [unowned self] choice in
             switch choice {
             case .newEntry:

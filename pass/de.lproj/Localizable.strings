@@ -288,9 +288,9 @@
 "EntryName" = "name";
 "CannotFillInCode" = "Code kann nicht ausgefüllt werden";
 "NoTimeBasedCode." = "%@ hat keinen zeitbasierten Bestätigungscode.";
-"SetUpCode" = "Code einrichten";
-"NewPassword" = "Neues Passwort";
-"AddToEntry" = "Zu Eintrag hinzufügen";
 "ReplaceCode?" = "Bestätigungscode ersetzen?";
 "Replace" = "Ersetzen";
 "KeepBoth" = "Beide behalten";
+"AddVerificationCode" = "Bestätigungscode hinzufügen";
+"CreateNewEntry" = "Neuen Eintrag erstellen";
+"AddToExistingEntry" = "Zu bestehendem Eintrag hinzufügen";

@@ -35,6 +35,13 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "AddVerificationCode".localize()
+        // What the code is for, so it is clear where it is going.
+        let code = [issuer, account].filter { !$0.isEmpty }.joined(separator: " · ")
+        if #available(iOS 26.0, *) {
+            navigationItem.subtitle = code
+        } else {
+            navigationItem.prompt = code
+        }
         navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction { [unowned self] _ in
             dismiss(animated: true)
         })
@@ -88,13 +95,7 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            // What the code is for, so it is clear where it is going.
-            [issuer, account].filter { !$0.isEmpty }.joined(separator: " · ")
-        default:
-            shown.isEmpty ? nil : "AddToExistingEntry".localize()
-        }
+        section == 1 && !shown.isEmpty ? "AddToExistingEntry".localize() : nil
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -69,7 +69,10 @@ struct SettingsView: View {
 
     private var autoFillSection: some View {
         SwiftUI.Section {
-            Toggle("AutoCopyOTP", isOn: model.autoCopyOTP)
+            // From iOS 18 on, AutoFill fills in codes itself instead of a notification copying them.
+            if #unavailable(iOS 18.0) {
+                Toggle("AutoCopyOTP", isOn: model.autoCopyOTP)
+            }
             Button("ClearSavedSuggestions") {
                 model.clearSuggestions()
             }
@@ -77,7 +80,9 @@ struct SettingsView: View {
         } header: {
             Text("AutoFill")
         } footer: {
-            Text("AutoCopyOTPExplanation.")
+            if #unavailable(iOS 18.0) {
+                Text("AutoCopyOTPExplanation.")
+            }
         }
     }
 

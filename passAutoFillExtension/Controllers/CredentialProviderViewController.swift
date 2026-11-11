@@ -13,7 +13,12 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     private lazy var passwordsViewController: PasswordsViewController = (children.first as! UINavigationController).viewControllers.first as! PasswordsViewController
 
     private lazy var credentialProvider: CredentialProvider = { [unowned self] in
-        CredentialProvider(viewController: self, extensionContext: extensionContext, afterDecryption: NotificationCenterDispatcher.showOTPNotification)
+        // From iOS 18 on, AutoFill fills in codes itself.
+        CredentialProvider(viewController: self, extensionContext: extensionContext) { password in
+            if #unavailable(iOS 18.0) {
+                NotificationCenterDispatcher.showOTPNotification(password: password)
+            }
+        }
     }()
 
     private lazy var passwordsTableEntries = PasswordStore.shared.fetchPasswordEntityCoreData(withDir: false)

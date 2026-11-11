@@ -251,12 +251,12 @@ private struct AutoFillStep: View {
             }
         } buttons: {
             if model.isAutoFillEnabled {
-                Button("Continue") { model.go(to: .oneTimeCodes) }
+                Button("Continue", action: model.afterAutoFill)
                     .buttonStyle(PrimaryButtonStyle())
             } else {
                 Button("TurnOnAutoFill", action: model.turnOnAutoFill)
                     .buttonStyle(PrimaryButtonStyle())
-                Button("NotNow") { model.go(to: .oneTimeCodes) }
+                Button("NotNow", action: model.afterAutoFill)
                     .frame(minHeight: 44)
             }
         }

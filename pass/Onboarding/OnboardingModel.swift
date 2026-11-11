@@ -233,6 +233,15 @@ final class OnboardingModel: ObservableObject {
         }
     }
 
+    /// Before iOS 18, AutoFill cannot fill in codes, so a notification shows them, which needs allowing.
+    func afterAutoFill() {
+        if #available(iOS 18.0, *) {
+            afterOneTimeCodes()
+        } else {
+            go(to: .oneTimeCodes)
+        }
+    }
+
     /// One-time codes are shown in a notification after AutoFill fills in a password.
     func allowOneTimeCodeNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge]) { _, _ in

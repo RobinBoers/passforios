@@ -288,23 +288,40 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
         present(UINavigationController(rootViewController: setup), animated: true)
     }
 
-    /// The code goes after the entry's last code, or else after its password, or else at the end.
+    /// The code replaces the entry's one code, if asked to, or goes after its last code, its password, or at the end.
     private func addOneTimeCode(_ otpauth: String, toEntryAt path: String) {
         decryptPassword(in: self, with: path) { [unowned self] password in
             var entry = password.entry
-            let after = entry.fields.lastIndex(where: \.isOtpauth) ?? entry.fields.firstIndex { $0.key == Constants.PASSWORD_KEYWORD }
-            entry.fields.insert(Field.oneTimeCode(otpauth, format: entry.format), at: after.map { $0 + 1 } ?? entry.fields.count)
-            password.updatePassword(name: password.name, path: password.path, plainText: entry.plainText)
-            do {
-                guard let entity = PasswordStore.shared.fetchPasswordEntity(with: path),
-                      let saved = try PasswordStore.shared.edit(passwordEntity: entity, password: password) else {
-                    return
+            let save = { [unowned self] (replacing: Bool) in
+                let codes = entry.fields.indices.filter { entry.fields[$0].isOtpauth }
+                if replacing, let index = codes.first {
+                    entry.fields[index].value = otpauth
+                } else {
+                    let after = codes.last ?? entry.fields.firstIndex { $0.key == Constants.PASSWORD_KEYWORD }
+                    entry.fields.insert(Field.oneTimeCode(otpauth, format: entry.format), at: after.map { $0 + 1 } ?? entry.fields.count)
                 }
-                Feedback.success()
-                showDetail(of: saved)
-            } catch {
-                Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
+                password.updatePassword(name: password.name, path: password.path, plainText: entry.plainText)
+                do {
+                    guard let entity = PasswordStore.shared.fetchPasswordEntity(with: path),
+                          let saved = try PasswordStore.shared.edit(passwordEntity: entity, password: password) else {
+                        return
+                    }
+                    Feedback.success()
+                    showDetail(of: saved)
+                } catch {
+                    Utils.alert(title: "Error".localize(), message: error.localizedDescription, controller: self)
+                }
             }
+            // With several codes it is unclear which one a new one would replace.
+            guard entry.fields.filter(\.isOtpauth).count == 1 else {
+                save(false)
+                return
+            }
+            let alert = UIAlertController(title: "ReplaceCode?".localize(), message: password.name, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Replace".localize(), style: .destructive) { _ in save(true) })
+            alert.addAction(UIAlertAction(title: "KeepBoth".localize(), style: .default) { _ in save(false) })
+            alert.addAction(UIAlertAction.cancel())
+            present(alert, animated: true)
         }
     }
 

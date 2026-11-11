@@ -287,3 +287,6 @@
 "SetUpCode" = "Configura codice";
 "NewPassword" = "Nuova password";
 "AddToEntry" = "Aggiungi a una voce";
+"ReplaceCode?" = "Sostituire il codice di verifica?";
+"Replace" = "Sostituisci";
+"KeepBoth" = "Mantieni entrambi";

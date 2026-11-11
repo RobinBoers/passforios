@@ -292,3 +292,6 @@
 "SetUpCode" = "Set Up Code";
 "NewPassword" = "New Password";
 "AddToEntry" = "Add to Entry";
+"ReplaceCode?" = "Replace Verification Code?";
+"Replace" = "Replace";
+"KeepBoth" = "Keep Both";

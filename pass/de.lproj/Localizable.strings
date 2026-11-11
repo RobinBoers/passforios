@@ -291,3 +291,6 @@
 "SetUpCode" = "Code einrichten";
 "NewPassword" = "Neues Passwort";
 "AddToEntry" = "Zu Eintrag hinzufügen";
+"ReplaceCode?" = "Bestätigungscode ersetzen?";
+"Replace" = "Ersetzen";
+"KeepBoth" = "Beide behalten";

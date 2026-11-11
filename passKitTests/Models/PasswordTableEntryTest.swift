@@ -43,3 +43,32 @@ final class PasswordTableEntryTest: XCTestCase {
         }
     }
 }
+
+final class PasswordTableEntrySearchTest: CoreDataTestCase {
+    private func entries(_ paths: [String]) -> [PasswordTableEntry] {
+        let context = controller.viewContext()
+        return paths.map { path in
+            let name = ((path as NSString).lastPathComponent as NSString).deletingPathExtension
+            return PasswordTableEntry(PasswordEntity.insert(name: name, path: path, isDir: false, into: context))
+        }
+    }
+
+    func testSearchNeedsEveryWord() {
+        let found = entries(["www/github.gpg", "work/github.gpg", "a/b.gpg"]).ranked(by: "work git").map(\.title)
+        XCTAssertEqual(found, ["github"])
+    }
+
+    func testSearchIgnoresCaseAndAccents() {
+        XCTAssertEqual(entries(["café.gpg"]).ranked(by: "CAFE").map(\.title), ["café"])
+    }
+
+    func testSearchNoLongerMatchesShortWordsInTheQuery() {
+        // Folder "a" used to match any search containing an a.
+        XCTAssertTrue(entries(["a/b.gpg"]).ranked(by: "amazon").isEmpty)
+    }
+
+    func testSearchRanksNamesBeforeFolders() {
+        let paths = ["github/personal.gpg", "work/my-github.gpg", "www/github.com.gpg", "www/github.gpg"]
+        XCTAssertEqual(entries(paths).ranked(by: "github").map(\.title), ["github", "github.com", "my-github", "personal"])
+    }
+}

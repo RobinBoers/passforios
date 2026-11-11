@@ -69,9 +69,7 @@ final class OneTimeCodeSetupController: UITableViewController, UISearchResultsUp
 
     private func updateShown() {
         let query = searchController.searchBar.text ?? ""
-        shown = entries
-            .filter { query.isEmpty || $0.matches(query) }
-            .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        shown = entries.ranked(by: query)
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {

@@ -157,10 +157,7 @@ final class PasswordListViewController: UITableViewController, PasswordAlertPres
             let folder = folderPath.flatMap(store.fetchPasswordEntity(with:))
             return folderPath != nil && folder == nil ? [] : store.fetchPasswordEntityCoreData(parent: folder)
         }()
-        let shown = all
-            .map(PasswordTableEntry.init)
-            .filter { query.isEmpty || $0.matches(query) }
-            .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        let shown = all.map(PasswordTableEntry.init).ranked(by: query)
         let previous = entries
         entries = Dictionary(shown.map { ($0.passwordEntity.path, $0) }, uniquingKeysWith: { first, _ in first })
         let hadUnsyncedEntries = hasUnsyncedEntries

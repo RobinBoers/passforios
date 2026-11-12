@@ -37,12 +37,12 @@ class PasswordsTableDataSource: NSObject, UITableViewDataSource {
             return nil
         }
         if !showSuggestion {
-            return "All Passwords"
+            return "AllPasswords".localize()
         }
         if section == 0 {
-            return "Suggested Passwords"
+            return "SuggestedPasswords".localize()
         }
-        return "Other Passwords"
+        return "OtherPasswords".localize()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

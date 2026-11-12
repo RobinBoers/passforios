@@ -289,3 +289,6 @@
 "KeepBoth" = "Mantieni entrambi";
 "AddVerificationCode" = "Aggiungi codice di verifica";
 "CreateNewEntry" = "Crea nuova voce";
+"AllPasswords" = "Tutte le password";
+"SuggestedPasswords" = "Password suggerite";
+"OtherPasswords" = "Altre password";

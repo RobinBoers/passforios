@@ -294,3 +294,6 @@
 "KeepBoth" = "Keep Both";
 "AddVerificationCode" = "Add Verification Code";
 "CreateNewEntry" = "Create New Entry";
+"AllPasswords" = "All Passwords";
+"SuggestedPasswords" = "Suggested Passwords";
+"OtherPasswords" = "Other Passwords";

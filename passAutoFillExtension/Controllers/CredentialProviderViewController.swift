@@ -27,6 +27,9 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     /// Whether the list was asked for a verification code rather than a password.
     private var isOneTimeCodeRequest = false
 
+    /// An unlock waiting for the sheet to be on screen.
+    private var pendingUnlock: (() -> Void)?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         passwordsViewController.dataSource = PasswordsTableDataSource(entries: passwordsTableEntries)
@@ -116,12 +119,26 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let unlock = pendingUnlock
+        pendingUnlock = nil
+        unlock?()
+    }
+
     private func unlock(then action: @escaping () -> Void) {
         guard AppLock.isEnabled else {
             action()
             return
         }
         view.isHidden = true
+        // Face ID asked before the sheet is on screen fails right away, which would close it.
+        guard view.window != nil else {
+            pendingUnlock = { [weak self] in
+                self?.unlock(then: action)
+            }
+            return
+        }
         AppLock.authenticate(reason: "UnlockPass".localize()) { [weak self] success in
             guard let self else {
                 return

@@ -23,7 +23,7 @@
 "OTPForPassword"            = "Verification code for %@";
 "OTPHasBeenCopied"          = "Copied to the clipboard.";
 "CopyToPasteboard"          = "Copy";
-"AutoCopyOTP"               = "Copy Verification Codes";
+"AutoCopyOTP"               = "Copy Verification Code";
 "AutoCopyOTPExplanation."   = "After AutoFill fills in a password, a notification shows its verification code. With this on, the code is copied right away.";
 
 // General (error) messages

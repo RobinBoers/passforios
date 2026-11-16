@@ -23,7 +23,7 @@
 "OTPForPassword"            = "One-time password per %@";
 "OTPHasBeenCopied"          = "... copiata negli appunti";
 "CopyToPasteboard"          = "Copia negli appunti";
-"AutoCopyOTP"               = "Copia automaticamente OTP";
+"AutoCopyOTP"               = "Copia codice di verifica";
 "AutoCopyOTPExplanation."   = "Dopo che nome utente e password sono stati riempiti automaticamente da Pass, viene mostrata una notifica con la one-time password, che può essere copiata negli appunti. Con questa opzione attiva la one-time password sarà copiata automaticamente.";
 
 // General (error) messages

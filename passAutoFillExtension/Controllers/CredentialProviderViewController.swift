@@ -13,11 +13,12 @@ class CredentialProviderViewController: ASCredentialProviderViewController {
     private lazy var passwordsViewController: PasswordsViewController = (children.first as! UINavigationController).viewControllers.first as! PasswordsViewController
 
     private lazy var credentialProvider: CredentialProvider = { [unowned self] in
-        // From iOS 18 on, AutoFill fills in codes itself.
         CredentialProvider(viewController: self, extensionContext: extensionContext) { password in
-            if #unavailable(iOS 18.0) {
-                NotificationCenterDispatcher.showOTPNotification(password: password)
+            // From iOS 18 on, AutoFill fills in codes where a site asks for one, which makes the notification a choice.
+            if #available(iOS 18.0, *), !Defaults.isCodeNotificationOn {
+                return
             }
+            NotificationCenterDispatcher.showOTPNotification(password: password)
         }
     }()
 

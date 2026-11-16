@@ -296,3 +296,5 @@
 "AllPasswords" = "Alle Passwörter";
 "SuggestedPasswords" = "Vorgeschlagene Passwörter";
 "OtherPasswords" = "Andere Passwörter";
+"ShowCodeAfterFilling" = "Bestätigungscode senden";
+"ShowCodeAfterFilling." = "Für Websites, die AutoFill nicht nach einem Code fragen, kann eine Mitteilung den Code nach dem Ausfüllen eines Passworts zeigen.";

@@ -69,8 +69,11 @@ struct SettingsView: View {
 
     private var autoFillSection: some View {
         SwiftUI.Section {
-            // From iOS 18 on, AutoFill fills in codes itself instead of a notification copying them.
-            if #unavailable(iOS 18.0) {
+            // From iOS 18 on, AutoFill fills in codes itself, so the notification with the code is optional.
+            if #available(iOS 18.0, *) {
+                Toggle("ShowCodeAfterFilling", isOn: model.codeNotification)
+            }
+            if showsCodeNotification {
                 Toggle("AutoCopyOTP", isOn: model.autoCopyOTP)
             }
             Button("ClearSavedSuggestions") {
@@ -80,10 +83,15 @@ struct SettingsView: View {
         } header: {
             Text("AutoFill")
         } footer: {
-            if #unavailable(iOS 18.0) {
-                Text("AutoCopyOTPExplanation.")
-            }
+            Text(showsCodeNotification ? "AutoCopyOTPExplanation." : "ShowCodeAfterFilling.")
         }
+    }
+
+    private var showsCodeNotification: Bool {
+        if #available(iOS 18.0, *) {
+            return model.codeNotification.wrappedValue
+        }
+        return true
     }
 
     private var keysSummary: String {

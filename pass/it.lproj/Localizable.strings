@@ -292,3 +292,5 @@
 "AllPasswords" = "Tutte le password";
 "SuggestedPasswords" = "Password suggerite";
 "OtherPasswords" = "Altre password";
+"ShowCodeAfterFilling" = "Invia codice di verifica";
+"ShowCodeAfterFilling." = "Per i siti che non chiedono un codice ad AutoFill, una notifica può mostrare il codice dopo la compilazione della password.";

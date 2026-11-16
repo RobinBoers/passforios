@@ -66,6 +66,8 @@ public extension DefaultsKeys {
     var passwordGenerator: DefaultsKey<PasswordGenerator> { DefaultsKey("appleStylePasswordGenerator", defaultValue: PasswordGenerator()) }
 
     var autoCopyOTP: DefaultsKey<Bool> { DefaultsKey("autoCopyOTP", defaultValue: false) }
+    /// From iOS 18 on, AutoFill fills in codes itself, but only where a site asks for one; the notification is a choice.
+    var isCodeNotificationOn: DefaultsKey<Bool> { DefaultsKey("isCodeNotificationOn", defaultValue: false) }
 
     var credentialIdentities: DefaultsKey<[SavedCredentialIdentity]> { DefaultsKey("credentialIdentities", defaultValue: []) }
 }

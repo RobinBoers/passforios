@@ -297,3 +297,5 @@
 "AllPasswords" = "All Passwords";
 "SuggestedPasswords" = "Suggested Passwords";
 "OtherPasswords" = "Other Passwords";
+"ShowCodeAfterFilling" = "Send Verification Code";
+"ShowCodeAfterFilling." = "For sites that do not ask AutoFill for a code, a notification can show the code after a password is filled in.";

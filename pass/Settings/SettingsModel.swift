@@ -99,6 +99,24 @@ final class SettingsModel: ObservableObject {
         binding(\.autoCopyOTP)
     }
 
+    /// Turning the notification on asks to allow notifications, and turns it off again when they are not.
+    var codeNotification: Binding<Bool> {
+        binding(\.isCodeNotificationOn) { [weak self] isOn in
+            guard isOn else {
+                return
+            }
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge]) { granted, _ in
+                guard !granted else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    passKit.Defaults.isCodeNotificationOn = false
+                    self?.objectWillChange.send()
+                }
+            }
+        }
+    }
+
     var showFolders: Binding<Bool> {
         binding(\.isShowFolderOn) { _ in
             NotificationCenter.default.post(name: .passwordDisplaySettingChanged, object: nil)

@@ -1,4 +1,4 @@
-# Pass
+# mobilesec
 
 This is my personal fork of [Pass for iOS](https://github.com/mssun/passforios). It has a completely redesigned UI with Liquid Glass, supports guided setup using a script called [`passport`](https://git.geheimesite.nl/~meta/dotfiles/blob/master/bin/passport) to setup Git, GPG and SSH, and adds support of the store format used in [`sec`](https://git.geheimesite.nl/~meta/dotfiles/blob/master/bin/passport), my own pass-inspired password manager.
 
